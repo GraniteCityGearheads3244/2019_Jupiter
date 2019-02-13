@@ -11,6 +11,7 @@
 
 package org.usfirst.frc3244.Jupiter2019;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -96,12 +97,20 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
+    boolean autonomousOnce = false;
+
     /**
      * This function is called periodically during autonomous
      */
     @Override
     public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
+        if (!autonomousOnce)
+    	{
+    	  DriverStation.reportError("My Autonomou Periodic is running!", false);
+    	}
+        autonomousOnce = true;
+        robotControl();
+        //Scheduler.getInstance().run();
     }
 
     @Override
@@ -113,11 +122,26 @@ public class Robot extends TimedRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
     }
 
+    boolean teleopOnce = false;
+    
     /**
      * This function is called periodically during operator control
      */
     @Override
     public void teleopPeriodic() {
+        if (!teleopOnce)
+    	{
+    	  DriverStation.reportError("My Teleop Periodic is running!", false);
+    	}
+    	teleopOnce = true;
+       
+        robotControl();
+        //Scheduler.getInstance().run();
+
+    }
+
+    private void robotControl(){
         Scheduler.getInstance().run();
+        driveTrain_1519_MM.driveTeleop(oi.driveY(), oi.driveRotation()*.5); 
     }
 }
