@@ -742,9 +742,9 @@ public class DriveTrain_1519_MM extends Subsystem {
 		// want to do all the sets immediately after one another to minimize
 		// delay between commands
 		// set all Talon SRX encoder values to zero
+		SmartDashboard.putNumber("Left talon", m_wheelSpeeds[kLeft]);
+		SmartDashboard.putNumber("Right talon", m_wheelSpeeds[kRight]);
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			SmartDashboard.putNumber("Left talon", m_wheelSpeeds[kLeft]);
-			SmartDashboard.putNumber("Right talon", m_wheelSpeeds[kRight]);
 			m_talons[talonIndex].set(m_closedLoopMode2018, m_wheelSpeeds[talonIndex]);		
 		}
 
