@@ -20,6 +20,10 @@ public class Hatch_Slide extends InstantCommand {
 
     private boolean m_extend;
  
+    /**
+     * Set to true to extend the Slide
+     * @param extend
+     */
     public Hatch_Slide(boolean extend) {
         m_extend = extend;
         requires(Robot.hatch);

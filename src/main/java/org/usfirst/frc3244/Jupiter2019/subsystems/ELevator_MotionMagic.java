@@ -88,14 +88,16 @@ public class ELevator_MotionMagic extends Subsystem {
 	 * Game Mode
 	 * 
 	 * ******************************/
-	enum gameMode{
+	
+
+	public static enum gameMode{
 		EMPTY, CARGO, HATCH;
 	}
 
 	private gameMode current_GameMode =  gameMode.EMPTY;
 	
-	public gameMode getCurrent_GameMode(){
-		return current_GameMode;
+	public String getCurrent_GameMode(){
+		return current_GameMode.toString();
 	}
 
 	public void setCurrent_GameMode_Empty(){
