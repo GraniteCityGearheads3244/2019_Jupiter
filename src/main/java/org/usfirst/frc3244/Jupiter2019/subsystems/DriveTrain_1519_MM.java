@@ -118,7 +118,6 @@ public class DriveTrain_1519_MM extends Subsystem {
 
  	private boolean m_useVoltageRamp = true;
  	private double m_voltageRampRate = 36.0;//48.0; // in volts/second
- 	private boolean m_breakMode = true;
  	private boolean m_fieldOrientedDrive = false;
 
  	private int m_iterationsSinceRotationCommanded = 0;
@@ -203,8 +202,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 
 		// put all Talon SRX into brake mode
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			//m_talons[talonIndex].enableBrakeMode(m_breakMode);
-			m_talons[talonIndex].setNeutralMode(NeutralMode.Brake);
+			m_talons[talonIndex].setNeutralMode(NeutralMode.Coast);
 			
 		}
 

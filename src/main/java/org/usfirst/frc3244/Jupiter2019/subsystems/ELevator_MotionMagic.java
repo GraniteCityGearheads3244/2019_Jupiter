@@ -66,7 +66,7 @@ public class ELevator_MotionMagic extends Subsystem {
 	 * ******************************/
 
 	 //home
-	 private double bottomPosition = 0;
+	 private double bottom_Position = 0;
 	 //Intake
 	 private double Intake_Hatch_Floor_Position = 1;
 	 private double Intake_Hatch_Depot_Position = 1;
@@ -75,7 +75,7 @@ public class ELevator_MotionMagic extends Subsystem {
 	 //Deliver Cargo Bay
 	 private double Deliver_Hatch_Bay_Position = 1;
 	 private double Deliver_Cargo_Bay_Position = 1;
-	 //Deliver Rocken
+	 //Deliver Rocket
 	 private double Deliver_Hatch_Rocket_Position1 = 2;
 	 private double Deliver_Hatch_Rocket_Position2 = 3;
 	 private double Deliver_Hatch_Rocket_Position3 = 4;
@@ -83,6 +83,52 @@ public class ELevator_MotionMagic extends Subsystem {
 	 private double Deliver_Cargo_Rocket_Position2 = 6;
 	 private double Deliver_Cargo_Rocket_Position3 = 6;
 
+
+	 //***    Getters    */
+	 //home
+	 public double get_bottom_Position(){
+		return bottom_Position;
+	 }
+	 //Intake
+	 public double get_Intake_Hatch_Floor_Position(){
+		return Intake_Hatch_Floor_Position;
+	 }
+	 public double get_Intake_Hatch_Depot_Position(){
+		return Intake_Hatch_Depot_Position;
+	 }
+	 public double get_Intake_cargo_Floor_Position(){
+		return Intake_cargo_Floor_Position;
+	 }
+	 public double get_Intake_cargo_Depot_Position(){
+		return Intake_cargo_Depot_Position;
+	 }
+	 //Deliver Cargo Bay
+	 public double get_Deliver_Hatch_Bay_Position(){
+		return Deliver_Hatch_Bay_Position;
+	 }
+	 public double get_Deliver_Cargo_Bay_Position(){
+		return Deliver_Cargo_Bay_Position;
+	 }
+	 //Deliver Rocket
+	 public double get_Deliver_Hatch_Rocket_Position1(){
+		return Deliver_Hatch_Rocket_Position1;
+	 }
+	 public double get_Deliver_Hatch_Rocket_Position2(){
+		return Deliver_Hatch_Rocket_Position2;
+	 }
+	 public double get_Deliver_Hatch_Rocket_Position3(){
+		return Deliver_Hatch_Rocket_Position3;
+	 }
+	 public double get_Deliver_Cargo_Rocket_Position1(){
+		return Deliver_Cargo_Rocket_Position1;
+	 }
+	 public double get_Deliver_Cargo_Rocket_Position2(){
+		return Deliver_Cargo_Rocket_Position2;
+	 }
+	 public double get_Deliver_Cargo_Rocket_Position3(){
+		return Deliver_Cargo_Rocket_Position3;
+	 }
+	 
 	/********************************
 	 * START
 	 * Game Mode
