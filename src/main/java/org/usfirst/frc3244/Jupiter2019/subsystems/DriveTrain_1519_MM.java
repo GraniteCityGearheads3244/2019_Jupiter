@@ -77,22 +77,22 @@ public class DriveTrain_1519_MM extends Subsystem {
 	private WPI_VictorSPX leftVictor1 = new WPI_VictorSPX(14);
 	//leftVictor1 = new WPI_VictorSPX(14);
 	//addChild(leftVictor1);
-	private WPI_VictorSPX leftVictor2 = new WPI_VictorSPX(13);
+	private WPI_VictorSPX leftVictor2 = new WPI_VictorSPX(15);
 	//leftVictor2 = new WPI_VictorSPX(13);
 	//addChild(leftVictor2);
-	private WPI_TalonSRX leftTalon = new WPI_TalonSRX(15);
+	private WPI_TalonSRX leftTalon = new WPI_TalonSRX(13);
 	//leftTalon = new WPI_TalonSRX(15);
 	//addChild(leftTalon);
 	//private SpeedControllerGroup leftWheels = new SpeedControllerGroup(leftVictor1, leftVictor2 , leftTalon );
 	//leftWheels = new SpeedControllerGroup(leftVictor1, leftVictor2 , leftTalon );
 	//addChild(leftWheels);
-	private WPI_VictorSPX rightVictor1 = new WPI_VictorSPX(1);
+	private WPI_VictorSPX rightVictor1 = new WPI_VictorSPX(2);
 	//rightVictor1 = new WPI_VictorSPX(1);
  	//addChild(rightVictor1);
-	private WPI_VictorSPX rightVictor2 = new WPI_VictorSPX(2);
+	private WPI_VictorSPX rightVictor2 = new WPI_VictorSPX(12);
 	//rightVictor2 = new WPI_VictorSPX(2);
 	//addChild(rightVictor2);
-	private WPI_TalonSRX rightTalon = new WPI_TalonSRX(0);
+	private WPI_TalonSRX rightTalon = new WPI_TalonSRX(3);
 	//rightTalon = new WPI_TalonSRX(0);
 	//addChild(rightTalon);
 	//private SpeedControllerGroup rightWheels = new SpeedControllerGroup(rightVictor1, rightVictor2 , rightTalon );
@@ -745,6 +745,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
 			m_talons[talonIndex].set(m_closedLoopMode2018, m_wheelSpeeds[talonIndex]);		
 		}
+		//m_talons[0].set(m_closedLoopMode2018, m_wheelSpeeds[0]);
+		//m_talons[1].set(m_closedLoopMode2018, m_wheelSpeeds[1]);
 
 	}
 }
