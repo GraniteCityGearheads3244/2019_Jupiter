@@ -18,20 +18,20 @@ public class Arm_To_Setpoint extends Command {
   public Arm_To_Setpoint(double setpoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.arnm);
+    requires(Robot.arm);
     m_setpoint = setpoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.arnm.my_Enable_PID();
+    Robot.arm.my_Enable_PID();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.arnm.setSetpoint(m_setpoint);
+    Robot.arm.setSetpoint(m_setpoint);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -43,7 +43,7 @@ public class Arm_To_Setpoint extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.arnm.my_Dissable_PID();
+    Robot.arm.my_Dissable_PID();
   }
 
   // Called when another command which requires one or more of the same

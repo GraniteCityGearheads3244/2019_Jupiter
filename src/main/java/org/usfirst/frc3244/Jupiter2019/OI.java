@@ -164,16 +164,16 @@ public class OI {
     private void setUp_Controler_xBox_Driver(){
 
         a_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_A_BUTTON);
-        a_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arnm.UP));
+        a_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.UP));
 
         b_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_B_BUTTON);
-        b_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arnm.HATCH_PICK));
+        b_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.HATCH_PICK));
 
         x_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON);
         //x_xBox_Driver.whenPressed(new);
 
         y_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_Y_BUTTON);
-        y_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arnm.DOWN));
+        y_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.DOWN));
 
         lb_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_LEFT_BUTTON);
         lb_xBox_Driver.whenPressed(new CG_HatchGrabSeqStart());
