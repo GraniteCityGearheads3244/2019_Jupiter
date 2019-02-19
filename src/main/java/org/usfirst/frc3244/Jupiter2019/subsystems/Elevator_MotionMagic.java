@@ -33,6 +33,112 @@ public class Elevator_MotionMagic extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
+  /********************************
+	 * 
+	 * Predefined setpoints
+	 * 
+	 * ******************************/
+
+	 //home
+	 private double bottom_Position = 0;
+	 //Intake
+	 private double Intake_Hatch_Floor_Position = 1;
+	 private double Intake_Hatch_Depot_Position = 20;
+	 private double Intake_cargo_Floor_Position = 1;
+	 private double Intake_cargo_Depot_Position = 1;
+	 //Deliver Cargo Bay
+	 private double Deliver_Hatch_Bay_Position = 1;
+	 private double Deliver_Cargo_Bay_Position = 1;
+	 //Deliver Rocket
+	 private double Deliver_Hatch_Rocket_Position1 = 100;
+	 private double Deliver_Hatch_Rocket_Position2 = 450;
+	 private double Deliver_Hatch_Rocket_Position3 = 500;
+	 private double Deliver_Cargo_Rocket_Position1 = 5;
+	 private double Deliver_Cargo_Rocket_Position2 = 6;
+	 private double Deliver_Cargo_Rocket_Position3 = 6;
+
+   private double maxHeight = 550;
+   private double minHeight = 0;
+
+	 //***    Getters    */
+	 //home
+	 public double get_bottom_Position(){
+		return bottom_Position;
+	 }
+	 //Intake
+	 public double get_Intake_Hatch_Floor_Position(){
+		return Intake_Hatch_Floor_Position;
+	 }
+	 public double get_Intake_Hatch_Depot_Position(){
+		return Intake_Hatch_Depot_Position;
+	 }
+	 public double get_Intake_cargo_Floor_Position(){
+		return Intake_cargo_Floor_Position;
+	 }
+	 public double get_Intake_cargo_Depot_Position(){
+		return Intake_cargo_Depot_Position;
+	 }
+	 //Deliver Cargo Bay
+	 public double get_Deliver_Hatch_Bay_Position(){
+		return Deliver_Hatch_Bay_Position;
+	 }
+	 public double get_Deliver_Cargo_Bay_Position(){
+		return Deliver_Cargo_Bay_Position;
+	 }
+	 //Deliver Rocket
+	 public double get_Deliver_Hatch_Rocket_Position1(){
+		return Deliver_Hatch_Rocket_Position1;
+	 }
+	 public double get_Deliver_Hatch_Rocket_Position2(){
+		return Deliver_Hatch_Rocket_Position2;
+	 }
+	 public double get_Deliver_Hatch_Rocket_Position3(){
+		return Deliver_Hatch_Rocket_Position3;
+	 }
+	 public double get_Deliver_Cargo_Rocket_Position1(){
+		return Deliver_Cargo_Rocket_Position1;
+	 }
+	 public double get_Deliver_Cargo_Rocket_Position2(){
+		return Deliver_Cargo_Rocket_Position2;
+	 }
+	 public double get_Deliver_Cargo_Rocket_Position3(){
+		return Deliver_Cargo_Rocket_Position3;
+	 }
+	 
+	/********************************
+	 * START
+	 * Game Mode
+	 * 
+	 * ******************************/
+	
+
+	public static enum gameMode{
+		EMPTY, CARGO, HATCH;
+	}
+
+	private gameMode current_GameMode =  gameMode.EMPTY;
+	
+	public String getCurrent_GameMode(){
+		return current_GameMode.toString();
+	}
+
+	public void setCurrent_GameMode_Empty(){
+		this.current_GameMode = gameMode.EMPTY;
+	}
+
+	public void setCurrent_GameMode_Cargo(){
+		this.current_GameMode = gameMode.CARGO;
+	}
+
+	public void setCurrent_GameMode_Hatch(){
+		this.current_GameMode = gameMode.HATCH;
+	}
+	/********************************
+	 * END
+	 * Game Mode
+	 * 
+	 * ********************************/
+
   public Elevator_MotionMagic(){
     /* Factory default hardware to prevent unexpected behavior */
 		_talon.configFactoryDefault();
@@ -153,14 +259,21 @@ public class Elevator_MotionMagic extends Subsystem {
     }
 
     public void my_ScissorMotionMagic(double height) {
-    	//m_targetEncoderValue = clampEncoderValue((height-DOWN) * m_convertion);
-    	double m_targetEncoderValue = height;
+    	double m_targetEncoderValue = clampEncoderValue(height);
+    	//double m_targetEncoderValue = height;
 
     	_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
   
     }
     
     private double clampEncoderValue(double value) {
+      if(value > maxHeight){
+        return maxHeight;
+      }else if(value < minHeight){
+        return minHeight;
+      }else{
+        return value;
+      }
       /*
       double rotatinToEncoder_Limit = 21.5*4096; // 18*4096 for 5/8 lead Screw,, 21.5*4096 for 1/2 lead Screw
     	if(value > rotatinToEncoder_Limit) { //18 Rev at 4096 counts/rev
@@ -175,7 +288,7 @@ public class Elevator_MotionMagic extends Subsystem {
     		return value;
       }
       */
-      return 0.0;
+     
     }
 
     
