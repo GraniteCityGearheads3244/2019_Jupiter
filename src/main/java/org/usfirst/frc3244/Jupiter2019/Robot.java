@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+        diagnaostics();
         Scheduler.getInstance().run();
     }
 
@@ -156,5 +157,10 @@ public class Robot extends TimedRobot {
     private void robotControl(){
         Scheduler.getInstance().run();
         driveTrain_1519_MM.driveTeleop(oi.driveY(), oi.driveRotation()*.5); 
+        diagnaostics();
+    }
+
+    private void diagnaostics(){
+        arm.diagnostics();
     }
 }

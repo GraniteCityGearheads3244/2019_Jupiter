@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -109,5 +110,9 @@ public class Arm extends PIDSubsystem {
         double kF = ( (armLenght*armWeight*mortorOhms) / (Kt*gearBox) ) * Math.cos(Math.toRadians(currentAngle));
         
         getPIDController().setF(kF);
+    }
+
+    public void diagnostics(){
+        SmartDashboard.putNumber("Current Feedback Value",  analogPotentiometer1.get());
     }
 }
