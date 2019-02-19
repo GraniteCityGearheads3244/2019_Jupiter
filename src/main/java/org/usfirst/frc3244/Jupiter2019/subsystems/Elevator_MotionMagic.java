@@ -112,27 +112,50 @@ public class Elevator_MotionMagic extends Subsystem {
 	 * ******************************/
 	
 
-	public static enum gameMode{
-		EMPTY, CARGO, HATCH;
-	}
+  public enum GameMode{
+    Empty(0),
+    /**
+     * Hatch
+     */
+    Hatch(1),
+    /**
+     * Cargo
+     */
+    Cargo(2);
 
-	private gameMode current_GameMode =  gameMode.EMPTY;
+    /**
+     * Value of Game mode
+     */
+    public final int value;
+
+    /**
+     * Create GameMode of initValue
+     * @param initValue Value of GameMode
+     */
+    GameMode(int initValue)
+    {
+        this.value = initValue;
+    }
+};
+
+	private GameMode current_GameMode =  GameMode.Empty;
 	
-	public String getCurrent_GameMode(){
-		return current_GameMode.toString();
+	public int getCurrent_GameMode(){
+		return current_GameMode.value;
 	}
 
 	public void setCurrent_GameMode_Empty(){
-		this.current_GameMode = gameMode.EMPTY;
+		this.current_GameMode = GameMode.Empty;
 	}
 
 	public void setCurrent_GameMode_Cargo(){
-		this.current_GameMode = gameMode.CARGO;
+		this.current_GameMode = GameMode.Cargo;
 	}
 
 	public void setCurrent_GameMode_Hatch(){
-		this.current_GameMode = gameMode.HATCH;
-	}
+		this.current_GameMode = GameMode.Hatch;
+  }
+  
 	/********************************
 	 * END
 	 * Game Mode
@@ -299,7 +322,7 @@ public class Elevator_MotionMagic extends Subsystem {
     // 	m_talons[kMotorRight].set(ControlMode.PercentOutput, -0.1);
     // }
     
-    public void my_ScissorStop() {
+    public void my_ElevatorStop() {
      	_talon.set(ControlMode.PercentOutput, 0.0);
      
     }
