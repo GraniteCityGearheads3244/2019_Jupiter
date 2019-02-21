@@ -47,15 +47,15 @@ public class Elevator_MotionMagic extends Subsystem {
 	 private double Intake_cargo_Floor_Position = 1;
 	 private double Intake_cargo_Depot_Position = 1;
 	 //Deliver Cargo Bay
-	 private double Deliver_Hatch_Bay_Position = 1;
-	 private double Deliver_Cargo_Bay_Position = 1;
+	 private double Deliver_Hatch_Bay_Position = 20;
+	 private double Deliver_Cargo_Bay_Position = 35;
 	 //Deliver Rocket
 	 private double Deliver_Hatch_Rocket_Position1 = 100;
 	 private double Deliver_Hatch_Rocket_Position2 = 450;
 	 private double Deliver_Hatch_Rocket_Position3 = 500;
-	 private double Deliver_Cargo_Rocket_Position1 = 5;
-	 private double Deliver_Cargo_Rocket_Position2 = 6;
-	 private double Deliver_Cargo_Rocket_Position3 = 6;
+	 private double Deliver_Cargo_Rocket_Position1 = 0;
+	 private double Deliver_Cargo_Rocket_Position2 = 250;
+	 private double Deliver_Cargo_Rocket_Position3 = 520;
 
    private double maxHeight = 550;
    private double minHeight = 0;

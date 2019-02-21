@@ -190,10 +190,10 @@ public class OI {
         //reset_xBox_Driver.whenPressed(new);
 
         r_Stick_Button_xbox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_STICK_BUTTON);
-        //r_Stick_Button_xbox_Driver.whenPressed(new);
+        r_Stick_Button_xbox_Driver.whenPressed(new Drive_Turn_To_Setpoint());
 
         l_Stick_Button_xbox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_LEFT_STICK_BUTTON);
-        //l_Stick_Button_xbox_Driver.whenPressed(new);
+        l_Stick_Button_xbox_Driver.whenPressed(new DriveToggleShifter());
 
         rt_xBox_Driver = new JoystickAxisButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_TRIGGER);
         rt_xBox_Driver.whileHeld(new Cargo_Intake(1));
@@ -202,7 +202,7 @@ public class OI {
         lt_xBox_Driver.whileHeld(new Cargo_Eject(-1));
         
         povNorth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTH);
-        //povNorth_xBox_Driver.
+        //povNorth_xBox_Driver.whenPressed(new );
 
         povSouth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTH);
         //povSouth_xBox_Driver.
@@ -235,7 +235,7 @@ public class OI {
       //rb_xBox_CoDriver.whenPressed(new);
       
       start_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_START_BUTTON);
-      //start_xBox_CoDriver.whenPressed(new);
+      start_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_Deliver_Cargo_Rocket_Position2()));
       
       reset_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_RESET_BUTTON);
       //reset_xBox_CoDriver.whenPressed(new);

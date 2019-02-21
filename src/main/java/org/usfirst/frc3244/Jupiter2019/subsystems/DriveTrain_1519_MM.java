@@ -127,7 +127,7 @@ public class DriveTrain_1519_MM extends Subsystem {
  	// driving scaling factors
  	private static final double FORWARD_BACKWARD_FACTOR =  1.0;
  	private static final double ROTATION_FACTOR  = 1.25;
- 	private static final double SLOW_FACTOR = 0.35; // scaling factor for (normal) "slow mode" .35
+ 	private static final double  SLOW_FACTOR = 0.35;//0.35; // scaling factor for (normal) "slow mode" .35
  	private static final double CRAWL_INPUT = 0.30; // "crawl" is a gentle control input
  	public static final double ALIGN_SPEED = 0.10;
 
@@ -250,6 +250,15 @@ public class DriveTrain_1519_MM extends Subsystem {
 		// setDefaultCommand(new Command());
 	}
 
+	public boolean my_GetIsCurrentGearHigh(){
+		if(dBL_Sol_Shifter.get() == Value.kReverse){
+			return true;
+
+		}else{
+			return false;
+		}
+	}
+
 	public void shiftHigh(){
         DriverStation.reportWarning("Shift Highs Gear", false);
         dBL_Sol_Shifter.set(Value.kReverse);
@@ -257,6 +266,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		rightTalon.selectProfileSlot(0,0);
 		leftTalon.selectProfileSlot(0,0);
 		m_kPIDLoopIdx = 0;
+
+		SmartDashboard.putBoolean("High Gear", true);
     }
 
     public void shiftLow(){
@@ -266,6 +277,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		rightTalon.selectProfileSlot(1,0);
 		leftTalon.selectProfileSlot(1,0);
 		m_kPIDLoopIdx = 1;
+
+		SmartDashboard.putBoolean("High Gear", false);
     }
 	
 	public double getMaxWheelSpeed() {
@@ -647,6 +660,17 @@ public class DriveTrain_1519_MM extends Subsystem {
 		}
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
+		}else{
+			if(Math.abs(rotation)<.75){
+				if(rotation<0){
+					rotation = -.25;
+				}else{
+					rotation = .25;
+				}
+				
+			}else{
+				rotation = rotation * .75;
+			}
 		}
 
 		// scale inputs to compensate for miss balance of speeds in different
@@ -661,7 +685,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		if (!Robot.oi.driveTurboMode() || !m_Craling) {
 			//xIn = xIn * 1.0;//SLOW_FACTOR;
 			yIn = yIn * 1.0;//SLOW_FACTOR;
-			rotation = rotation * SLOW_FACTOR;
+			
 		}
 
 		// update count of iterations since rotation last commanded
