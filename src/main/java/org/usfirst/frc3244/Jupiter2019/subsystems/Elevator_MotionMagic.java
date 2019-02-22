@@ -9,6 +9,7 @@ package org.usfirst.frc3244.Jupiter2019.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -191,9 +192,12 @@ public class Elevator_MotionMagic extends Subsystem {
 
 		/* Set acceleration and vcruise velocity - see documentation */
 		_talon.configMotionCruiseVelocity(20, Constants.kTimeoutMs);
-		_talon.configMotionAcceleration(20, Constants.kTimeoutMs);
-
-		/* Zero the sensor */
+    _talon.configMotionAcceleration(20, Constants.kTimeoutMs);
+    
+    // put all Talon SRX into brake mode
+		_talon.setNeutralMode(NeutralMode.Brake);
+			
+				/* Zero the sensor */
     _talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
     _talon.configClearPositionOnLimitR(true, Constants.kTimeoutMs);
   }
