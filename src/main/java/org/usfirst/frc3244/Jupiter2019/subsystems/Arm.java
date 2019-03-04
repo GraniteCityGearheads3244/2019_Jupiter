@@ -11,6 +11,7 @@
 
 package org.usfirst.frc3244.Jupiter2019.subsystems;
 
+import org.usfirst.frc3244.Jupiter2019.Robot;
 import org.usfirst.frc3244.Jupiter2019.commands.*;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
@@ -35,15 +36,17 @@ public class Arm extends PIDSubsystem {
     private Spark motor;
     private AnalogPotentiometer analogPotentiometer1;
 
+    private double current_Angle_Raw;
+
     // Initialize your subsystem here
     public Arm() {
     
-        super("Arm", 0.42, 0.1, 0.0, 0.0);
+        super("Arm", 0.01, 0.0, 0.0, 5.0);
         setAbsoluteTolerance(0.2);
         getPIDController().setContinuous(false);
         getPIDController().setName("Arm", "PIDSubsystem Controller");
         LiveWindow.add(getPIDController());
-        getPIDController().setInputRange(0.4, 3.8);
+        getPIDController().setInputRange(0.9,4.1);//(-11.2, 90);
         getPIDController().setOutputRange(-0.45, 0.6);
 
    
@@ -51,7 +54,7 @@ public class Arm extends PIDSubsystem {
         addChild("Motor",motor);
         motor.setInverted(false);
         
-        analogPotentiometer1 = new AnalogPotentiometer(0, 5.0, 0.0);
+        analogPotentiometer1 = new AnalogPotentiometer(0,5.0,0.0);//(0, 160, -44.5);
         addChild("Analog Potentiometer 1",analogPotentiometer1);
 
         // Use these to get going:
@@ -73,17 +76,20 @@ public class Arm extends PIDSubsystem {
         // e.g. a sensor, like a potentiometer:
         // yourPot.getAverageVoltage() / kYourMaxVoltage;
 
+        current_Angle_Raw = analogPotentiometer1.get();
        
-        return analogPotentiometer1.get();
+        return current_Angle_Raw;
     }
 
     @Override
     protected void usePIDOutput(double output) {
         // Use output to drive your system, like a motor
         // e.g. yourMotor.set(output);
+        diagnostics();
+       calculateFF(current_Angle_Raw);
 
-       
         motor.pidWrite(output);
+
     }
 
     public void my_Dissable_PID(){
@@ -109,7 +115,8 @@ public class Arm extends PIDSubsystem {
 
         double kF = ( (armLenght*armWeight*mortorOhms) / (Kt*gearBox) ) * Math.cos(Math.toRadians(currentAngle));
         
-        getPIDController().setF(kF);
+        SmartDashboard.putNumber("CalculateFF", currentAngle);
+        //getPIDController().setF(kF);
     }
 
     public void diagnostics(){

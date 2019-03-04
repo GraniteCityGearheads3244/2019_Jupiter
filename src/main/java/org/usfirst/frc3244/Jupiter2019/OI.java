@@ -164,10 +164,12 @@ public class OI {
     private void setUp_Controler_xBox_Driver(){
 
         a_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_A_BUTTON);
-        a_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.UP));
+        a_xBox_Driver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_bottom_Position()));
+        //a_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.UP));
 
         b_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_B_BUTTON);
-        b_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.HATCH_PICK));
+        b_xBox_Driver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_Deliver_Hatch_Rocket_Position3()));
+        //b_xBox_Driver.whileHeld(new Arm_To_Setpoint(Robot.arm.HATCH_PICK));
 
         x_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON);
         //x_xBox_Driver.whenPressed(new);
@@ -217,10 +219,10 @@ public class OI {
     private void setUp_Controler_xBox_CoDriver(){
 
       a_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
-      a_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_bottom_Position()));
+      //a_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_bottom_Position()));
       
       b_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_B_BUTTON);
-      b_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_Deliver_Hatch_Rocket_Position1()));
+      //b_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_Deliver_Hatch_Rocket_Position1()));
       
       x_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_X_BUTTON);
       x_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator.get_Deliver_Hatch_Rocket_Position3()));
