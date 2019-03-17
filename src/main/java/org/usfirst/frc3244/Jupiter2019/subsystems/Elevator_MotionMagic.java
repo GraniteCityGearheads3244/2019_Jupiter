@@ -352,7 +352,18 @@ public class Elevator_MotionMagic extends Subsystem {
 	public double get_My_CurrentRAW_Postion(){
 		return _talon.getSelectedSensorPosition(0);
 	}
-     
 
+	public boolean get_My_PositionLock(double setpoint){
+		double positionLockTollerence = 10;
+		double error = get_My_CurrentRAW_Postion() - setpoint;
+
+		//SmartDashboard.putNumber("Arm Error", error);
+
+		if(Math.abs(error)<=positionLockTollerence){
+			return true;
+		}else{
+			return false;
+		}
+	}
     
 }

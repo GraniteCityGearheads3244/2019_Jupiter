@@ -39,7 +39,7 @@ public class Elevator_To_Setpoint extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return Robot.elevator_MM.get_My_PositionLock(m_setpoint);
   }
 
   // Called once after isFinished returns true
