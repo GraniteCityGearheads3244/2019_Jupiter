@@ -13,12 +13,15 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Elevator_To_Setpoint extends Command {
 
+  private boolean m_continueTOServo;
   private double  m_setpoint = 0.0;
-  public Elevator_To_Setpoint(double setpoint) {
+  public Elevator_To_Setpoint(double setpoint, boolean continueTOServo) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.elevator_MM);
     m_setpoint = setpoint;
+    m_continueTOServo = continueTOServo;
+    
   }
 
   // Called just before this Command runs the first time
@@ -42,7 +45,9 @@ public class Elevator_To_Setpoint extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.elevator_MM.my_ElevatorStop();
+    if(!m_continueTOServo){
+      Robot.elevator_MM.my_ElevatorStop();
+    }
   }
 
   // Called when another command which requires one or more of the same

@@ -230,13 +230,13 @@ public class OI {
       //a_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position()));
       
       b_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_B_BUTTON);
-      b_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1()));
+      b_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1(),false));
       
       x_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_X_BUTTON);
-      x_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position3()));
+      x_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position3(),false));
       
       y_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_Y_BUTTON);
-      y_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position2()));
+      y_xBox_CoDriver.whileHeld(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position2(),false));
       
       lb_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_LEFT_BUTTON);
       //lb_xBox_CoDriver.whenPressed(new);
@@ -312,7 +312,7 @@ public class OI {
 
     private void setUp_OR_Buttons(){
       elevator_Down_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
-      elevator_Down_BTN.whenPressed(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position()));
+      elevator_Down_BTN.whenPressed(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(),false));
     }
 
     private void setUp_SmartDashboard_Buttons(){

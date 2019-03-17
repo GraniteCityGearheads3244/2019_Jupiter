@@ -39,7 +39,7 @@ public class CG_Hatch_Pick_Prepair_From_Floor extends CommandGroup {
 
     addParallel(new HatchGripper_Ungrip());
     addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED),2);
-    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Intake_Hatch_Floor_Position()));
+    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Intake_Hatch_Floor_Position(),false));
     addSequential(new HatchFloor_To_Position_InstandCommand(Robot.hatch_Floor_Pick_MM.PERSET_PICK));
   }
 }

@@ -35,7 +35,7 @@ public class CG_Elevator_LVL2_Hatch extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position2()));
+    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position2(),false));
     addSequential(new Arm_To_Setpoint(Robot.arm_MM.HATCH_PLACE_ROCKET_LVL2),4);
 
   }

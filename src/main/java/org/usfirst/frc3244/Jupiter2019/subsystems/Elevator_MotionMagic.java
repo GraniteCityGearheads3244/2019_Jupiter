@@ -61,7 +61,8 @@ public class Elevator_MotionMagic extends Subsystem {
 
    private double maxHeight = 720;
    private double minHeight = 160;
-   private double Arm_Monitor_Zone_Start = 580;
+   private double Arm_Monitor_Zone_Bottom = 200;
+   private double Arm_Monitor_Zone_Top = 580;
 
 	 //***    Getters    */
 	 //home
@@ -297,20 +298,28 @@ public class Elevator_MotionMagic extends Subsystem {
 
 		double m_targetEncoderValue = clampEncoderValue(height);
 		
+		if((get_My_CurrentRAW_Postion() <  Arm_Monitor_Zone_Top) &&
+		 (get_My_CurrentRAW_Postion() >  Arm_Monitor_Zone_Bottom) && 
+		 (!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
+			my_ElevatorStop();
+		 }
+
+
+
 		//Stop Up
-		if((m_targetEncoderValue > Arm_Monitor_Zone_Start) &&
+		if((m_targetEncoderValue > Arm_Monitor_Zone_Bottom) &&
 			(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
-			if((get_My_CurrentRAW_Postion() > Arm_Monitor_Zone_Start)){
+			if((get_My_CurrentRAW_Postion() > Arm_Monitor_Zone_Top)){
 				_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
 			}else {
 				my_ElevatorStop();
 			}
 		//Stop Down
-		}else if((get_My_CurrentRAW_Postion() >  Arm_Monitor_Zone_Start) &&
-			(m_targetEncoderValue < Arm_Monitor_Zone_Start) &&
+		}else if((get_My_CurrentRAW_Postion() >  Arm_Monitor_Zone_Top) &&
+			(m_targetEncoderValue < Arm_Monitor_Zone_Top) &&
 			(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
 
-				if((m_targetEncoderValue > Arm_Monitor_Zone_Start)){
+				if((m_targetEncoderValue > Arm_Monitor_Zone_Top)){
 					_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
 				}else {
 					my_ElevatorStop();

@@ -35,7 +35,7 @@ public class CG_Elevator_LVL2_Cargo extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position2()));
+    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position2(),false));
     addSequential(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_ROCKET_LVL2),4);
   }
 }
