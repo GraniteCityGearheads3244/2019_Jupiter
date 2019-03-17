@@ -7,7 +7,7 @@
 
 package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
-import org.usfirst.frc3244.Jupiter2019.commands.Extend;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Extend;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -16,6 +16,6 @@ public class CG_HatchDeliver extends CommandGroup {
    * Add your docs here.
    */
   public CG_HatchDeliver() {
-    addSequential(new Extend());
+    addSequential(new HatchGripper_Extend());
   }
 }

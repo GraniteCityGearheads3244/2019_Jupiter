@@ -11,39 +11,38 @@ import org.usfirst.frc3244.Jupiter2019.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class Arm_To_Setpoint extends Command {
+public class HatchFloor_To_Position extends Command {
 
-  private double m_setpoint;
+  private double m_Setpoint;
 
-  public Arm_To_Setpoint(double setpoint) {
+  public HatchFloor_To_Position(double setpoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.arm_MM);
-    m_setpoint = setpoint;
+    requires(Robot.hatch_Floor_Pick_MM);
+    m_Setpoint=setpoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.arm_MM.my_Arm_MotionMagic(m_setpoint);
+    Robot.hatch_Floor_Pick_MM.my_Hatch_Floor_Pick_MotionMagic(m_Setpoint);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.arm_MM.get_My_PositionLock(m_setpoint);
+    return Robot.hatch_Floor_Pick_MM.get_My_PositionLock(m_Setpoint);
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    
+    Robot.hatch_Floor_Pick_MM.my_Arm_Stop();
   }
 
   // Called when another command which requires one or more of the same

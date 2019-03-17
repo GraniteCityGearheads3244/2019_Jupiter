@@ -17,19 +17,20 @@ public class Elevator_To_Setpoint extends Command {
   public Elevator_To_Setpoint(double setpoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.elevator);
+    requires(Robot.elevator_MM);
     m_setpoint = setpoint;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.elevator.my_ScissorMotionMagic(m_setpoint);
+    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    Robot.elevator_MM.my_ScissorMotionMagic(m_setpoint);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,7 +42,7 @@ public class Elevator_To_Setpoint extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    //Robot.elevator.my_ElevatorStop();
+    Robot.elevator_MM.my_ElevatorStop();
   }
 
   // Called when another command which requires one or more of the same

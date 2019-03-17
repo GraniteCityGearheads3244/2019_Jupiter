@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.usfirst.frc3244.Jupiter2019.Constants;
+import org.usfirst.frc3244.Jupiter2019.Robot;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,25 +42,26 @@ public class Elevator_MotionMagic extends Subsystem {
 	 * ******************************/
 
 	 //home
-	 private double bottom_Position = 0;
+	 private double bottom_Position = 160;
 	 //Intake
-	 private double Intake_Hatch_Floor_Position = 1;
-	 private double Intake_Hatch_Depot_Position = 20;
-	 private double Intake_cargo_Floor_Position = 1;
-	 private double Intake_cargo_Depot_Position = 1;
-	 //Deliver Cargo Bay
-	 private double Deliver_Hatch_Bay_Position = 20;
-	 private double Deliver_Cargo_Bay_Position = 35;
-	 //Deliver Rocket
-	 private double Deliver_Hatch_Rocket_Position1 = 100;
-	 private double Deliver_Hatch_Rocket_Position2 = 450;
-	 private double Deliver_Hatch_Rocket_Position3 = 500;
-	 private double Deliver_Cargo_Rocket_Position1 = 0;
-	 private double Deliver_Cargo_Rocket_Position2 = 250;
-	 private double Deliver_Cargo_Rocket_Position3 = 520;
+	 private double Intake_Hatch_Floor_Position = 160;
+	 private double Intake_Hatch_Depot_Position = 180;
+	 private double Intake_cargo_Floor_Position = 160;
+	 private double Intake_cargo_Depot_Position = 160;
+	 //Deliver To Cargo Bay
+	 private double Deliver_Hatch_Bay_Position = 180;
+	 private double Deliver_Cargo_Bay_Position = 195;
+	 //Deliver To Rocket
+	 private double Deliver_Hatch_Rocket_Position1 = 260;
+	 private double Deliver_Hatch_Rocket_Position2 = 560;
+	 private double Deliver_Hatch_Rocket_Position3 = 700;
+	 private double Deliver_Cargo_Rocket_Position1 = 160;
+	 private double Deliver_Cargo_Rocket_Position2 = 410;
+	 private double Deliver_Cargo_Rocket_Position3 = 710;
 
-   private double maxHeight = 550;
-   private double minHeight = 0;
+   private double maxHeight = 720;
+   private double minHeight = 160;
+   private double Arm_Monitor_Zone_Start = 580;
 
 	 //***    Getters    */
 	 //home
@@ -104,6 +106,14 @@ public class Elevator_MotionMagic extends Subsystem {
 	 }
 	 public double get_Deliver_Cargo_Rocket_Position3(){
 		return Deliver_Cargo_Rocket_Position3;
+	 }
+
+	 public double get_MaxHeight(){
+		 return maxHeight;
+	 }
+
+	 public double get_minHeight(){
+		 return minHeight;
 	 }
 	 
 	/********************************
@@ -194,12 +204,20 @@ public class Elevator_MotionMagic extends Subsystem {
 		_talon.configMotionCruiseVelocity(20, Constants.kTimeoutMs);
     _talon.configMotionAcceleration(20, Constants.kTimeoutMs);
     
-    // put all Talon SRX into brake mode
-		_talon.setNeutralMode(NeutralMode.Brake);
 			
-				/* Zero the sensor */
-    _talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-    _talon.configClearPositionOnLimitR(true, Constants.kTimeoutMs);
+		/* Zero the sensor */
+		//_talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+		_talon.configFeedbackNotContinuous(true, Constants.kTimeoutMs);
+		//_talon.configClearPositionOnLimitR(true, Constants.kTimeoutMs);
+
+		/* Configure Current Limits */
+		_talon.configPeakCurrentLimit(30);
+    _talon.configPeakCurrentDuration(150);
+    _talon.configContinuousCurrentLimit(20);
+
+     // put all Talon SRX into brake mode
+		_talon.setNeutralMode(NeutralMode.Brake);
+
   }
 
   public void init() {
@@ -242,19 +260,9 @@ public class Elevator_MotionMagic extends Subsystem {
   }
 
   public void periodic() {
-       
-    /*
-    m_Left_FWD_LimitSwitch = my_get_LEFT_FWD_LimitSwitch();
-    m_Left_REV_LimitSwitch = my_get_LEFT_REV_LimitSwitch();
-    m_Right_FWD_LimitSwitch = my_get_RIGHT_FWD_LimitSwitch();
-    m_Right_REV_LimitSwitch = my_get_RIGHT_REV_LimitSwitch();
-    
-    diagnostics();
-    
-    if(m_DebugThisSubsystem) {
-      debug();
-    }
-    */
+
+	SmartDashboard.putNumber("Elevaltor Height", get_My_CurrentRAW_Postion() );
+  
   }
 
   //Set the PID Profile Slot
@@ -286,11 +294,32 @@ public class Elevator_MotionMagic extends Subsystem {
     }
 
     public void my_ScissorMotionMagic(double height) {
-    	double m_targetEncoderValue = clampEncoderValue(height);
-    	//double m_targetEncoderValue = height;
 
-    	_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
-  
+		double m_targetEncoderValue = clampEncoderValue(height);
+		
+		//Stop Up
+		if((m_targetEncoderValue > Arm_Monitor_Zone_Start) &&
+			(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
+			if((get_My_CurrentRAW_Postion() > Arm_Monitor_Zone_Start)){
+				_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
+			}else {
+				my_ElevatorStop();
+			}
+		//Stop Down
+		}else if((get_My_CurrentRAW_Postion() >  Arm_Monitor_Zone_Start) &&
+			(m_targetEncoderValue < Arm_Monitor_Zone_Start) &&
+			(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
+
+				if((m_targetEncoderValue > Arm_Monitor_Zone_Start)){
+					_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
+				}else {
+					my_ElevatorStop();
+				}
+
+		}else{
+			_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
+		}
+
     }
     
     private double clampEncoderValue(double value) {
@@ -301,179 +330,20 @@ public class Elevator_MotionMagic extends Subsystem {
       }else{
         return value;
       }
-      /*
-      double rotatinToEncoder_Limit = 21.5*4096; // 18*4096 for 5/8 lead Screw,, 21.5*4096 for 1/2 lead Screw
-    	if(value > rotatinToEncoder_Limit) { //18 Rev at 4096 counts/rev
-    		DriverStation.reportError("Scissor m_targetEncoderValue. Out of range MAX: " + value  + ">" + rotatinToEncoder_Limit, false);
-    		return rotatinToEncoder_Limit
-    				;
-    	}else if(value<0){
-    		DriverStation.reportError("Scissor m_targetEncoderValue. Out of range MIN: " + value  + "<" + 0, false);
-    		return 0;
-    	}else {
-    		
-    		return value;
-      }
-      */
+     
      
     }
 
-    
-    // public void my_jog_Left_Down_Motor() {
-    // 	m_talons[kMotorLeft].set(ControlMode.PercentOutput, -0.1);
-    // }
-    // public void my_Jog_Right_Down_Motor() {
-    // 	m_talons[kMotorRight].set(ControlMode.PercentOutput, -0.1);
-    // }
     
     public void my_ElevatorStop() {
      	_talon.set(ControlMode.PercentOutput, 0.0);
      
     }
    
-    // //************ Get Encoders ************
-    // public double my_get_LEFT_Raw_Encoder() {
-    // 	return m_talons[kMotorLeft].getSelectedSensorPosition(0);
-    // }
-    // public double my_get_RIGHT_Raw_Encoder() {
-    // 	return m_talons[kMotorRight].getSelectedSensorPosition(0);
-    // }
-    
-    // public double my_get_Current_Height() {
-    // 	return ((my_get_LEFT_Raw_Encoder() + my_get_RIGHT_Raw_Encoder()) / 2) / m_convertion;
-    // }
-    
-    // //************ Get Limit Switches
-    // public boolean my_get_LEFT_FWD_LimitSwitch() {
-    // 	return m_talons[kMotorLeft].getSensorCollection().isFwdLimitSwitchClosed();
-    // }
-    // public boolean my_get_LEFT_REV_LimitSwitch() {
-    // 	return m_talons[kMotorLeft].getSensorCollection().isRevLimitSwitchClosed();
-    // }
-    // public boolean my_get_RIGHT_FWD_LimitSwitch() {
-    // 	return m_talons[kMotorRight].getSensorCollection().isFwdLimitSwitchClosed();
-    // }
-    // public boolean my_get_RIGHT_REV_LimitSwitch() {
-    // 	return m_talons[kMotorRight].getSensorCollection().isRevLimitSwitchClosed();
-    // }
-    
-    // public void my_zeroEncoders() {
-    // 	int talonIndex = 0;
-    // 	/* zero the sensor */
-		// for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-		// 	m_talons[talonIndex].setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-		// }
-    // }
-    
-    // public void my_referenc_Encoders_to_LimitSwitch() {
-    // 	int homeDir = -1;
-    // 	double homeSpeed = .1;
-    // 	double syncError;
-    	
-    // 	if(Robot.oi.launchPad.getRawButton(11)){
-    // 		homeSpeed = .7;
-    // 	}else {
-    // 		homeSpeed = .3;
-    // 	}
-    	
-    // 	syncError = my_get_LEFT_Raw_Encoder() - my_get_RIGHT_Raw_Encoder();
-    // 	System.out.println("syncError= " + syncError);
-   
-    // 	if(!m_Left_REV_LimitSwitch) {
-    // 		m_talons[kMotorLeft].set(ControlMode.PercentOutput, (homeSpeed)*homeDir);
-    // 	}else {
-    // 		m_talons[kMotorLeft].set(ControlMode.PercentOutput,0.0);
-    // 	}
-    	
-    // 	if(!m_Right_REV_LimitSwitch) {
-    // 		m_talons[kMotorRight].set(ControlMode.PercentOutput, (homeSpeed)*homeDir);
-    // 	}else {
-    // 		m_talons[kMotorRight].set(ControlMode.PercentOutput,0.0);
-    // 	}
-    // }
-    
-    // public void my_reference_Encoders_off_LimitSwitch() {
-    // 		m_talons[kMotorLeft].set(ControlMode.MotionMagic, 1024);
-    // 		m_talons[kMotorRight].set(ControlMode.MotionMagic, 1024);
-    // }
-    
-    // public boolean onTarget() {
-    // 	double window_Hi = m_targetEncoderValue + (m_Tolerance*m_encoderUnitsPerRev);
-    // 	double window_Low = m_targetEncoderValue - (m_Tolerance*m_encoderUnitsPerRev);
-    // 	double currentPos = (my_get_LEFT_Raw_Encoder()+my_get_RIGHT_Raw_Encoder())/2;
-    	
-    // 	if(currentPos > window_Low && currentPos < window_Hi) {
-    // 		return true;
-    // 	}else {
-    // 		return false;
-    // 	}	
-    // }
-    
-    // public boolean getOvertraveles() {
-    // 	if(m_Left_FWD_LimitSwitch || m_Left_REV_LimitSwitch || m_Right_FWD_LimitSwitch || m_Right_REV_LimitSwitch) {
-    // 		return true;
-    // 	}else {
-    // 		return false;
-    // 	}
-    // }
-    
-    // boolean report_ONS[] = new boolean[4];
-    
-    // public void diagnostics() {
-    	
-    	
-    // 	if(m_Left_FWD_LimitSwitch) {
-    // 		if(!report_ONS[0]) {
-    // 			DriverStation.reportError("Scissor Left FWD Limit Switch activated ", false);
-    // 			report_ONS[0] = true;
-    // 		}
-    // 	}else {
-    // 		report_ONS[0] = false;
-    // 	}
-    	
-    // 	if(m_Left_REV_LimitSwitch) {
-    // 		if(!report_ONS[1]) {
-    // 			DriverStation.reportError("Scissor Left REV Limit Switch activated ", false);
-    // 			report_ONS[1] = true;
-    // 		}
-    // 	}else {
-    // 		report_ONS[1] = false;
-    // 	}
-    	
-    // 	if(m_Right_FWD_LimitSwitch) {
-    // 		if(!report_ONS[2]) {
-    // 			DriverStation.reportError("Scissor Right FWD Limit Switch activated ", false);
-    // 			report_ONS[2] = true;
-    // 		}
-    // 	}else {
-    // 		report_ONS[2] = false;
-    // 	}
-    	
-    // 	if(m_Right_REV_LimitSwitch) {
-    // 		if(!report_ONS[3]) {
-    // 			DriverStation.reportError("Scissor Right REV Limit Switch activated ", false);
-    // 			report_ONS[3] = true;
-    // 		}
-    // 	}else {
-    // 		report_ONS[3] = false;
-    // 	}
-    // }
-    
-    // private void debug() {
-    // 	SmartDashboard.putNumber("TargetPos", 			m_targetEncoderValue);
-    // 	SmartDashboard.putNumber("AccPos kMotorLeft", 	my_get_LEFT_Raw_Encoder());
-    // 	SmartDashboard.putNumber("AccPos kMotorRight", 	my_get_RIGHT_Raw_Encoder());
-    	
-    // 	double rawEncioder_window_Hi 	= 		m_targetEncoderValue 		+ 	(m_Tolerance*m_encoderUnitsPerRev);
-    // 	double rawEncioder_window_Low 	= 		m_targetEncoderValue 		- 	(m_Tolerance*m_encoderUnitsPerRev);
-    // 	double currentRawEncoderPos 	= 		(my_get_LEFT_Raw_Encoder() 	+ 	my_get_RIGHT_Raw_Encoder()) / 2;
-    	
-    // 	SmartDashboard.putNumber("Current Pos: ", 	currentRawEncoderPos / (m_convertion));
-    // 	SmartDashboard.putNumber("Window Hi", 		rawEncioder_window_Hi / (m_convertion));
-    // 	SmartDashboard.putNumber("window Low", 		rawEncioder_window_Low / (m_convertion));
-    	
-    // 	SmartDashboard.putString("Motor Left ControlMode", 		m_talons[kMotorLeft].getControlMode().toString());
-    // 	SmartDashboard.putString("Motor Right ControlMode", 	m_talons[kMotorRight].getControlMode().toString());
-    // }
+	public double get_My_CurrentRAW_Postion(){
+		return _talon.getSelectedSensorPosition(0);
+	}
+     
+
     
 }

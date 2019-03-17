@@ -661,11 +661,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
 		}else{
-			if(Math.abs(rotation)<.75){
+			if(Math.abs(rotation)<.45){
 				if(rotation<0){
-					rotation = -.25;
+					rotation = -.175;
 				}else{
-					rotation = .25;
+					rotation = .175;
 				}
 				
 			}else{
@@ -773,4 +773,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 		//m_talons[1].set(m_closedLoopMode2018, m_wheelSpeeds[1]);
 
 	}
+	 public boolean get_my_Gyro_IsReady(){
+		if(_pidgey.getState().value == 2){
+			return true;
+		}else{
+			return false;
+		}
+	 }
 }

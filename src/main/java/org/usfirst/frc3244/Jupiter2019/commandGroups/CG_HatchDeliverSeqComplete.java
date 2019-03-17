@@ -7,21 +7,21 @@
 
 package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
-import org.usfirst.frc3244.Jupiter2019.commands.Retract;
-import org.usfirst.frc3244.Jupiter2019.commands.Ungrip;
-import org.usfirst.frc3244.Jupiter2019.commands.myDelay;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Retract;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Ungrip;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 
 public class CG_HatchDeliverSeqComplete extends CommandGroup {
   /**
    * Add your docs here.
    */
   public CG_HatchDeliverSeqComplete() {
-   addSequential(new Ungrip());
+   addSequential(new HatchGripper_Ungrip());
 
-   addSequential(new myDelay(.5));
+   addSequential(new WaitCommand(.5));
 
-   addSequential(new Retract());
+   addSequential(new HatchGripper_Retract());
   }
 }

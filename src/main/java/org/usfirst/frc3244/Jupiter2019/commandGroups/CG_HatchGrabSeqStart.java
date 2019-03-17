@@ -7,10 +7,9 @@
 
 package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
-import org.usfirst.frc3244.Jupiter2019.commands.Extend;
-import org.usfirst.frc3244.Jupiter2019.commands.Grip;
-import org.usfirst.frc3244.Jupiter2019.commands.Ungrip;
-import org.usfirst.frc3244.Jupiter2019.commands.myDelay;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Extend;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Grip;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Ungrip;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
@@ -21,11 +20,11 @@ public class CG_HatchGrabSeqStart extends CommandGroup {
    */
   public CG_HatchGrabSeqStart() {
 
-    addSequential(new Ungrip());
+    addSequential(new HatchGripper_Ungrip());
 
-    addSequential(new myDelay(.2));
+    addSequential(new WaitCommand(.1));
 
-    addSequential(new Extend());
+    addSequential(new HatchGripper_Extend());
 
   }
 }

@@ -7,19 +7,21 @@
 
 package org.usfirst.frc3244.Jupiter2019.commands;
 
-import edu.wpi.first.wpilibj.command.TimedCommand;
+import org.usfirst.frc3244.Jupiter2019.Robot;
 
-/**
- * Add your docs here.
- */
-public class myDelay extends TimedCommand {
-  /**
-   * Add your docs here.
-   */
-  public myDelay(double timeout) {
-    super(timeout);
+import edu.wpi.first.wpilibj.command.Command;
+
+public class Elevator_Jog_MotoinMagic extends Command {
+
+  private double m_Setpoint;
+	private boolean m_continueToServo;
+  
+  
+  public Elevator_Jog_MotoinMagic(boolean continueTOServo) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    requires(Robot.elevator_MM);
+    m_continueToServo = continueTOServo;
   }
 
   // Called just before this Command runs the first time
@@ -30,16 +32,33 @@ public class myDelay extends TimedCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    double joystick = Robot.oi.co_Driver_Right_AxisY();
+    	
+    	if(joystick>0) {
+    		m_Setpoint = Robot.elevator_MM.get_MaxHeight();
+    	}else {
+    		m_Setpoint = Robot.elevator_MM.get_minHeight();
+    	}
+    	
+    	Robot.elevator_MM.my_ScissorMotionMagic(m_Setpoint);
   }
 
-  // Called once after timeout
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  protected boolean isFinished() {
+    return false;
+  }
+
+  // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.elevator_MM.my_ElevatorStop();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    end();
   }
 }
