@@ -61,8 +61,11 @@ public class Elevator_MotionMagic extends Subsystem {
 
    private double maxHeight = 720;
    private double minHeight = 160;
-   private double Arm_Monitor_Zone_Bottom = 200;
    private double Arm_Monitor_Zone_Top = 580;
+   private double Arm_Monitor_Zone_Top_OVERRIDE_UP = 540;
+   private double Arm_Monitor_Zone_Bottom_OVERRIDE_DOWN = 250;
+   private double Arm_Monitor_Zone_Bottom = 200;
+   
 
 	 //***    Getters    */
 	 //home
@@ -219,6 +222,8 @@ public class Elevator_MotionMagic extends Subsystem {
      // put all Talon SRX into brake mode
 		_talon.setNeutralMode(NeutralMode.Brake);
 
+		
+
   }
 
   public void init() {
@@ -233,9 +238,9 @@ public class Elevator_MotionMagic extends Subsystem {
   }
   
   public void setPIDF_UP() {
-    double elevatorkP = 1.7;///RobotPreferences.getelevatorkP();
-    double elevatorkI = 0.0;//RobotPreferences.getelevatorkI();
-    double elevatorkD = 0.0;//RobotPreferences.getelevatorkD();
+    double elevatorkP = 4.5;// 3/17 = 1.7///RobotPreferences.getelevatorkP();
+    double elevatorkI = 0.003;//RobotPreferences.getelevatorkI();
+    double elevatorkD = 1.0;//RobotPreferences.getelevatorkD();
     double elevatorkF = 46.2;//RobotPreferences.getelevatorkF();
   
    /* Set Motion Magic gains in slot0 - see documentation */
@@ -244,6 +249,10 @@ public class Elevator_MotionMagic extends Subsystem {
 		_talon.config_kP(Constants.kSlotIdx, elevatorkP, Constants.kTimeoutMs);//Constants.kGains.kP, Constants.kTimeoutMs);
 		_talon.config_kI(Constants.kSlotIdx, elevatorkI, Constants.kTimeoutMs);//Constants.kGains.kI, Constants.kTimeoutMs);
 		_talon.config_kD(Constants.kSlotIdx, elevatorkD, Constants.kTimeoutMs);//Constants.kGains.kD, Constants.kTimeoutMs);
+
+		// new PIDF Setups
+		_talon.config_IntegralZone(Constants.kSlotIdx, 30);
+		//_talon.setIntegralAccumulator(20, Constants.kSlotIdx, Constants.kTimeoutMs);
   }
 
   public void setPIDF_DWN() {
@@ -266,70 +275,43 @@ public class Elevator_MotionMagic extends Subsystem {
   
   }
 
-  //Set the PID Profile Slot
-    /**
-     * 
-     * @param isClimb
-     */
-    public void my_set_ControlProfile(boolean isClimb) {
-    	int talonIndex;
-    	/*
-    	if(isClimb) {
-    		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-    			m_talons[talonIndex].selectProfileSlot(1, 0);
-    		}
-    		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-    			m_talons[talonIndex].configMotionCruiseVelocity(m_CruiseVelocityClimb, Constants.kTimeoutMs);
-    			m_talons[talonIndex].configMotionAcceleration(m_AccelerationClimb, Constants.kTimeoutMs);
-    		}
-    	}else {
-    		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-    			m_talons[talonIndex].selectProfileSlot(0, 0);
-    		}
-    		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-    			m_talons[talonIndex].configMotionCruiseVelocity(m_CruiseVelocity, Constants.kTimeoutMs);
-    			m_talons[talonIndex].configMotionAcceleration(m_Acceleration, Constants.kTimeoutMs);
-    		}
-      }
-      */
-    }
-
     public void my_ScissorMotionMagic(double height) {
 
 		double m_targetEncoderValue = clampEncoderValue(height);
-		
-		if((get_My_CurrentRAW_Postion() <  Arm_Monitor_Zone_Top) &&
-		 (get_My_CurrentRAW_Postion() >  Arm_Monitor_Zone_Bottom) && 
-		 (!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
-			my_ElevatorStop();
+		double currentPOS = get_My_CurrentRAW_Postion();
+		//Is Elevator in the arm monitor zone?
+		if((currentPOS < Arm_Monitor_Zone_Top) &&
+		 	(currentPOS > Arm_Monitor_Zone_Bottom) && 
+		 	(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
+
+				// Is the elevator above the zone and target in above too?
+				if((currentPOS > Arm_Monitor_Zone_Top_OVERRIDE_UP) &&
+				(m_targetEncoderValue > Arm_Monitor_Zone_Top)){
+
+					my_SetMotor_Taget_MM(m_targetEncoderValue);
+
+				// Is the elevator Below the zone and target in below too?
+				}else if((currentPOS < Arm_Monitor_Zone_Bottom_OVERRIDE_DOWN) &&
+				(m_targetEncoderValue < Arm_Monitor_Zone_Bottom)){
+
+					my_SetMotor_Taget_MM(m_targetEncoderValue);
+
+				// Stop Motoin!!!!!!!!!!!!!!!
+				}else{
+
+					my_ElevatorStop();
+
+				}
+			
+		 }else{
+			my_SetMotor_Taget_MM(m_targetEncoderValue);
 		 }
 
-
-
-		//Stop Up
-		if((m_targetEncoderValue > Arm_Monitor_Zone_Bottom) &&
-			(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
-			if((get_My_CurrentRAW_Postion() > Arm_Monitor_Zone_Top)){
-				_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
-			}else {
-				my_ElevatorStop();
-			}
-		//Stop Down
-		}else if((get_My_CurrentRAW_Postion() >  Arm_Monitor_Zone_Top) &&
-			(m_targetEncoderValue < Arm_Monitor_Zone_Top) &&
-			(!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
-
-				if((m_targetEncoderValue > Arm_Monitor_Zone_Top)){
-					_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
-				}else {
-					my_ElevatorStop();
-				}
-
-		}else{
-			_talon.set(ControlMode.MotionMagic, m_targetEncoderValue);
-		}
-
-    }
+	}
+	
+	private void my_SetMotor_Taget_MM(double setpoint){
+		_talon.set(ControlMode.MotionMagic, setpoint);
+	}
     
     private double clampEncoderValue(double value) {
       if(value > maxHeight){
@@ -364,6 +346,9 @@ public class Elevator_MotionMagic extends Subsystem {
 		}else{
 			return false;
 		}
+	}
+	public double get_Arm_Clear_Window_TOP() {
+		return Arm_Monitor_Zone_Top;
 	}
     
 }

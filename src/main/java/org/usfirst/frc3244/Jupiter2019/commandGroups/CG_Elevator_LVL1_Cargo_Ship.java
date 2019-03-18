@@ -13,11 +13,11 @@ import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class CG_Elevator_LVL3_Hatch extends CommandGroup {
+public class CG_Elevator_LVL1_Cargo_Ship extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public CG_Elevator_LVL3_Hatch() {
+  public CG_Elevator_LVL1_Cargo_Ship() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -35,10 +35,7 @@ public class CG_Elevator_LVL3_Hatch extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addParallel(new CG_Elevator_LVL3_Arm_Swing());
-    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position3(),false));
-    //addSequential(new Arm_To_Setpoint(Robot.arm_MM.HATCH_PLACE_ROCKET_LVL3));
+    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Bay_Position(),false));
+    addSequential(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_CARGOBAY),4);
   }
-
-  
 }

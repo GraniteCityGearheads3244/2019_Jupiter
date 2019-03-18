@@ -391,14 +391,13 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void setFieldOrientedDrive(boolean enable){
 		
 			m_fieldOrientedDrive = enable;
-			SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
+			//SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
 			
 	}
 	
 	public void toggleFieldOrientedDrive() {
 		m_fieldOrientedDrive = !m_fieldOrientedDrive;
-		SmartDashboard.putBoolean("Field Oriented Drive",
-				m_fieldOrientedDrive);
+		//SmartDashboard.putBoolean("Field Oriented Drive",	m_fieldOrientedDrive);
 	}
 
 	public void setClosedLoopMode() {
@@ -551,8 +550,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double tempMagnitude;
 		double maxMagnitude;
 
-		SmartDashboard.putNumber("a_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-		SmartDashboard.putNumber("a_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
+		//SmartDashboard.putNumber("a_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+		//SmartDashboard.putNumber("a_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
 		// find maxMagnitude
 		maxMagnitude = Math.abs(m_wheelSpeeds[0]);
 		for (i = 1; i < kMaxNumberOfMotors; i++) {
@@ -562,7 +561,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 			}
 		}
 
-		SmartDashboard.putNumber("maxMagnitude", maxMagnitude);
+		//SmartDashboard.putNumber("maxMagnitude", maxMagnitude);
 		// if any wheel has a magnitude greater than 1.0, reduce all to fit in
 		// range
 		if (maxMagnitude > 1.0) {
@@ -570,20 +569,20 @@ public class DriveTrain_1519_MM extends Subsystem {
 				m_wheelSpeeds[i] = m_wheelSpeeds[i] / maxMagnitude;
 			}
 		}
-		SmartDashboard.putNumber("b_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-		SmartDashboard.putNumber("b_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
+		//SmartDashboard.putNumber("b_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+		//SmartDashboard.putNumber("b_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
 		// if in closedLoopMode, scale wheels to be speeds, rather than power
 		// percentage
 		if (m_closedLoopMode) {
 			for (i = 0; i < kMaxNumberOfMotors; i++) {
-				SmartDashboard.putNumber("c_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-				SmartDashboard.putNumber("c_wheelSpeeds[krigt]", m_wheelSpeeds[kRight]);
+				//SmartDashboard.putNumber("c_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+				//SmartDashboard.putNumber("c_wheelSpeeds[krigt]", m_wheelSpeeds[kRight]);
 				/* Speed mode */
 				/* 4096 Units/Rev * 500 RPM / 600 100ms/min in either direction: velocity setpoint is in units/100ms */
 				m_wheelSpeeds[i] = m_wheelSpeeds[i] * m_maxWheelSpeed_Current * m_encoderUnitsPerRev / 600;
-				SmartDashboard.putNumber("m_maxWheelSpeed_Current", m_maxWheelSpeed_Current);
-				SmartDashboard.putNumber("d_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-				SmartDashboard.putNumber("d_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
+				//SmartDashboard.putNumber("m_maxWheelSpeed_Current", m_maxWheelSpeed_Current);
+				//SmartDashboard.putNumber("d_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+				//SmartDashboard.putNumber("d_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
 			}
 		}
 	}
@@ -642,7 +641,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		if(!IMU_Connected){
 			m_preserveHeading_Enable = false;
 			m_fieldOrientedDrive = false;
-			SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
+			//SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
 			if(!reportERROR_ONS){
 				DriverStation.reportError("Lost Gyro - Forcing Robot Oriantated " + "\n", false);
 				reportERROR_ONS = true;
@@ -764,8 +763,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		// want to do all the sets immediately after one another to minimize
 		// delay between commands
 		// set all Talon SRX encoder values to zero
-		SmartDashboard.putNumber("Left talon", m_wheelSpeeds[kLeft]);
-		SmartDashboard.putNumber("Right talon", m_wheelSpeeds[kRight]);
+		//SmartDashboard.putNumber("Left talon", m_wheelSpeeds[kLeft]);
+		//SmartDashboard.putNumber("Right talon", m_wheelSpeeds[kRight]);
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
 			m_talons[talonIndex].set(m_closedLoopMode2018, m_wheelSpeeds[talonIndex]);		
 		}

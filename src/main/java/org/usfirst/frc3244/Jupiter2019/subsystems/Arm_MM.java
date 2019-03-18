@@ -25,28 +25,32 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Arm_MM extends Subsystem {
 
-	public double STOWED = 16.5;
+	public double STOWED = 7;
 
   public double CARGO_PICK_DEPOT = 100;
-	public double CARGO_PICK_FLOOR = 660;
-	public double HATCH_PICK_FLOOR = 16.5;
-	public double HATCH_PICK_DEPOT = 20;
+	public double CARGO_PICK_FLOOR = 675;
+	public double HATCH_PICK_FLOOR = 7;
+	public double HATCH_PICK_DEPOT = 7;
 
+	// BALLS
 	public double CARGO_PLACE_CARGOBAY = 30;
 	public double CARGO_PLACE_ROCKET_LVL1 = 330;
-	public double CARGO_PLACE_ROCKET_LVL2 = 200; //
-	public double CARGO_PLACE_ROCKET_LVL3 = 200; //
+	public double CARGO_PLACE_ROCKET_LVL2 = 10; //
+	public double CARGO_PLACE_ROCKET_LVL3 = 10; //
 
+	// HATCH PANLES
 	public double HATCH_PLACE_CARGOBAY = 20;
 	public double HATCH_PLACE_ROCKET_LVL1 = 16.5;
 	public double HATCH_PLACE_ROCKET_LVL2 = 16.5;
 	public double HATCH_PLACE_ROCKET_LVL3 = 520;
 
-  private double m_ARM_0_DEG = 16.5;
-  private double m_ARM_90_DEG = 700;
-  private double maxSetPoint = 635;
-	private double minSetPoint = 16.5;
-	private double ARM_CLEAR_ELEVATOR = 400;
+  private double m_ARM_0_DEG = 10;
+  private double m_ARM_90_DEG = 615;
+  private double maxSetPoint = 675;
+	private double minSetPoint = 10;
+	private double ARM_CLEAR_ELEVATOR = 390;  //Any position Less then is ok for full Elevator Travle
+
+	private int CRUISE_VELOCITY = 100;
   
   /* Hardware */
   TalonSRX _talon = new TalonSRX(5);
@@ -86,8 +90,8 @@ public class Arm_MM extends Subsystem {
 		_talon.config_kD(Constants.kSlotIdx, 70.0, Constants.kTimeoutMs);//Constants.kGains.kD, Constants.kTimeoutMs);
 
 		/* Set acceleration and vcruise velocity - see documentation */
-		_talon.configMotionCruiseVelocity(100, Constants.kTimeoutMs);
-		_talon.configMotionAcceleration(100, Constants.kTimeoutMs);
+		_talon.configMotionCruiseVelocity(CRUISE_VELOCITY, Constants.kTimeoutMs);
+		_talon.configMotionAcceleration(75, Constants.kTimeoutMs);
 
 		/* Zero the sensor */
 		//_talon.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
@@ -209,5 +213,24 @@ public class Arm_MM extends Subsystem {
 
 	public void diagnostics() {
 
+	}
+
+
+	public double get_MaxHeight() {
+		return maxSetPoint;
+	}
+
+	public double get_minHeight() {
+		return minSetPoint;
+	}
+
+	public int get_my_CRUISE_VELOCITY(){
+		return CRUISE_VELOCITY;
+	}
+
+
+	//Need to test this more
+	private void set_my_CruiseVelocity(int cruiseVelocity) {
+		_talon.configMotionCruiseVelocity(cruiseVelocity, Constants.kTimeoutMs);
 	}
 }

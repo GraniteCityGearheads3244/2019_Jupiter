@@ -9,6 +9,7 @@ package org.usfirst.frc3244.Jupiter2019.commands;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Elevator_Jog_MotoinMagic extends Command {
@@ -27,6 +28,9 @@ public class Elevator_Jog_MotoinMagic extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    if(Robot.DIVERSTATION_REPORTS_ENABLED){
+      DriverStation.reportError("Elevator Jog Target = ", false);
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -53,12 +57,14 @@ public class Elevator_Jog_MotoinMagic extends Command {
   @Override
   protected void end() {
     Robot.elevator_MM.my_ElevatorStop();
+    DriverStation.reportWarning("Elevator Jog End()", false);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    Robot.elevator_MM.my_ElevatorStop();
     end();
   }
 }
