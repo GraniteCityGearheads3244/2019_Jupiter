@@ -37,14 +37,30 @@ public class Elevator_Jog_MotoinMagic extends Command {
   @Override
   protected void execute() {
     double joystick = Robot.oi.co_Driver_Right_AxisY();
-    	
-    	if(joystick>0) {
-    		m_Setpoint = Robot.elevator_MM.get_MaxHeight();
-    	}else {
-    		m_Setpoint = Robot.elevator_MM.get_minHeight();
-    	}
+    m_Setpoint = get_Jog_Setpoint(joystick);	
+
+    	//if(joystick>0) {
+    	//m_Setpoint = Robot.elevator_MM.get_MaxHeight();
+    	//}else {
+    	//	m_Setpoint = Robot.elevator_MM.get_minHeight();
+    	//}
     	
     	Robot.elevator_MM.my_ScissorMotionMagic(m_Setpoint);
+  }
+
+  private double get_Jog_Setpoint(double setpoint){
+   
+    double maxStep = 50;  
+
+    m_Setpoint = (Robot.elevator_MM.get_My_CurrentRAW_Postion() + (setpoint * maxStep));
+    
+    if(m_Setpoint > Robot.elevator_MM.get_MaxHeight( )){
+      return  Robot.elevator_MM.get_MaxHeight( );
+    }else if(m_Setpoint < Robot.elevator_MM.get_minHeight( )){
+      return Robot.elevator_MM.get_minHeight( );
+    }else{
+      return m_Setpoint;
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()

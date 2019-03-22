@@ -22,6 +22,7 @@ import com.ctre.phoenix.motorcontrol.*;
 
 import org.usfirst.frc3244.Jupiter2019.Constants;
 import org.usfirst.frc3244.Jupiter2019.Robot;
+import org.usfirst.frc3244.Jupiter2019.commands.Drive_With_Joysticks;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -248,6 +249,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new Command());
+		setDefaultCommand(new Drive_With_Joysticks());
+	}
+
+	public void periodic() {
+		
 	}
 
 	public boolean my_GetIsCurrentGearHigh(){
@@ -707,6 +713,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 				SmartDashboard.putNumber("MaintainHeaading ROtation", rotation);
 			}
 		}
+
+		
 		
 		driveCartesian(yIn, rotation);
 	}
@@ -779,4 +787,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 			return false;
 		}
 	 }
+
+	public void diagnostics() {
+		SmartDashboard.putNumber("Heading", getHeading());
+	}
 }

@@ -205,8 +205,8 @@ public class Elevator_MotionMagic extends Subsystem {
 		_talon.configPeakOutputReverse(-1, Constants.kTimeoutMs);
 
 		/* Set acceleration and vcruise velocity - see documentation */
-		_talon.configMotionCruiseVelocity(20, Constants.kTimeoutMs);
-    _talon.configMotionAcceleration(20, Constants.kTimeoutMs);
+		_talon.configMotionCruiseVelocity(30, Constants.kTimeoutMs);//30, Constants.kTimeoutMs);
+    	_talon.configMotionAcceleration(45, Constants.kTimeoutMs);
     
 			
 		/* Zero the sensor */
@@ -216,8 +216,8 @@ public class Elevator_MotionMagic extends Subsystem {
 
 		/* Configure Current Limits */
 		_talon.configPeakCurrentLimit(30);
-    _talon.configPeakCurrentDuration(150);
-    _talon.configContinuousCurrentLimit(20);
+    	_talon.configPeakCurrentDuration(150);
+    	_talon.configContinuousCurrentLimit(20);
 
      // put all Talon SRX into brake mode
 		_talon.setNeutralMode(NeutralMode.Brake);
@@ -238,10 +238,10 @@ public class Elevator_MotionMagic extends Subsystem {
   }
   
   public void setPIDF_UP() {
-    double elevatorkP = 4.5;// 3/17 = 1.7///RobotPreferences.getelevatorkP();
+    double elevatorkP = 4.7;// 3/17 = 1.7///RobotPreferences.getelevatorkP();
     double elevatorkI = 0.003;//RobotPreferences.getelevatorkI();
-    double elevatorkD = 1.0;//RobotPreferences.getelevatorkD();
-    double elevatorkF = 46.2;//RobotPreferences.getelevatorkF();
+    double elevatorkD = 100.0;//RobotPreferences.getelevatorkD();
+    double elevatorkF = 31.96;//RobotPreferences.getelevatorkF();
   
    /* Set Motion Magic gains in slot0 - see documentation */
 		_talon.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
@@ -257,9 +257,9 @@ public class Elevator_MotionMagic extends Subsystem {
 
   public void setPIDF_DWN() {
     double elevatorkP = 1.7;///RobotPreferences.getelevatorkP();
-    double elevatorkI = 0.0;//RobotPreferences.getelevatorkI();
-    double elevatorkD = 0.0;//RobotPreferences.getelevatorkD();
-    double elevatorkF = 46.2;//RobotPreferences.getelevatorkF();
+    double elevatorkI = 0.003;//RobotPreferences.getelevatorkI();
+    double elevatorkD = 100.0;//RobotPreferences.getelevatorkD();
+    double elevatorkF = 31.96;//RobotPreferences.getelevatorkF();
   
    /* Set Motion Magic gains in slot0 - see documentation */
 		_talon.selectProfileSlot(Constants.kSlotIdx, Constants.kPIDLoopIdx);
@@ -304,6 +304,14 @@ public class Elevator_MotionMagic extends Subsystem {
 				}
 			
 		 }else{
+
+			 //This should slow things down when reseting from Pos 3
+			 if((currentPOS > Arm_Monitor_Zone_Top_OVERRIDE_UP) &&
+			 (m_targetEncoderValue < Arm_Monitor_Zone_Top) && 
+		 	 (!Robot.arm_MM.get_IsArm_CLear_For_Elevator())){
+				m_targetEncoderValue = currentPOS;
+			 }
+
 			my_SetMotor_Taget_MM(m_targetEncoderValue);
 		 }
 
@@ -349,6 +357,16 @@ public class Elevator_MotionMagic extends Subsystem {
 	}
 	public double get_Arm_Clear_Window_TOP() {
 		return Arm_Monitor_Zone_Top;
+	}
+
+	public boolean get_IsElevator_CLear_For_Arm(){
+		double currentPOS = get_My_CurrentRAW_Postion();
+		if((currentPOS < Arm_Monitor_Zone_Top) &&
+		 	(currentPOS > Arm_Monitor_Zone_Bottom)){
+			return false;
+		}else{
+			return true;
+		}
 	}
     
 }

@@ -49,8 +49,7 @@ public class Arm_MM extends Subsystem {
   private double maxSetPoint = 675;
 	private double minSetPoint = 10;
 	private double ARM_CLEAR_ELEVATOR = 390;  //Any position Less then is ok for full Elevator Travle
-
-	private int CRUISE_VELOCITY = 100;
+	
   
   /* Hardware */
   TalonSRX _talon = new TalonSRX(5);
@@ -90,7 +89,7 @@ public class Arm_MM extends Subsystem {
 		_talon.config_kD(Constants.kSlotIdx, 70.0, Constants.kTimeoutMs);//Constants.kGains.kD, Constants.kTimeoutMs);
 
 		/* Set acceleration and vcruise velocity - see documentation */
-		_talon.configMotionCruiseVelocity(CRUISE_VELOCITY, Constants.kTimeoutMs);
+		_talon.configMotionCruiseVelocity( 100, Constants.kTimeoutMs);
 		_talon.configMotionAcceleration(75, Constants.kTimeoutMs);
 
 		/* Zero the sensor */
@@ -119,7 +118,8 @@ public class Arm_MM extends Subsystem {
   }
 
   public void periodic() {
-       SmartDashboard.putNumber("Arm Position", get_My_CurrentRAW_Postion());
+			 SmartDashboard.putNumber("Arm Position", get_My_CurrentRAW_Postion());
+			 SmartDashboard.putBoolean("Arm Safe for Elevator", get_IsArm_CLear_For_Elevator());
   }
 
   public void my_Arm_MotionMagic(double setpoint) {
@@ -203,7 +203,7 @@ public class Arm_MM extends Subsystem {
 
 		public boolean get_IsArm_CLear_For_Elevator(){
 			double clearPosition = ARM_CLEAR_ELEVATOR;
-			if(get_My_CurrentRAW_Postion() < clearPosition){
+			if((get_My_CurrentRAW_Postion() < clearPosition) || Robot.oi.launchPad.getRawButton(11)){
 				return true;
 			}else{
 				return false;
@@ -224,13 +224,9 @@ public class Arm_MM extends Subsystem {
 		return minSetPoint;
 	}
 
-	public int get_my_CRUISE_VELOCITY(){
-		return CRUISE_VELOCITY;
+
+	public void set_armToCurrent() {
+		_talon.set(ControlMode.Position, get_My_CurrentRAW_Postion());
 	}
 
-
-	//Need to test this more
-	private void set_my_CruiseVelocity(int cruiseVelocity) {
-		_talon.configMotionCruiseVelocity(cruiseVelocity, Constants.kTimeoutMs);
-	}
 }

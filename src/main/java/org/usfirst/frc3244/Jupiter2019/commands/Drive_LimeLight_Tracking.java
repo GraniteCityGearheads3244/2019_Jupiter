@@ -9,52 +9,48 @@ package org.usfirst.frc3244.Jupiter2019.commands;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import oi.limelightvision.limelight.frc.LimeLight;
+import oi.limelightvision.limelight.frc.ControlMode.LedMode;
 
-public class Arm_Jog_MotionMagic extends Command {
-  
-  private double m_Setpoint;
-  private boolean m_continueToServo;
-  
-  public Arm_Jog_MotionMagic(boolean continueTOServo) {
+public class Drive_LimeLight_Tracking extends Command {
+  private boolean debug = true;
+  public Drive_LimeLight_Tracking() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.arm_MM);
-    m_continueToServo = continueTOServo;
+    requires(Robot.driveTrain_1519_MM);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    if(Robot.DIVERSTATION_REPORTS_ENABLED){
-      DriverStation.reportError("Arm Jog Target = ", false);
-    }
+    Robot.oi.get_my_LimeLight().setLEDMode(LedMode.kforceOn);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-
-    double joystick = Robot.oi.co_Driver_Left_AxisY();
-    double maxStep = 300;  
-    m_Setpoint = (Robot.arm_MM.get_My_CurrentRAW_Postion() + (joystick * maxStep));
-    
-    if(m_Setpoint > Robot.arm_MM.get_MaxHeight( )){
-      m_Setpoint = Robot.arm_MM.get_MaxHeight( );
-    }else if(m_Setpoint < Robot.arm_MM.get_minHeight( )){
-      m_Setpoint = Robot.arm_MM.get_minHeight( );
+    double kp = .01;
+    double yIn = 0.0;
+    double rotation = 0.0;
+    LimeLight limelight = Robot.oi.get_my_LimeLight();
+    if(limelight.getIsTargetFound()){
+      if(debug){
+        SmartDashboard.putBoolean("Target Found", true);
+      }
+      yIn = Robot.oi.driveY();
+      rotation = limelight.getdegRotationToTarget() * kp;
+      Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation);
+    }else{
+      if(debug){
+        SmartDashboard.putBoolean("Target Found", false);
+      }
+      yIn = 0.0;
+      rotation = 0.0;
+      Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation);
     }
-      //if(joystick>0) {
-    	//	m_Setpoint = Robot.arm_MM.get_MaxHeight( ) * joystick;
-    	//}else {
-    	//	m_Setpoint = Robot.arm_MM.get_minHeight();
-    	//}
-      
-      //int cruiseVelocity = (int) Math.abs(joystick) * Robot.arm_MM.get_my_CRUISE_VELOCITY();
-      //Robot.arm_MM.set_my_CruiseVelocity(cruiseVelocity);
-      Robot.arm_MM.my_Arm_MotionMagic(m_Setpoint);
-      
+
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -66,15 +62,14 @@ public class Arm_Jog_MotionMagic extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.arm_MM.my_Arm_Stop();
-    DriverStation.reportWarning("Arm Jog End()", false);
+    //Robot.oi.get_my_LimeLight().setLEDMode(LedMode.kforceOff);
+    Robot.driveTrain_1519_MM.driveTeleop(0.0,0.0);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.arm_MM.my_Arm_Stop();
     end();
   }
 }

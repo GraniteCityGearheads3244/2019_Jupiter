@@ -87,6 +87,7 @@ public class Robot extends TimedRobot {
         //SmartDashboard.putData("Auto mode", chooser);
         SmartDashboard.putData("Elevator Subsystem" ,elevator_MM);
         SmartDashboard.putData("Arm Subsystem", arm_MM);
+        SmartDashboard.putData("Drive Train", driveTrain_1519_MM);
 
 
         //Is there a USB CAMERA???
@@ -152,6 +153,8 @@ public class Robot extends TimedRobot {
 
         driveTrain_1519_MM.clearDesiredHeading();
         driveTrain_1519_MM.set_PreserveHeading(true);// When Testing climb we forget to re-enable
+
+        arm_MM.set_armToCurrent();
     }
 
     boolean autonomousOnce = false;
@@ -183,6 +186,9 @@ public class Robot extends TimedRobot {
 
         driveTrain_1519_MM.clearDesiredHeading();
         driveTrain_1519_MM.set_PreserveHeading(true);// When Testing climb we forget to re-enable
+
+        arm_MM.set_armToCurrent();
+
     }
 
     boolean teleopOnce = false;
@@ -205,11 +211,12 @@ public class Robot extends TimedRobot {
 
     private void robotControl(){
         Scheduler.getInstance().run();
-        driveTrain_1519_MM.driveTeleop(oi.driveY(), oi.driveRotation()*.5); 
+       
         diagnaostics();
     }
 
     private void diagnaostics(){
         arm_MM.diagnostics();
+        driveTrain_1519_MM.diagnostics();
     }
 }
