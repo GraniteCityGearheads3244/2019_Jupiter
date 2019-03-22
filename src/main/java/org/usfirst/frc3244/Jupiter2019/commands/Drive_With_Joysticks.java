@@ -26,7 +26,7 @@ public class Drive_With_Joysticks extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.driveTrain_1519_MM.driveTeleop(Robot.oi.driveY(), Robot.oi.driveRotation()*.5); 
+    Robot.driveTrain_1519_MM.driveTeleop(Robot.oi.driveY(), Robot.oi.driveRotation()); 
   }
 
   // Make this return true when this Command no longer needs to run execute()

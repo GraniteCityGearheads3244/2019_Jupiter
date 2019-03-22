@@ -211,7 +211,6 @@ public class Robot extends TimedRobot {
 
     private void robotControl(){
         Scheduler.getInstance().run();
-       
         diagnaostics();
     }
 

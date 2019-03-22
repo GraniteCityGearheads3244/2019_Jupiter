@@ -127,7 +127,8 @@ public class DriveTrain_1519_MM extends Subsystem {
  	
  	// driving scaling factors
  	private static final double FORWARD_BACKWARD_FACTOR =  1.0;
- 	private static final double ROTATION_FACTOR  = 1.25;
+	 private static final double ROTATION_FACTOR_LOW_GEAR  = 0.75;
+	 private static final double ROTATION_FACTOR_HIGH_GEAR  = 0.5;
  	private static final double  SLOW_FACTOR = 0.35;//0.35; // scaling factor for (normal) "slow mode" .35
  	private static final double CRAWL_INPUT = 0.30; // "crawl" is a gentle control input
  	public static final double ALIGN_SPEED = 0.10;
@@ -656,35 +657,32 @@ public class DriveTrain_1519_MM extends Subsystem {
 		}
 		
 
-		// check to see if forward/back, strife, and rotation are being
+		// check to see if forward/back, and rotation are being
 		// commanded.
 		// values with magnitude < 0.07 are just "centering noise" and set to
 		// 0.0
+		
 		if ((-0.07 < yIn) && (yIn < 0.07)) {
 			yIn = 0.0;
+		}else{
+			yIn = yIn * FORWARD_BACKWARD_FACTOR;
 		}
+
+		// Scall the Rotation Factor
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
 		}else{
-			if(Math.abs(rotation)<.45){
-				if(rotation<0){
-					rotation = -.175;
-				}else{
-					rotation = .175;
-				}
-				
+			rotation = rotation + .15; // .15 is a FeedForward
+			if(my_GetIsCurrentGearHigh()){
+				rotation = rotation * ROTATION_FACTOR_HIGH_GEAR;
 			}else{
-				rotation = rotation * .75;
+				if(rotation < 0.75){
+					rotation = rotation * ROTATION_FACTOR_LOW_GEAR;
+				}else{
+					rotation = rotation;
+				}
 			}
 		}
-
-		// scale inputs to compensate for miss balance of speeds in different
-		// directions
-		//xIn = xIn;// * STRAFE_FACTOR;
-		
-		yIn = yIn * FORWARD_BACKWARD_FACTOR;
-		
-		rotation = rotation * ROTATION_FACTOR;
 
 		// apply "slowFactor" if not in "Turbo Mode"
 		if (!Robot.oi.driveTurboMode() || !m_Craling) {
@@ -714,7 +712,17 @@ public class DriveTrain_1519_MM extends Subsystem {
 			}
 		}
 
-		
+		double elevator_Drivetrain_Limit_Start = Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1();
+		double elevator_Drivetrain_Limit_Full = Robot.elevator_MM.get_MaxHeight();
+		double elevator_CurrentRAW_Position = Robot.elevator_MM.get_My_CurrentRAW_Postion();
+		double full_Choke = .5;
+		// Finaly if the elevator is extended lets slow things down too
+		if(elevator_CurrentRAW_Position > elevator_Drivetrain_Limit_Start && 
+			my_GetIsCurrentGearHigh()){
+			yIn = yIn * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
+				(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * full_Choke) ;
+			rotation = rotation * 0.5;
+		}
 		
 		driveCartesian(yIn, rotation);
 	}
