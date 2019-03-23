@@ -355,6 +355,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void setgyroOffset(double adjustment){
 		// Follow up headingGyro.setAngleAdjustment(adjustment);
 		//headingGyro_BCK.setAngledAdjustimenet(adjustment); // Not available
+		_pidgey.setYaw(adjustment, Constants.kTimeoutMs);
 	}
 	
 	public double getHeading() {

@@ -49,6 +49,8 @@ public class Robot extends TimedRobot {
     public static Hatch_Floor_Pick_MM hatch_Floor_Pick_MM;
     public static PowerDistributionPanel pdp;
     
+
+    public static SendableChooser StartUpChooser;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -96,6 +98,15 @@ public class Robot extends TimedRobot {
 
        
 
+    }
+
+    private void setupStartUpChooser(){
+        StartUpChooser.addDefault("North", 0);
+        StartUpChooser.addObject("South", 180);
+        StartUpChooser.addObject("East", 90);
+        StartUpChooser.addObject("West", -90);
+        StartUpChooser.addObject("Rocket Left", -45);
+        StartUpChooser.addObject("Rocket Right", 45);
     }
 
     /**
@@ -150,6 +161,7 @@ public class Robot extends TimedRobot {
         //autonomousCommand = chooser.getSelected();
         // schedule the autonomous command (example)
         //if (autonomousCommand != null) autonomousCommand.start();
+        driveTrain_1519_MM.setgyroOffset( (Integer) StartUpChooser.getSelected());
 
         driveTrain_1519_MM.clearDesiredHeading();
         driveTrain_1519_MM.set_PreserveHeading(true);// When Testing climb we forget to re-enable
