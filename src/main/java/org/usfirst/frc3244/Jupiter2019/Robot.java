@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Elevator Subsystem" ,elevator_MM);
         SmartDashboard.putData("Arm Subsystem", arm_MM);
         SmartDashboard.putData("Drive Train", driveTrain_1519_MM);
-
+        SmartDashboard.putData("Cargo Intake", cargoIntake);
 
         //Is there a USB CAMERA???
         //CameraServer.getInstance().startAutomaticCapture();

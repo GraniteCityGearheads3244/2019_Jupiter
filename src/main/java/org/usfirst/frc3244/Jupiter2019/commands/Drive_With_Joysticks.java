@@ -8,8 +8,10 @@
 package org.usfirst.frc3244.Jupiter2019.commands;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
+import org.usfirst.frc3244.Jupiter2019.subsystems.Elevator_MotionMagic.GameMode;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive_With_Joysticks extends Command {
   public Drive_With_Joysticks() {
@@ -26,7 +28,16 @@ public class Drive_With_Joysticks extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.driveTrain_1519_MM.driveTeleop(Robot.oi.driveY(), Robot.oi.driveRotation()); 
+    double yIn = Robot.oi.driveY();
+
+    if(Robot.elevator_MM.getCurrent_GameMode() == GameMode.Cargo.value){ 
+    //if(Robot.oi.launchPad.getRawButton(3)){
+      yIn = -yIn;
+    }
+    
+    SmartDashboard.putNumber("Game Mode", Robot.elevator_MM.getCurrent_GameMode());
+    double rotation = Robot.oi.driveRotation();
+    Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation); 
   }
 
   // Make this return true when this Command no longer needs to run execute()

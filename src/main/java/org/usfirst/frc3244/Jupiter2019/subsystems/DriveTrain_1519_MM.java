@@ -715,13 +715,21 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double elevator_Drivetrain_Limit_Start = Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1();
 		double elevator_Drivetrain_Limit_Full = Robot.elevator_MM.get_MaxHeight();
 		double elevator_CurrentRAW_Position = Robot.elevator_MM.get_My_CurrentRAW_Postion();
-		double full_Choke = .5;
-		// Finaly if the elevator is extended lets slow things down too
-		if(elevator_CurrentRAW_Position > elevator_Drivetrain_Limit_Start && 
-			my_GetIsCurrentGearHigh()){
-			yIn = yIn * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
-				(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * full_Choke) ;
-			rotation = rotation * 0.5;
+		double yIn_full_Choke;
+		double rotation_full_Choke;
+		if(my_GetIsCurrentGearHigh()){ 
+			yIn_full_Choke = .75;
+			rotation_full_Choke = .5;
+		}else{
+			yIn_full_Choke = .75;
+			rotation_full_Choke = .5;
+		}
+			// Finaly if the elevator is extended lets slow things down too
+		if(elevator_CurrentRAW_Position > elevator_Drivetrain_Limit_Start){
+			yIn = yIn - (yIn * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
+				(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * yIn_full_Choke)) ;
+			rotation = rotation - (rotation * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
+			(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * rotation_full_Choke)) ;
 		}
 		
 		driveCartesian(yIn, rotation);
