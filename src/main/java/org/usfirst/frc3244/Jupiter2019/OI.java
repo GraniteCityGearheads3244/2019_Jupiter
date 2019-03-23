@@ -86,7 +86,11 @@ public class OI {
     public JoystickAxisButton lt_xBox_Driver;
      
     public JoystickPOVButton povNorth_xBox_Driver;
+    public JoystickPOVButton povNorthEast_xBox_Driver;
+    public JoystickPOVButton povNorthWest_xBox_Driver;
     public JoystickPOVButton povSouth_xBox_Driver;
+    public JoystickPOVButton povSouthEast_xBox_Driver;
+    public JoystickPOVButton povSouthWest_xBox_Driver;
     public JoystickPOVButton povWest_xBox_Driver;
     public JoystickPOVButton povEast_xBox_Driver;
     
@@ -210,16 +214,30 @@ public class OI {
         lt_xBox_Driver.whileHeld(new Cargo_Intake(1));
         
         povNorth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTH);
-        //povNorth_xBox_Driver.whenPressed(new );
+        povNorth_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 0.0f));
 
-        povSouth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTH);
-        //povSouth_xBox_Driver.
-
-        povWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.WEST);
-        //povWest_xBox_Driver.
+        povNorthEast_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTHEAST);
+        povNorthEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 35.0f));
 
         povEast_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.EAST);
-        //povEast_xBox_Driver.
+        povEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 90.0f));
+
+        povSouthEast_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTHEAST);
+        povSouthEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 125.0f));
+
+        povSouth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTH);
+        povSouth_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 179.0f));
+
+        povSouthWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTHWEST);
+        povSouthWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -125.0f));
+
+        povWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.WEST);
+        povWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -90.0f));
+
+        povNorthWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTHWEST);
+        povNorthWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -35.0f));
+
+      
     }
 
     private void setUp_Controler_xBox_CoDriver(){
