@@ -8,36 +8,27 @@
 package org.usfirst.frc3244.Jupiter2019.commands;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
-import org.usfirst.frc3244.Jupiter2019.subsystems.Elevator_MotionMagic.GameMode;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Drive_With_Joysticks extends Command {
-  public Drive_With_Joysticks() {
+public class RGB_Test extends Command {
+  public RGB_Test() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.driveTrain_1519_MM);
+    requires(Robot.rgb_LEDs);
+    setRunWhenDisabled(true);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.rgb_LEDs.set_myRGB("blue1");
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double yIn = Robot.oi.driveY();
-
-    if(Robot.elevator_MM.getCurrent_GameMode() == GameMode.Cargo.value){ 
-    //if(Robot.oi.launchPad.getRawButton(3)){
-      yIn = -yIn;
-    }
     
-    //SmartDashboard.putNumber("Game Mode", Robot.elevator_MM.getCurrent_GameMode());
-    double rotation = Robot.oi.driveRotation();
-    Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation); 
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -49,7 +40,8 @@ public class Drive_With_Joysticks extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.driveTrain_1519_MM.driveTeleop(0,0);
+    Robot.rgb_LEDs.set_myRGB("blue2");
+    
   }
 
   // Called when another command which requires one or more of the same

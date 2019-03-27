@@ -25,7 +25,7 @@ public class DriveToggleShifter extends ConditionalCommand {
     public DriveToggleShifter() {
       //super(new Auto_12_3_1_Deliver_Left_Scale_90_To_Plate(), new Auto_00_Reach_BaseLine());
       //super(new Auto_12_3_1_Deliver_Left_Scale_45_To_Plate(), new Auto_00_Reach_BaseLine());
-      super(new ShiftHigh(), new ShiftLow());
+      super(new Drive_ShiftHigh(), new Drive_ShiftLow());
     }
 
     @Override

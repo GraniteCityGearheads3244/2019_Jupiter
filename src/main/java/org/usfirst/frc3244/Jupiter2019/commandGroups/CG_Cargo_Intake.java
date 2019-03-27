@@ -5,30 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc3244.Jupiter2019.commands;
-
+package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
+import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
+import org.usfirst.frc3244.Jupiter2019.commands.Cargo_Intake;
+import org.usfirst.frc3244.Jupiter2019.subsystems.Arm_MM;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
-/**
- * Add your docs here.
- */
-public class ShiftHigh extends InstantCommand {
+public class CG_Cargo_Intake extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public ShiftHigh() {
-    super();
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-  }
+  public CG_Cargo_Intake() {
 
-  // Called once when the command executes
-  @Override
-  protected void initialize() {
-    Robot.driveTrain_1519_MM.shiftHigh();
+    addParallel(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PICK_FLOOR));
+    addSequential(new Cargo_Intake(1));
   }
-
 }

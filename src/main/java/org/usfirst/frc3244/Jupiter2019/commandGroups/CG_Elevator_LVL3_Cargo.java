@@ -10,7 +10,9 @@ package org.usfirst.frc3244.Jupiter2019.commandGroups;
 import org.usfirst.frc3244.Jupiter2019.Robot;
 import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
 import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
-
+import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPipeline;
+import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPIP;
+import oi.limelightvision.limelight.frc.ControlMode.StreamType;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class CG_Elevator_LVL3_Cargo extends CommandGroup {
@@ -35,7 +37,9 @@ public class CG_Elevator_LVL3_Cargo extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position3(),false));
+    addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
+    addParallel(new LimeLight_SetPipeline(0));
+    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position3(),true));
     addSequential(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_ROCKET_LVL3),4);
   }
 }

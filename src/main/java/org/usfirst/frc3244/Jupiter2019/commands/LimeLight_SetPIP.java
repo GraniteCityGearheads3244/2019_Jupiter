@@ -7,28 +7,33 @@
 
 package org.usfirst.frc3244.Jupiter2019.commands;
 
-
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import oi.limelightvision.limelight.frc.ControlMode.StreamType;
 
 /**
  * Add your docs here.
  */
-public class ShiftLow extends InstantCommand {
+public class LimeLight_SetPIP extends InstantCommand {
   /**
    * Add your docs here.
    */
-  public ShiftLow() {
+
+   private StreamType m_streamType;
+
+  public LimeLight_SetPIP(StreamType streamType) {
     super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    setRunWhenDisabled(true);
+    m_streamType = streamType;
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.driveTrain_1519_MM.shiftLow();
+    Robot.oi.get_my_LimeLight().setStream(m_streamType);;
   }
 
 }

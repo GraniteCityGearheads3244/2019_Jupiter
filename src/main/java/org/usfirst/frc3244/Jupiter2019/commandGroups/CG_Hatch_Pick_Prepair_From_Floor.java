@@ -12,8 +12,11 @@ import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
 import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
 import org.usfirst.frc3244.Jupiter2019.commands.HatchFloor_To_Position_InstandCommand;
 import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Ungrip;
+import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPIP;
+import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPipeline;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import oi.limelightvision.limelight.frc.ControlMode.StreamType;
 
 public class CG_Hatch_Pick_Prepair_From_Floor extends CommandGroup {
   /**
@@ -37,6 +40,8 @@ public class CG_Hatch_Pick_Prepair_From_Floor extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
+    addParallel(new LimeLight_SetPIP(StreamType.kPiPMain));
+    addParallel(new LimeLight_SetPipeline(0));
     addParallel(new HatchGripper_Ungrip());
     addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED),2);
     addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Intake_Hatch_Floor_Position(),false));

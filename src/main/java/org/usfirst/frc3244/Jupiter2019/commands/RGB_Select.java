@@ -5,20 +5,33 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc3244.Jupiter2019.commandGroups;
+package org.usfirst.frc3244.Jupiter2019.commands;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
-import org.usfirst.frc3244.Jupiter2019.commandGroups.PositionMonitor.Elevator_LVL3_Arm_Swing_Monitor;
-import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class CG_Elevator_LVL3_Arm_Swing extends CommandGroup {
+/**
+ * Add your docs here.
+ */
+public class RGB_Select extends InstantCommand {
   /**
    * Add your docs here.
    */
-  public CG_Elevator_LVL3_Arm_Swing() {
-    addSequential(new Elevator_LVL3_Arm_Swing_Monitor(Robot.elevator_MM.get_Arm_Clear_Window_TOP()));
-    addSequential(new Arm_To_Setpoint(Robot.arm_MM.HATCH_PLACE_ROCKET_LVL3));
+  private String m_RGB_Select;
+
+  public RGB_Select(String RGB_Select) {
+    super();
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    requires(Robot.rgb_LEDs);
+    m_RGB_Select = RGB_Select;
   }
+
+  // Called once when the command executes
+  @Override
+  protected void initialize() {
+    Robot.rgb_LEDs.set_myRGB(m_RGB_Select);
+  }
+
 }

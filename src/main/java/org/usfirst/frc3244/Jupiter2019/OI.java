@@ -11,6 +11,9 @@
 
 package org.usfirst.frc3244.Jupiter2019;
 
+import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Left_From_Center;
+import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Right_From_Center;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Cargo_Intake;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_Arm_Reset;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_LVL1_Cargo;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_LVL1_Cargo_Ship;
@@ -25,6 +28,9 @@ import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_HatchGrabSeqComplete;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_HatchGrabSeqStart;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Hatch_Pick_From_Floor;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Hatch_Pick_Prepair_From_Floor;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_LimeLight_Set_Drive_Hatch;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_LimeLight_Set_Target_Left_Hatch;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_LimeLight_Set_Target_Right_Hatch;
 import org.usfirst.frc3244.Jupiter2019.commands.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import oi.limelightvision.limelight.frc.LimeLight;
@@ -202,7 +208,7 @@ public class OI {
         reset_xBox_Driver.whenPressed(new GameMode_Set_Hatch());
 
         r_Stick_Button_xbox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_STICK_BUTTON);
-        r_Stick_Button_xbox_Driver.whileHeld(new Drive_LimeLight_Tracking());
+        r_Stick_Button_xbox_Driver.whileHeld(new Drive_LimeLight_Tracking(1));
 
         l_Stick_Button_xbox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_LEFT_STICK_BUTTON);
         l_Stick_Button_xbox_Driver.whenPressed(new DriveToggleShifter());
@@ -211,31 +217,31 @@ public class OI {
         rt_xBox_Driver.whileHeld(new Cargo_Eject(-1));
 
         lt_xBox_Driver = new JoystickAxisButton(xBox_Driver, GAMEPAD_XBOX_LEFT_TRIGGER);
-        lt_xBox_Driver.whileHeld(new Cargo_Intake(1));
+        lt_xBox_Driver.whileHeld(new CG_Cargo_Intake());
         
         povNorth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTH);
         povNorth_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 0.0f));
 
         povNorthEast_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTHEAST);
-        povNorthEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 35.0f));
+        povNorthEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -35.0f));
 
         povEast_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.EAST);
-        povEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 90.0f));
+        povEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -90.0f));
 
         povSouthEast_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTHEAST);
-        povSouthEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 125.0f));
+        povSouthEast_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -125.0f));
 
         povSouth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTH);
         povSouth_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 179.0f));
 
         povSouthWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.SOUTHWEST);
-        povSouthWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -125.0f));
+        povSouthWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 125.0f));
 
         povWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.WEST);
-        povWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -90.0f));
+        povWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 90.0f));
 
         povNorthWest_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTHWEST);
-        povNorthWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, -35.0f));
+        povNorthWest_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 35.0f));
 
       
     }
@@ -246,13 +252,13 @@ public class OI {
       //setUp_OR_Buttons() a_xBox_CoDriver.whileHeld(new CG_Elevator_Arm_Reset());
       
       b_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_B_BUTTON);
-      b_xBox_CoDriver.whileHeld(new CG_Elevator_LVL1_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1(),false));
+      b_xBox_CoDriver.whenPressed(new CG_Elevator_LVL1_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1(),false));
       
       x_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_X_BUTTON);
-      x_xBox_CoDriver.whileHeld(new CG_Elevator_LVL2_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position3(),false));
+      x_xBox_CoDriver.whenPressed(new CG_Elevator_LVL2_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position3(),false));
       
       y_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_Y_BUTTON);
-      y_xBox_CoDriver.whileHeld(new CG_Elevator_LVL3_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position2(),false));
+      y_xBox_CoDriver.whenPressed(new CG_Elevator_LVL3_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position2(),false));
       
       lb_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_LEFT_BUTTON);
       //lb_xBox_CoDriver.whenPressed(new);
@@ -300,28 +306,35 @@ public class OI {
     private void setUp_Controler_LaunchPad(){
 
       btn1_launchPad = new JoystickButton(launchPad,1);
-      //btn1_launchPad.whenPressed(new HatchGripper_Grip());
+      btn1_launchPad.whenPressed(new ACG_Return_to_LoadStation_Left_From_Center());
 
       btn2_launchPad = new JoystickButton(launchPad,2);
-      //btn2_launchPad.whenPressed(new HatchGripper_Ungrip());
+      btn2_launchPad.whenPressed(new ACG_Return_to_LoadStation_Right_From_Center());
+
+      btn3_launchPad = new JoystickButton(launchPad,3);
+      //btn3_launchPad.whileHeld(new RGB_Test());
 
       btn4_launchPad = new JoystickButton(launchPad,4);
-      //btn4_launchPad.whileHeld(new CG_Elevator_LVL3_Cargo());
+      btn4_launchPad.whenPressed(new CG_LimeLight_Set_Drive_Hatch());
 
       btn5_launchPad = new JoystickButton(launchPad,5);
-      //btn5_launchPad.whileHeld(new CG_Elevator_LVL2_Cargo());
+      btn5_launchPad.whileHeld(new CG_LimeLight_Set_Target_Left_Hatch());
 
       btn6_launchPad = new JoystickButton(launchPad,6);
-      //btn6_launchPad.whileHeld(new CG_Elevator_LVL1_Cargo());
+      btn6_launchPad.whileHeld(new CG_LimeLight_Set_Target_Right_Hatch());
       
       btn7_launchPad = new JoystickButton(launchPad,7);
-      btn7_launchPad.whileHeld(new CG_Elevator_LVL3_Hatch());
+      //btn7_launchPad.whileHeld(new CG_Elevator_LVL3_Hatch());
 
       btn8_launchPad = new JoystickButton(launchPad,8);
-      btn8_launchPad.whileHeld(new CG_Elevator_LVL2_Hatch());
+      //btn8_launchPad.whileHeld(new CG_Elevator_LVL2_Hatch());
 
       btn9_launchPad = new JoystickButton(launchPad,9);
-      btn9_launchPad.whileHeld(new CG_Elevator_LVL1_Hatch());
+      //btn9_launchPad.whileHeld(new CG_Elevator_LVL1_Hatch());
+
+      btn10_launchPad = new JoystickButton(launchPad,9);
+
+      //btn11_launchPad Used as a logic over ride = new JoystickButton(launchPad,9);
 
     }
 
@@ -403,7 +416,7 @@ public class OI {
     }
 
     public double driveY() {
-      return(stickDeadBand(xBox_Driver.getRawAxis(GAMEPAD_XBOX_LEFT_Y_AXIS),.2));
+      return(stickDeadBand(-xBox_Driver.getRawAxis(GAMEPAD_XBOX_LEFT_Y_AXIS),.2));
     }
 
     public LimeLight get_my_LimeLight(){

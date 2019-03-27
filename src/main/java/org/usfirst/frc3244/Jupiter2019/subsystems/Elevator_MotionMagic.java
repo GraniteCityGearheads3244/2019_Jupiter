@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.usfirst.frc3244.Jupiter2019.Constants;
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -28,7 +29,8 @@ public class Elevator_MotionMagic extends Subsystem {
 
   /* Hardware */
   TalonSRX _talon = new TalonSRX(0);
-  
+  private Solenoid breakSol;
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -45,14 +47,14 @@ public class Elevator_MotionMagic extends Subsystem {
 	 private double bottom_Position = 160;
 	 //Intake
 	 private double Intake_Hatch_Floor_Position = 160;
-	 private double Intake_Hatch_Depot_Position = 180;
+	 private double Intake_Hatch_Depot_Position = 250;
 	 private double Intake_cargo_Floor_Position = 160;
 	 private double Intake_cargo_Depot_Position = 160;
 	 //Deliver To Cargo Bay
-	 private double Deliver_Hatch_Bay_Position = 180;
+	 private double Deliver_Hatch_Bay_Position = 250;
 	 private double Deliver_Cargo_Bay_Position = 195;
 	 //Deliver To Rocket
-	 private double Deliver_Hatch_Rocket_Position1 = 260;
+	 private double Deliver_Hatch_Rocket_Position1 = 250;
 	 private double Deliver_Hatch_Rocket_Position2 = 560;
 	 private double Deliver_Hatch_Rocket_Position3 = 700;
 	 private double Deliver_Cargo_Rocket_Position1 = 160;
@@ -178,7 +180,11 @@ public class Elevator_MotionMagic extends Subsystem {
 	 * ********************************/
 
   public Elevator_MotionMagic(){
-    /* Factory default hardware to prevent unexpected behavior */
+
+		breakSol = new Solenoid(0,6);
+    	addChild("Extender",breakSol);
+	
+		/* Factory default hardware to prevent unexpected behavior */
 		_talon.configFactoryDefault();
 
 		/* Configure Sensor Source for Pirmary PID */
@@ -318,6 +324,7 @@ public class Elevator_MotionMagic extends Subsystem {
 	}
 	
 	private void my_SetMotor_Taget_MM(double setpoint){
+		set_my_Release_Break(true);
 		_talon.set(ControlMode.MotionMagic, setpoint);
 	}
     
@@ -335,7 +342,8 @@ public class Elevator_MotionMagic extends Subsystem {
 
     
     public void my_ElevatorStop() {
-     	_talon.set(ControlMode.PercentOutput, 0.0);
+		 _talon.set(ControlMode.PercentOutput, 0.0);
+		 set_my_Release_Break(false);
      
     }
    
@@ -368,5 +376,12 @@ public class Elevator_MotionMagic extends Subsystem {
 			return true;
 		}
 	}
-    
+	
+	/**
+	 * Set True to release Break
+	 * @param release
+	 */
+	public void set_my_Release_Break(boolean release){
+		breakSol.set(release);
+	}
 }

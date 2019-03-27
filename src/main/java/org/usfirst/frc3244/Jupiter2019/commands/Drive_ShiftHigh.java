@@ -7,31 +7,28 @@
 
 package org.usfirst.frc3244.Jupiter2019.commands;
 
+
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
-import oi.limelightvision.limelight.frc.ControlMode.StreamType;
 
 /**
  * Add your docs here.
  */
-public class GameMode_Set_Hatch extends InstantCommand {
+public class Drive_ShiftHigh extends InstantCommand {
   /**
    * Add your docs here.
    */
-  public GameMode_Set_Hatch() {
+  public Drive_ShiftHigh() {
     super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    setRunWhenDisabled(true);
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
-    Robot.elevator_MM.setCurrent_GameMode_Hatch();
-    // If Bandwidth issues then try this
-    Robot.oi.get_my_LimeLight().setStream(StreamType.kPiPMain);
+    Robot.driveTrain_1519_MM.shiftHigh();
   }
 
 }

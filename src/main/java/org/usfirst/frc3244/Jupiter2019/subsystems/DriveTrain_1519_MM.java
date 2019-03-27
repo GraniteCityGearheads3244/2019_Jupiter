@@ -296,19 +296,25 @@ public class DriveTrain_1519_MM extends Subsystem {
 		int talonIndex = 0;
 		// record current positions as "zero" for all of the Talon SRX encoders
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			m_zeroPositions[talonIndex] = m_talons[talonIndex].getSelectedSensorPosition(0)/4096;
+			m_zeroPositions[talonIndex] = (double) m_talons[talonIndex].getSelectedSensorPosition(0)/4096;
 		}
 	}
 
 	public double getDistanceTraveled() {
 		int talonIndex = 0;
 		double tempDistance = 0;
+		double realDistance = 0;
+		//double leftRawRotations = (double) m_talons[kLeft].getSelectedSensorPosition(0) / 4096;
+		//double right = (double) m_talons[kRight].getSelectedSensorPosition(0) / 4096;
+
 		// add up the absolute value of the distances from each individual wheel
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			tempDistance += Math.abs((m_talons[talonIndex].getSelectedSensorPosition(0)/4096)
+			tempDistance += Math.abs(((double) m_talons[talonIndex].getSelectedSensorPosition(0)/4096)
 					- m_zeroPositions[talonIndex]);
 		}
-		return (tempDistance);
+
+		realDistance = (tempDistance *(6.125*3.14)) / 2;
+		return realDistance;//(tempDistance);
 	}
 
 	public void setWheelPIDF() {
@@ -355,7 +361,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void setgyroOffset(double adjustment){
 		// Follow up headingGyro.setAngleAdjustment(adjustment);
 		//headingGyro_BCK.setAngledAdjustimenet(adjustment); // Not available
-		_pidgey.setYaw(adjustment, Constants.kTimeoutMs);
+		_pidgey.setFusedHeading(adjustment, Constants.kTimeoutMs);
 	}
 	
 	public double getHeading() {
@@ -709,7 +715,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		} else if (m_iterationsSinceRotationCommanded > m_preserveHeading_Iterations) {
 			if(m_preserveHeading_Enable){
 				rotation = (m_desiredHeading - getHeading()) * kP_preserveHeading_Telepo; 
-				SmartDashboard.putNumber("MaintainHeaading ROtation", rotation);
+				//SmartDashboard.putNumber("MaintainHeaading ROtation", rotation);
 			}
 		}
 
@@ -736,7 +742,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 
-	public void driveAutonomous(double xIn, double yIn, double rotation,	double heading) {
+	public void driveAutonomous(double yIn, double rotation, double heading) {
 		m_desiredHeading = heading;
 
 		// preserve heading if no rotation is commanded
@@ -779,8 +785,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void driveCartesian(double yIn, double rotation) {
 		int talonIndex = 0;
 
-		m_wheelSpeeds[kLeft] = yIn + rotation;
-		m_wheelSpeeds[kRight] = yIn - rotation;
+		m_wheelSpeeds[kLeft] = -yIn + rotation;
+		m_wheelSpeeds[kRight] = -yIn - rotation;
 
 		normalizeAndScaleWheelSpeeds();
 		correctInvertedMotors();
@@ -806,6 +812,9 @@ public class DriveTrain_1519_MM extends Subsystem {
 	 }
 
 	public void diagnostics() {
+		
 		SmartDashboard.putNumber("Heading", getHeading());
+		SmartDashboard.putNumber("Encoder Distance", getDistanceTraveled());
+	
 	}
 }

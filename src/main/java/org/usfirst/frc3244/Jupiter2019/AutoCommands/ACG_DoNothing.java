@@ -5,23 +5,15 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc3244.Jupiter2019.commandGroups;
-
-import org.usfirst.frc3244.Jupiter2019.Robot;
-import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
-import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
-import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPIP;
-import oi.limelightvision.limelight.frc.ControlMode.StreamType;
-import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPipeline;
+package org.usfirst.frc3244.Jupiter2019.AutoCommands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-
-public class CG_Elevator_LVL1_Hatch extends CommandGroup {
+public class ACG_DoNothing extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public CG_Elevator_LVL1_Hatch() {
+  public ACG_DoNothing() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -38,10 +30,5 @@ public class CG_Elevator_LVL1_Hatch extends CommandGroup {
     // e.g. if Command1 requires chassis, and Command2 requires arm,
     // a CommandGroup containing them would require both the chassis and the
     // arm.
-
-    addParallel(new LimeLight_SetPIP(StreamType.kPiPMain));
-    addParallel(new LimeLight_SetPipeline(1));
-    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1(),true));
-    addSequential(new Arm_To_Setpoint(Robot.arm_MM.HATCH_PLACE_ROCKET_LVL1),4);
   }
 }

@@ -28,6 +28,7 @@ public class Elevator_Jog_MotoinMagic extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+
     if(Robot.DIVERSTATION_REPORTS_ENABLED){
       DriverStation.reportError("Elevator Jog Target = ", false);
     }

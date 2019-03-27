@@ -114,7 +114,7 @@ public class HatchGripper extends Subsystem {
     }
 
     private double get_my_Current_Pressure(){
-        return ((250*(presureSwitch.getAverageVoltage()/5))-25);
+        return ((250*(presureSwitch.getAverageVoltage()/4.75))-25);
     }
 
     public void my_SmartDashboard(){

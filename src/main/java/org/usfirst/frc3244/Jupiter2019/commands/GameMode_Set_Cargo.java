@@ -10,6 +10,7 @@ package org.usfirst.frc3244.Jupiter2019.commands;
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import oi.limelightvision.limelight.frc.ControlMode.StreamType;
 
 /**
  * Add your docs here.
@@ -22,12 +23,15 @@ public class GameMode_Set_Cargo extends InstantCommand {
     super();
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
+    setRunWhenDisabled(true);
   }
 
   // Called once when the command executes
   @Override
   protected void initialize() {
     Robot.elevator_MM.setCurrent_GameMode_Cargo();
+    // If Bandwidth issues then try this
+    Robot.oi.get_my_LimeLight().setStream(StreamType.kPiPSecondary);
   }
 
 }
