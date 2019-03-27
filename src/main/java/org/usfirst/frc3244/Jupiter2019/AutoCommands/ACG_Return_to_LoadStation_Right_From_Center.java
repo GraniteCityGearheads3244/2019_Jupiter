@@ -7,7 +7,8 @@
 
 package org.usfirst.frc3244.Jupiter2019.AutoCommands;
 
-import org.usfirst.frc3244.Jupiter2019.commands.Drive_For_Distance;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_Arm_Reset;
+import org.usfirst.frc3244.Jupiter2019.commands.Drive_For_Distance_PID;
 import org.usfirst.frc3244.Jupiter2019.commands.Drive_Turn_To_Setpoint;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -34,9 +35,10 @@ public class ACG_Return_to_LoadStation_Right_From_Center extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
+    addParallel(new CG_Elevator_Arm_Reset());
     addSequential(new Drive_Turn_To_Setpoint(-110),1);
-    addSequential(new Drive_For_Distance(.25, 0.0, 10, -110));
+    addSequential(new Drive_For_Distance_PID(.25, 10, -110));
     addSequential(new Drive_Turn_To_Setpoint(-180),1);
-    addSequential(new Drive_For_Distance(.25, 0.0, 10, -180));
+    addSequential(new Drive_For_Distance_PID(.25, 10, -180));
   }
 }

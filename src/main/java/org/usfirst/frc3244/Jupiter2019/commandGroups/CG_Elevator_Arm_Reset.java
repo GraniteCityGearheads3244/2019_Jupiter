@@ -10,6 +10,7 @@ package org.usfirst.frc3244.Jupiter2019.commandGroups;
 import org.usfirst.frc3244.Jupiter2019.Robot;
 import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
 import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
+import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Retract;
 import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPipeline;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -37,8 +38,9 @@ public class CG_Elevator_Arm_Reset extends CommandGroup {
     // arm.
 
     //addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
-    addParallel(new LimeLight_SetPipeline(0));
-    addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED));
-    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), false));
+    addParallel(new LimeLight_SetPipeline(0),1);
+    addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED),2);
+    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), false),5);
+    addSequential(new HatchGripper_Retract(),2);
   }
 }

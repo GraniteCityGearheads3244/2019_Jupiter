@@ -49,7 +49,7 @@ public class Arm_To_Setpoint extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    DriverStation.reportWarning("Arm to Sepoint End()", false);
+//    DriverStation.reportWarning("Arm to Sepoint End()", false);
   }
 
   // Called when another command which requires one or more of the same

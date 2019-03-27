@@ -127,8 +127,8 @@ public class DriveTrain_1519_MM extends Subsystem {
  	
  	// driving scaling factors
  	private static final double FORWARD_BACKWARD_FACTOR =  1.0;
-	 private static final double ROTATION_FACTOR_LOW_GEAR  = 0.75;
-	 private static final double ROTATION_FACTOR_HIGH_GEAR  = 0.5;
+	 //private static final double ROTATION_FACTOR_LOW_GEAR  = 0.75;
+	 //private static final double ROTATION_FACTOR_HIGH_GEAR  = 0.25;
  	private static final double  SLOW_FACTOR = 0.35;//0.35; // scaling factor for (normal) "slow mode" .35
  	private static final double CRAWL_INPUT = 0.30; // "crawl" is a gentle control input
  	public static final double ALIGN_SPEED = 0.10;
@@ -361,7 +361,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void setgyroOffset(double adjustment){
 		// Follow up headingGyro.setAngleAdjustment(adjustment);
 		//headingGyro_BCK.setAngledAdjustimenet(adjustment); // Not available
-		_pidgey.setFusedHeading(adjustment, Constants.kTimeoutMs);
+		_pidgey.setFusedHeading(adjustment);
+		//_pidgey.setYaw(adjustment);
 	}
 	
 	public double getHeading() {
@@ -556,17 +557,17 @@ public class DriveTrain_1519_MM extends Subsystem {
 
 		// check for the presence of the special "crawl" commands and do those
 		// if commanded
-		if (Robot.oi.crawlBackward()) {
-			yIn = -CRAWL_INPUT;
-			rotation = rotation * .5;
-			m_Craling = true;
-		}else if (Robot.oi.crawlForward()) {
-			yIn = CRAWL_INPUT;
-			rotation = rotation * .5;
-			m_Craling = true;
-		}else{
-			m_Craling = false;
-		}
+		// if (Robot.oi.crawlBackward()) {
+		// 	yIn = -CRAWL_INPUT;
+		// 	rotation = rotation * .5;
+		// 	m_Craling = true;
+		// }else if (Robot.oi.crawlForward()) {
+		// 	yIn = CRAWL_INPUT;
+		// 	rotation = rotation * .5;
+		// 	m_Craling = true;
+		// }else{
+		// 	m_Craling = false;
+		// }
 
 		//Disable Field Oriantated if Gyro Fails
 		boolean IMU_Connected = true;//headingGyro.isConnected();
@@ -599,12 +600,19 @@ public class DriveTrain_1519_MM extends Subsystem {
 		}else{
 			rotation = rotation + .15; // .15 is a FeedForward
 			if(my_GetIsCurrentGearHigh()){
-				rotation = rotation * ROTATION_FACTOR_HIGH_GEAR;
-			}else{
-				if(rotation < 0.75){
-					rotation = rotation * ROTATION_FACTOR_LOW_GEAR;
+
+				if(Math.abs(rotation) < 0.85){
+					rotation = rotation * .35;//ROTATION_FACTOR_LOW_GEAR;
 				}else{
-					rotation = rotation;
+					rotation = rotation * .75;//ROTATION_FACTOR_HIGH_GEAR;
+				}
+
+			}else{ //In low gear
+
+				if(Math.abs(rotation) < 0.85){
+					rotation = rotation * .40;//ROTATION_FACTOR_LOW_GEAR;
+				}else{
+					rotation = rotation * .75;
 				}
 			}
 		}
@@ -656,7 +664,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 			rotation = rotation - (rotation * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
 			(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * rotation_full_Choke)) ;
 		}
-		
+		//SmartDashboard.putNumber("rotation", rotation);
 		driveCartesian(yIn, rotation);
 	}
 
@@ -666,7 +674,19 @@ public class DriveTrain_1519_MM extends Subsystem {
 		// preserve heading if no rotation is commanded
 		if ((-0.01 < rotation) && (rotation < 0.01)) {
 			rotation = (m_desiredHeading - getHeading()) * kP_preserveHeading_Auto; //In Auto keep the snappy action
+		
 		}
+
+		double limit = .3;
+		if(rotation > limit){
+			rotation = limit;
+		}else if(rotation < -limit){
+			rotation = -limit;
+		}
+
+		//SmartDashboard.putNumber("m_desiredHeading", m_desiredHeading);
+		//SmartDashboard.putNumber("getHeading",getHeading());
+		//SmartDashboard.putNumber("rotation", rotation);
 		driveCartesian(yIn, rotation);
 	}
 	
@@ -732,7 +752,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void diagnostics() {
 		
 		SmartDashboard.putNumber("Heading", getHeading());
-		SmartDashboard.putNumber("Encoder Distance", getDistanceTraveled());
+//		SmartDashboard.putNumber("Encoder Distance", getDistanceTraveled());
 	
 	}
 }

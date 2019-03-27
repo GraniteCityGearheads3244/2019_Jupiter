@@ -17,6 +17,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_DoNothing;
+import org.usfirst.frc3244.Jupiter2019.AutoCommands.Auto_11_Drive_Left_Cargo_Pos1;
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.Auto_21_Drive_Right_Cargo_Pos1;
 import org.usfirst.frc3244.Jupiter2019.commands.*;
 import org.usfirst.frc3244.Jupiter2019.subsystems.*;
@@ -38,7 +40,7 @@ import org.usfirst.frc3244.Jupiter2019.subsystems.*;
 public class Robot extends TimedRobot {
 
     public static final boolean DEBUG = false;
-    public static final boolean DIVERSTATION_REPORTS_ENABLED = true;
+    public static final boolean DIVERSTATION_REPORTS_ENABLED = false;
     //Command autonomousCommand;
     Command autonomousCommand;
     private String autonomousSelected;
@@ -108,9 +110,11 @@ public class Robot extends TimedRobot {
         autonomousChooser = new SendableChooser();
         
         // ******* Default Auto
-        autonomousChooser.addDefault("99: Auto_99", new ACG_DoNothing());					
+        autonomousChooser.addDefault("99: Auto_99 DoNothing", new ACG_DoNothing());					
         
         // ******* Basic Auto
+        autonomousChooser.addObject("0: Auto 11 Drive Left Cargo Pos1", new Auto_11_Drive_Left_Cargo_Pos1());					
+
         autonomousChooser.addObject("0: Auto 21 Drive Right Cargo Pos1", new Auto_21_Drive_Right_Cargo_Pos1());					
         
         //Place autonomousChooser on the SmartDashboard
@@ -181,6 +185,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+
+        Alliance currentAlliance = DriverStation.getInstance().getAlliance();
+        if(currentAlliance == Alliance.Red){
+            Robot.rgb_LEDs.set_myRGB("red1");
+        }else if(currentAlliance == Alliance.Blue){
+            Robot.rgb_LEDs.set_myRGB("blue1");
+        }
+
         //Turn off all the Launchpad LEDs
         Robot.oi.launchPad.setOutputs(0);
         
@@ -216,6 +228,14 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+
+        Alliance currentAlliance = DriverStation.getInstance().getAlliance();
+        if(currentAlliance == Alliance.Red){
+            Robot.rgb_LEDs.set_myRGB("red2");
+        }else if(currentAlliance == Alliance.Blue){
+            Robot.rgb_LEDs.set_myRGB("blue2");
+        }
+
         //Turn off all the Launchpad LEDs
     	Robot.oi.launchPad.setOutputs(0); 
 
@@ -228,7 +248,7 @@ public class Robot extends TimedRobot {
         driveTrain_1519_MM.clearDesiredHeading();
         driveTrain_1519_MM.set_PreserveHeading(true);// When Testing climb we forget to re-enable
 
-        arm_MM.set_armToCurrent();
+        //arm_MM.set_armToCurrent();
 
     }
 

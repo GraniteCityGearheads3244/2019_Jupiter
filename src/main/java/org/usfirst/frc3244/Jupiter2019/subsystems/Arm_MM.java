@@ -118,7 +118,7 @@ public class Arm_MM extends Subsystem {
   }
 
   public void periodic() {
-			 SmartDashboard.putNumber("Arm Position", get_My_CurrentRAW_Postion());
+//			 SmartDashboard.putNumber("Arm Position", get_My_CurrentRAW_Postion());
 			 SmartDashboard.putBoolean("Arm Safe for Elevator", get_IsArm_CLear_For_Elevator());
   }
 
