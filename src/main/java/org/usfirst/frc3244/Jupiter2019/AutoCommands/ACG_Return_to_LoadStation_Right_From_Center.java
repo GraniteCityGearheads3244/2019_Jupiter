@@ -18,27 +18,13 @@ public class ACG_Return_to_LoadStation_Right_From_Center extends CommandGroup {
    * Add your docs here.
    */
   public ACG_Return_to_LoadStation_Right_From_Center() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
-
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
+   
+    /** Deg Positive Turn to the left */
 
     addParallel(new CG_Elevator_Arm_Reset());
-    addSequential(new Drive_Turn_To_Setpoint(-110),1);
-    addSequential(new Drive_For_Distance_PID(.25, 10, -110));
+    addSequential(new Drive_Turn_To_Setpoint(-110),2);
+    addSequential(new Drive_For_Distance_PID(.25, 110, -110));
     addSequential(new Drive_Turn_To_Setpoint(-180),1);
-    addSequential(new Drive_For_Distance_PID(.25, 10, -180));
+    addSequential(new Drive_For_Distance_PID(.25, 24, -180),3);
   }
 }

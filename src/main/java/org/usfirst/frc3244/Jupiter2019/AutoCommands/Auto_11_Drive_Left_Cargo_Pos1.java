@@ -19,13 +19,10 @@ public class Auto_11_Drive_Left_Cargo_Pos1 extends CommandGroup {
    */
   public Auto_11_Drive_Left_Cargo_Pos1() {
     
-    addSequential(new Drive_For_Distance_PID(0.25, 25, 0.0));
-    addSequential(new Drive_Turn_To_Setpoint(90),1);
-    addSequential(new Drive_For_Distance_PID(0.25, 10, 90));
-    addSequential(new Drive_Turn_To_Setpoint(0.0),1);
-    addSequential(new Drive_For_Distance_PID(0.25, 10, 0.0));
+    /** Deg Positive Turn to the left */
+    
+    addSequential(new Drive_For_Distance_PID(0.25, 25, 5.0));
     addSequential(new Drive_Turn_To_Setpoint(-90),1);
-    addSequential(new Drive_For_Distance_PID(0.25, 10, -90.0));
     //addSequential(new Drive_ShiftLow());
   }
 }
