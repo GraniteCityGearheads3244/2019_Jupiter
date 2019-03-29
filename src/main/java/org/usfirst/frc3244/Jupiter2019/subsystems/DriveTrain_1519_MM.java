@@ -22,6 +22,7 @@ import com.ctre.phoenix.motorcontrol.*;
 
 import org.usfirst.frc3244.Jupiter2019.Constants;
 import org.usfirst.frc3244.Jupiter2019.Robot;
+import org.usfirst.frc3244.Jupiter2019.commands.Drive_With_Joysticks;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -77,22 +78,22 @@ public class DriveTrain_1519_MM extends Subsystem {
 	private WPI_VictorSPX leftVictor1 = new WPI_VictorSPX(14);
 	//leftVictor1 = new WPI_VictorSPX(14);
 	//addChild(leftVictor1);
-	private WPI_VictorSPX leftVictor2 = new WPI_VictorSPX(13);
+	private WPI_VictorSPX leftVictor2 = new WPI_VictorSPX(15);
 	//leftVictor2 = new WPI_VictorSPX(13);
 	//addChild(leftVictor2);
-	private WPI_TalonSRX leftTalon = new WPI_TalonSRX(15);
+	private WPI_TalonSRX leftTalon = new WPI_TalonSRX(13);
 	//leftTalon = new WPI_TalonSRX(15);
 	//addChild(leftTalon);
 	//private SpeedControllerGroup leftWheels = new SpeedControllerGroup(leftVictor1, leftVictor2 , leftTalon );
 	//leftWheels = new SpeedControllerGroup(leftVictor1, leftVictor2 , leftTalon );
 	//addChild(leftWheels);
-	private WPI_VictorSPX rightVictor1 = new WPI_VictorSPX(1);
+	private WPI_VictorSPX rightVictor1 = new WPI_VictorSPX(2);
 	//rightVictor1 = new WPI_VictorSPX(1);
  	//addChild(rightVictor1);
-	private WPI_VictorSPX rightVictor2 = new WPI_VictorSPX(2);
+	private WPI_VictorSPX rightVictor2 = new WPI_VictorSPX(12);
 	//rightVictor2 = new WPI_VictorSPX(2);
 	//addChild(rightVictor2);
-	private WPI_TalonSRX rightTalon = new WPI_TalonSRX(0);
+	private WPI_TalonSRX rightTalon = new WPI_TalonSRX(3);
 	//rightTalon = new WPI_TalonSRX(0);
 	//addChild(rightTalon);
 	//private SpeedControllerGroup rightWheels = new SpeedControllerGroup(rightVictor1, rightVictor2 , rightTalon );
@@ -118,7 +119,6 @@ public class DriveTrain_1519_MM extends Subsystem {
 
  	private boolean m_useVoltageRamp = true;
  	private double m_voltageRampRate = 36.0;//48.0; // in volts/second
- 	private boolean m_breakMode = true;
  	private boolean m_fieldOrientedDrive = false;
 
  	private int m_iterationsSinceRotationCommanded = 0;
@@ -127,8 +127,9 @@ public class DriveTrain_1519_MM extends Subsystem {
  	
  	// driving scaling factors
  	private static final double FORWARD_BACKWARD_FACTOR =  1.0;
- 	private static final double ROTATION_FACTOR  = 1.25;
- 	private static final double SLOW_FACTOR = 0.35; // scaling factor for (normal) "slow mode" .35
+	 //private static final double ROTATION_FACTOR_LOW_GEAR  = 0.75;
+	 //private static final double ROTATION_FACTOR_HIGH_GEAR  = 0.25;
+ 	private static final double  SLOW_FACTOR = 0.35;//0.35; // scaling factor for (normal) "slow mode" .35
  	private static final double CRAWL_INPUT = 0.30; // "crawl" is a gentle control input
  	public static final double ALIGN_SPEED = 0.10;
 
@@ -203,8 +204,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 
 		// put all Talon SRX into brake mode
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			//m_talons[talonIndex].enableBrakeMode(m_breakMode);
-			m_talons[talonIndex].setNeutralMode(NeutralMode.Brake);
+			m_talons[talonIndex].setNeutralMode(NeutralMode.Coast);
 			
 		}
 
@@ -250,6 +250,20 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		// setDefaultCommand(new Command());
+		setDefaultCommand(new Drive_With_Joysticks());
+	}
+
+	public void periodic() {
+		
+	}
+
+	public boolean my_GetIsCurrentGearHigh(){
+		if(dBL_Sol_Shifter.get() == Value.kReverse){
+			return true;
+
+		}else{
+			return false;
+		}
 	}
 
 	public void shiftHigh(){
@@ -259,6 +273,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		rightTalon.selectProfileSlot(0,0);
 		leftTalon.selectProfileSlot(0,0);
 		m_kPIDLoopIdx = 0;
+
+		SmartDashboard.putBoolean("High Gear", true);
     }
 
     public void shiftLow(){
@@ -268,6 +284,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		rightTalon.selectProfileSlot(1,0);
 		leftTalon.selectProfileSlot(1,0);
 		m_kPIDLoopIdx = 1;
+
+		SmartDashboard.putBoolean("High Gear", false);
     }
 	
 	public double getMaxWheelSpeed() {
@@ -278,19 +296,25 @@ public class DriveTrain_1519_MM extends Subsystem {
 		int talonIndex = 0;
 		// record current positions as "zero" for all of the Talon SRX encoders
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			m_zeroPositions[talonIndex] = m_talons[talonIndex].getSelectedSensorPosition(0)/4096;
+			m_zeroPositions[talonIndex] = (double) m_talons[talonIndex].getSelectedSensorPosition(0)/4096;
 		}
 	}
 
 	public double getDistanceTraveled() {
 		int talonIndex = 0;
 		double tempDistance = 0;
+		double realDistance = 0;
+		//double leftRawRotations = (double) m_talons[kLeft].getSelectedSensorPosition(0) / 4096;
+		//double right = (double) m_talons[kRight].getSelectedSensorPosition(0) / 4096;
+
 		// add up the absolute value of the distances from each individual wheel
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			tempDistance += Math.abs((m_talons[talonIndex].getSelectedSensorPosition(0)/4096)
+			tempDistance += Math.abs(((double) m_talons[talonIndex].getSelectedSensorPosition(0)/4096)
 					- m_zeroPositions[talonIndex]);
 		}
-		return (tempDistance);
+
+		realDistance = (tempDistance *(6.125*3.14)) / 2;
+		return realDistance;//(tempDistance);
 	}
 
 	public void setWheelPIDF() {
@@ -337,6 +361,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void setgyroOffset(double adjustment){
 		// Follow up headingGyro.setAngleAdjustment(adjustment);
 		//headingGyro_BCK.setAngledAdjustimenet(adjustment); // Not available
+		_pidgey.setFusedHeading(adjustment);
+		//_pidgey.setYaw(adjustment);
 	}
 	
 	public double getHeading() {
@@ -380,14 +406,13 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void setFieldOrientedDrive(boolean enable){
 		
 			m_fieldOrientedDrive = enable;
-			SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
+			//SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
 			
 	}
 	
 	public void toggleFieldOrientedDrive() {
 		m_fieldOrientedDrive = !m_fieldOrientedDrive;
-		SmartDashboard.putBoolean("Field Oriented Drive",
-				m_fieldOrientedDrive);
+		//SmartDashboard.putBoolean("Field Oriented Drive",	m_fieldOrientedDrive);
 	}
 
 	public void setClosedLoopMode() {
@@ -447,89 +472,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		//m_preserveHeading_Enable = false;
 	}
 	
-	public void updateSmartDashboard() {
-
-		double motorOutput = leftTalon.getMotorOutputPercent();
-		/* prepare line to print */
-		_sb.append("\tout:");
-		_sb.append(motorOutput);
-		_sb.append("\tspd:");
-		_sb.append(leftTalon.getSelectedSensorVelocity(m_kPIDLoopIdx));
-		/* append more signals to print when in speed mode. */
-		_sb.append("\terr:");
-		_sb.append(leftTalon.getClosedLoopError(m_kPIDLoopIdx));
-
-		System.out.println(_sb.toString());
-		
-		_sb.setLength(0);
-
-		if (Robot.DEBUG) {
-			SmartDashboard.putNumber("Front Left SRX Position",
-					(m_talons[kLeft].getSelectedSensorPosition(0)/4096) - m_zeroPositions[kLeft]);
-			SmartDashboard.putNumber("Front Right SRX Position",
-					-((m_talons[kRight].getSelectedSensorPosition(0)/4096) - m_zeroPositions[kRight]));
-
-			SmartDashboard.putNumber("Front Left SRX Speed",
-					m_talons[kLeft].getSelectedSensorVelocity(0));
-			SmartDashboard.putNumber("Front Right SRX Speed",
-					-m_talons[kRight].getSelectedSensorVelocity(0));
-			
-			/*
-			SmartDashboard.putNumber("Front Left SRX Position",
-					m_talons[kFrontLeft].getPosition() - m_zeroPositions[kFrontLeft]);
-			SmartDashboard.putNumber("Front Right SRX Position",
-					-(m_talons[kFrontRight].getPosition() - m_zeroPositions[kFrontRight]));
-			SmartDashboard.putNumber("Back Left SRX Position",
-					m_talons[kBackLeft].getPosition() - m_zeroPositions[kBackLeft]);
-			SmartDashboard.putNumber("Back Right SRX Position",
-					-(m_talons[kBackRight].getPosition() - m_zeroPositions[kBackRight]));
-
-			SmartDashboard.putNumber("Front Left SRX Speed",
-					m_talons[kFrontLeft].getSpeed());
-			SmartDashboard.putNumber("Front Right SRX Speed",
-					-m_talons[kFrontRight].getSpeed());
-			SmartDashboard.putNumber("Back Left SRX Speed",
-					m_talons[kBackLeft].getSpeed());
-			SmartDashboard.putNumber("Back Right SRX Speed",
-					-m_talons[kBackRight].getSpeed());F
-			*/
-			
-			SmartDashboard.putNumber("FL Desired Speed",
-					m_wheelSpeeds[kLeft]);
-			SmartDashboard.putNumber("FR Desired Speed",
-					-m_wheelSpeeds[kRight]);
-			
-			SmartDashboard.putNumber("Front Left SRX Close loop Error",
-					m_talons[kLeft].getClosedLoopError(0));
-			SmartDashboard.putNumber("Front Right SRX Close loop Error",
-					-m_talons[kRight].getClosedLoopError(0));
-
-			///SmartDashboard.putNumber("Left Current",
-			///		Robot.pdp.getCurrent(15));
-			//SmartDashboard.putNumber("Right Current",
-			//		Robot.pdp.getCurrent(0));
-			
-			SmartDashboard.putNumber("Front Left Output Voltage",
-					m_talons[kLeft].getMotorOutputVoltage());
-			SmartDashboard.putNumber("Front Right Output Voltage",
-					-m_talons[kRight].getMotorOutputVoltage());
-			//SmartDashboard.putNumber("Gyro",
-					//Utils.twoDecimalPlaces(headingGyro.getFusedHeading()));
-			
-			//SmartDashboard.putBoolean(  "IMU_Connected",        headingGyro.isConnected());
-            //SmartDashboard.putBoolean(  "IMU_IsCalibrating",    headingGyro.isCalibrating());
-            //SmartDashboard.putNumber(   "IMU_Yaw",              headingGyro.getYaw());
-            
-			SmartDashboard.putNumber("Desired Heading", m_desiredHeading);
-
-			SmartDashboard.putBoolean("Turbo Mode", Robot.oi.driveTurboMode());
-			SmartDashboard.putBoolean("Closed Loop Mode", m_closedLoopMode);
-			SmartDashboard.putBoolean("Field Oriented Drive",
-					m_fieldOrientedDrive);
-
-
-		}
-	}
+	
 	
 	/**
 	 * Normalize all wheel speeds if the magnitude of any wheel is greater than
@@ -540,8 +483,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double tempMagnitude;
 		double maxMagnitude;
 
-		SmartDashboard.putNumber("a_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-		SmartDashboard.putNumber("a_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
+		//SmartDashboard.putNumber("a_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+		//SmartDashboard.putNumber("a_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
 		// find maxMagnitude
 		maxMagnitude = Math.abs(m_wheelSpeeds[0]);
 		for (i = 1; i < kMaxNumberOfMotors; i++) {
@@ -551,7 +494,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 			}
 		}
 
-		SmartDashboard.putNumber("maxMagnitude", maxMagnitude);
+		//SmartDashboard.putNumber("maxMagnitude", maxMagnitude);
 		// if any wheel has a magnitude greater than 1.0, reduce all to fit in
 		// range
 		if (maxMagnitude > 1.0) {
@@ -559,20 +502,20 @@ public class DriveTrain_1519_MM extends Subsystem {
 				m_wheelSpeeds[i] = m_wheelSpeeds[i] / maxMagnitude;
 			}
 		}
-		SmartDashboard.putNumber("b_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-		SmartDashboard.putNumber("b_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
+		//SmartDashboard.putNumber("b_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+		//SmartDashboard.putNumber("b_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
 		// if in closedLoopMode, scale wheels to be speeds, rather than power
 		// percentage
 		if (m_closedLoopMode) {
 			for (i = 0; i < kMaxNumberOfMotors; i++) {
-				SmartDashboard.putNumber("c_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-				SmartDashboard.putNumber("c_wheelSpeeds[krigt]", m_wheelSpeeds[kRight]);
+				//SmartDashboard.putNumber("c_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+				//SmartDashboard.putNumber("c_wheelSpeeds[krigt]", m_wheelSpeeds[kRight]);
 				/* Speed mode */
 				/* 4096 Units/Rev * 500 RPM / 600 100ms/min in either direction: velocity setpoint is in units/100ms */
 				m_wheelSpeeds[i] = m_wheelSpeeds[i] * m_maxWheelSpeed_Current * m_encoderUnitsPerRev / 600;
-				SmartDashboard.putNumber("m_maxWheelSpeed_Current", m_maxWheelSpeed_Current);
-				SmartDashboard.putNumber("d_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
-				SmartDashboard.putNumber("d_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
+				//SmartDashboard.putNumber("m_maxWheelSpeed_Current", m_maxWheelSpeed_Current);
+				//SmartDashboard.putNumber("d_wheelSpeeds[kLeft]", m_wheelSpeeds[kLeft]);
+				//SmartDashboard.putNumber("d_wheelSpeeds[kRight]", m_wheelSpeeds[kRight]);
 			}
 		}
 	}
@@ -614,24 +557,24 @@ public class DriveTrain_1519_MM extends Subsystem {
 
 		// check for the presence of the special "crawl" commands and do those
 		// if commanded
-		if (Robot.oi.crawlBackward()) {
-			yIn = -CRAWL_INPUT;
-			rotation = rotation * .5;
-			m_Craling = true;
-		}else if (Robot.oi.crawlForward()) {
-			yIn = CRAWL_INPUT;
-			rotation = rotation * .5;
-			m_Craling = true;
-		}else{
-			m_Craling = false;
-		}
+		// if (Robot.oi.crawlBackward()) {
+		// 	yIn = -CRAWL_INPUT;
+		// 	rotation = rotation * .5;
+		// 	m_Craling = true;
+		// }else if (Robot.oi.crawlForward()) {
+		// 	yIn = CRAWL_INPUT;
+		// 	rotation = rotation * .5;
+		// 	m_Craling = true;
+		// }else{
+		// 	m_Craling = false;
+		// }
 
 		//Disable Field Oriantated if Gyro Fails
 		boolean IMU_Connected = true;//headingGyro.isConnected();
 		if(!IMU_Connected){
 			m_preserveHeading_Enable = false;
 			m_fieldOrientedDrive = false;
-			SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
+			//SmartDashboard.putBoolean("Field Oriented Drive", m_fieldOrientedDrive);
 			if(!reportERROR_ONS){
 				DriverStation.reportError("Lost Gyro - Forcing Robot Oriantated " + "\n", false);
 				reportERROR_ONS = true;
@@ -640,30 +583,49 @@ public class DriveTrain_1519_MM extends Subsystem {
 		}
 		
 
-		// check to see if forward/back, strife, and rotation are being
+		// check to see if forward/back, and rotation are being
 		// commanded.
 		// values with magnitude < 0.07 are just "centering noise" and set to
 		// 0.0
+		
 		if ((-0.07 < yIn) && (yIn < 0.07)) {
 			yIn = 0.0;
-		}
-		if ((-0.07 < rotation) && (rotation < 0.07)) {
-			rotation = 0.0;
+		}else{
+			yIn = yIn * FORWARD_BACKWARD_FACTOR;
 		}
 
-		// scale inputs to compensate for miss balance of speeds in different
-		// directions
-		//xIn = xIn;// * STRAFE_FACTOR;
+		double turnScaler = (1-Robot.oi.launchPad.getRawAxis(1))*.5;
+
 		
-		yIn = yIn * FORWARD_BACKWARD_FACTOR;
-		
-		rotation = rotation * ROTATION_FACTOR;
+		// Scall the Rotation Factor
+		if ((-0.07 < rotation) && (rotation < 0.07)) {
+			rotation = 0.0;
+		}else{
+			//rotation = rotation; // .15 is a FeedForward
+			if(my_GetIsCurrentGearHigh()){
+
+				rotation = rotation * turnScaler;
+				//if(Math.abs(rotation) < 0.95){
+				//	rotation = rotation * turnScaler;//ROTATION_FACTOR_LOW_GEAR;
+				//}else{
+				//	rotation = rotation * .55;//ROTATION_FACTOR_HIGH_GEAR;
+				//}
+
+			}else{ //In low gear
+
+				if(Math.abs(rotation) < 0.95){
+					rotation = rotation * .25;//ROTATION_FACTOR_LOW_GEAR;
+				}else{
+					rotation = rotation * .55;
+				}
+			}
+		}
 
 		// apply "slowFactor" if not in "Turbo Mode"
 		if (!Robot.oi.driveTurboMode() || !m_Craling) {
 			//xIn = xIn * 1.0;//SLOW_FACTOR;
 			yIn = yIn * 1.0;//SLOW_FACTOR;
-			rotation = rotation * SLOW_FACTOR;
+			
 		}
 
 		// update count of iterations since rotation last commanded
@@ -683,20 +645,61 @@ public class DriveTrain_1519_MM extends Subsystem {
 		} else if (m_iterationsSinceRotationCommanded > m_preserveHeading_Iterations) {
 			if(m_preserveHeading_Enable){
 				rotation = (m_desiredHeading - getHeading()) * kP_preserveHeading_Telepo; 
-				SmartDashboard.putNumber("MaintainHeaading ROtation", rotation);
+				//SmartDashboard.putNumber("MaintainHeaading ROtation", rotation);
 			}
 		}
-		
+
+		double elevator_Drivetrain_Limit_Start = Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1();
+		double elevator_Drivetrain_Limit_Full = Robot.elevator_MM.get_MaxHeight();
+		double elevator_CurrentRAW_Position = Robot.elevator_MM.get_My_CurrentRAW_Postion();
+		double yIn_full_Choke;
+		double rotation_full_Choke;
+		if(my_GetIsCurrentGearHigh()){ 
+			yIn_full_Choke = .75;
+			rotation_full_Choke = .5;
+		}else{
+			yIn_full_Choke = .75;
+			rotation_full_Choke = .5;
+		}
+			// Finaly if the elevator is extended lets slow things down too
+		if(elevator_CurrentRAW_Position > elevator_Drivetrain_Limit_Start){
+			yIn = yIn - (yIn * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
+				(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * yIn_full_Choke)) ;
+			rotation = rotation - (rotation * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
+			(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * rotation_full_Choke)) ;
+		}
+		SmartDashboard.putNumber("rotation", turnScaler);
+
+
+		//if(rotation>.3){
+		//	rotation=.3;
+		//}
+		//if(rotation<-.3){
+		//	rotation=-.3;
+		//}
+
 		driveCartesian(yIn, rotation);
 	}
 
-	public void driveAutonomous(double xIn, double yIn, double rotation,	double heading) {
+	public void driveAutonomous(double yIn, double rotation, double heading) {
 		m_desiredHeading = heading;
 
 		// preserve heading if no rotation is commanded
 		if ((-0.01 < rotation) && (rotation < 0.01)) {
 			rotation = (m_desiredHeading - getHeading()) * kP_preserveHeading_Auto; //In Auto keep the snappy action
+		
 		}
+
+		double limit = .3;
+		if(rotation > limit){
+			rotation = limit;
+		}else if(rotation < -limit){
+			rotation = -limit;
+		}
+
+		//SmartDashboard.putNumber("m_desiredHeading", m_desiredHeading);
+		//SmartDashboard.putNumber("getHeading",getHeading());
+		//SmartDashboard.putNumber("rotation", rotation);
 		driveCartesian(yIn, rotation);
 	}
 	
@@ -733,8 +736,8 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void driveCartesian(double yIn, double rotation) {
 		int talonIndex = 0;
 
-		m_wheelSpeeds[kLeft] = yIn + rotation;
-		m_wheelSpeeds[kRight] = yIn - rotation;
+		m_wheelSpeeds[kLeft] = -yIn + rotation;
+		m_wheelSpeeds[kRight] = -yIn - rotation;
 
 		normalizeAndScaleWheelSpeeds();
 		correctInvertedMotors();
@@ -742,11 +745,27 @@ public class DriveTrain_1519_MM extends Subsystem {
 		// want to do all the sets immediately after one another to minimize
 		// delay between commands
 		// set all Talon SRX encoder values to zero
+		//SmartDashboard.putNumber("Left talon", m_wheelSpeeds[kLeft]);
+		//SmartDashboard.putNumber("Right talon", m_wheelSpeeds[kRight]);
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
-			SmartDashboard.putNumber("Left talon", m_wheelSpeeds[kLeft]);
-			SmartDashboard.putNumber("Right talon", m_wheelSpeeds[kRight]);
 			m_talons[talonIndex].set(m_closedLoopMode2018, m_wheelSpeeds[talonIndex]);		
 		}
+		//m_talons[0].set(m_closedLoopMode2018, m_wheelSpeeds[0]);
+		//m_talons[1].set(m_closedLoopMode2018, m_wheelSpeeds[1]);
 
+	}
+	 public boolean get_my_Gyro_IsReady(){
+		if(_pidgey.getState().value == 2){
+			return true;
+		}else{
+			return false;
+		}
+	 }
+
+	public void diagnostics() {
+		
+		SmartDashboard.putNumber("Heading", getHeading());
+//		SmartDashboard.putNumber("Encoder Distance", getDistanceTraveled());
+	
 	}
 }
