@@ -13,6 +13,7 @@ package org.usfirst.frc3244.Jupiter2019;
 
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Left_From_Center;
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Right_From_Center;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Arm_To_Pick_Cargo;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Cargo_Intake;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_Arm_Reset;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_LVL1_Cargo;
@@ -191,7 +192,7 @@ public class OI {
         //setUp_OR_Buttons() x_xBox_Driver.whenPressed(new CG_Elevator_Arm_Reset());
 
         y_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_Y_BUTTON);
-        y_xBox_Driver.whenPressed(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PICK_FLOOR));
+        y_xBox_Driver.whenPressed(new CG_Arm_To_Pick_Cargo());
 
         lb_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_LEFT_BUTTON);
         lb_xBox_Driver.whenPressed(new CG_HatchGrabSeqStart());
@@ -264,7 +265,7 @@ public class OI {
       //lb_xBox_CoDriver.whenPressed(new);
       
       rb_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_RIGHT_BUTTON);
-      //rb_xBox_CoDriver.whenPressed(new);
+      rb_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), true));
       
       start_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_START_BUTTON);
       start_xBox_CoDriver.whenPressed(new CG_Hatch_Pick_Prepair_From_Floor());

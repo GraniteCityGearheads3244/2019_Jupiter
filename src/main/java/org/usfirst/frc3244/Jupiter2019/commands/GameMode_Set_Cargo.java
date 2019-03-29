@@ -32,6 +32,8 @@ public class GameMode_Set_Cargo extends InstantCommand {
     Robot.elevator_MM.setCurrent_GameMode_Cargo();
     // If Bandwidth issues then try this
     Robot.oi.get_my_LimeLight().setStream(StreamType.kPiPSecondary);
+
+    Robot.rgb_LEDs.set_myRGB("red1");
   }
 
 }

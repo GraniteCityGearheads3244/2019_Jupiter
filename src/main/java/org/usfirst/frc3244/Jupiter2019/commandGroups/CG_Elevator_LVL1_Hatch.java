@@ -40,7 +40,7 @@ public class CG_Elevator_LVL1_Hatch extends CommandGroup {
     // arm.
 
     addParallel(new LimeLight_SetPIP(StreamType.kPiPMain));
-    addParallel(new LimeLight_SetPipeline(1));
+    //addParallel(new LimeLight_SetPipeline(1));
     addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1(),true));
     addSequential(new Arm_To_Setpoint(Robot.arm_MM.HATCH_PLACE_ROCKET_LVL1),4);
   }

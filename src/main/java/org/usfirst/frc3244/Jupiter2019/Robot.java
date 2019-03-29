@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 
         //Is there a USB CAMERA???
         UsbCamera cam0 = CameraServer.getInstance().startAutomaticCapture();
-        cam0.setFPS(20);
+        cam0.setFPS(15);
         cam0.setResolution(320,240); // 160x120 or 320x240
         
     }
@@ -188,9 +188,9 @@ public class Robot extends TimedRobot {
 
         Alliance currentAlliance = DriverStation.getInstance().getAlliance();
         if(currentAlliance == Alliance.Red){
-            Robot.rgb_LEDs.set_myRGB("red1");
+            //Robot.rgb_LEDs.set_myRGB("red1");
         }else if(currentAlliance == Alliance.Blue){
-            Robot.rgb_LEDs.set_myRGB("blue1");
+            //Robot.rgb_LEDs.set_myRGB("blue1");
         }
 
         //Turn off all the Launchpad LEDs

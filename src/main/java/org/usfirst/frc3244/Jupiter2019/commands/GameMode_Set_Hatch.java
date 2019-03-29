@@ -32,6 +32,9 @@ public class GameMode_Set_Hatch extends InstantCommand {
     Robot.elevator_MM.setCurrent_GameMode_Hatch();
     // If Bandwidth issues then try this
     Robot.oi.get_my_LimeLight().setStream(StreamType.kPiPMain);
+
+    Robot.rgb_LEDs.set_myRGB("blue1");
+    
   }
 
 }

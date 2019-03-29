@@ -34,7 +34,7 @@ public class Arm_MM extends Subsystem {
 
 	// BALLS
 	public double CARGO_PLACE_CARGOBAY = 30;
-	public double CARGO_PLACE_ROCKET_LVL1 = 330;
+	public double CARGO_PLACE_ROCKET_LVL1 = 340; //330/
 	public double CARGO_PLACE_ROCKET_LVL2 = 10; //
 	public double CARGO_PLACE_ROCKET_LVL3 = 10; //
 

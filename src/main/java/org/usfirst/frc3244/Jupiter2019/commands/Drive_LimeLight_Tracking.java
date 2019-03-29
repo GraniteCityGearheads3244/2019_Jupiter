@@ -50,7 +50,7 @@ public class Drive_LimeLight_Tracking extends Command {
   @Override
   protected void execute() {
     double kp = .07;
-    double yIn = 0.0;
+    double yIn = Robot.oi.driveY();
     double rotation = 0.0;
    
     LimeLight limelight = Robot.oi.get_my_LimeLight();
@@ -77,8 +77,8 @@ public class Drive_LimeLight_Tracking extends Command {
       if(debug){
         SmartDashboard.putBoolean("Target Found", false);
       }
-      yIn = 0.0;
-      rotation = 0.0;
+      //yIn = 0.0;
+      rotation = Robot.oi.driveRotation();;
       
       if(!targetONS2){
         Robot.rgb_LEDs.set_myRGB("green1");

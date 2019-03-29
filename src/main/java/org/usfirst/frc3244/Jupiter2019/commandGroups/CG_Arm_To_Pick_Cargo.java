@@ -5,24 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc3244.Jupiter2019.AutoCommands;
+package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
-import org.usfirst.frc3244.Jupiter2019.commands.Drive_For_Distance_PID;
-import org.usfirst.frc3244.Jupiter2019.commands.Drive_ShiftLow;
-import org.usfirst.frc3244.Jupiter2019.commands.Drive_Turn_To_Setpoint;
+import org.usfirst.frc3244.Jupiter2019.Robot;
+import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
+import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class Auto_11_Drive_Left_Cargo_Pos1 extends CommandGroup {
+public class CG_Arm_To_Pick_Cargo extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public Auto_11_Drive_Left_Cargo_Pos1() {
-    
-    /** Deg Positive Turn to the left */
-    
-    addSequential(new Drive_For_Distance_PID(0.75, 170, 5.0));
-    addSequential(new Drive_Turn_To_Setpoint(-90),1);
-    //addSequential(new Drive_ShiftLow());
+  public CG_Arm_To_Pick_Cargo() {
+    addParallel(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PICK_FLOOR));
+    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), false),5);
   }
 }

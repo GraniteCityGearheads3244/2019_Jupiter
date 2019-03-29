@@ -594,25 +594,29 @@ public class DriveTrain_1519_MM extends Subsystem {
 			yIn = yIn * FORWARD_BACKWARD_FACTOR;
 		}
 
+		double turnScaler = (1-Robot.oi.launchPad.getRawAxis(1))*.5;
+
+		
 		// Scall the Rotation Factor
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
 		}else{
-			rotation = rotation + .15; // .15 is a FeedForward
+			//rotation = rotation; // .15 is a FeedForward
 			if(my_GetIsCurrentGearHigh()){
 
-				if(Math.abs(rotation) < 0.85){
-					rotation = rotation * .35;//ROTATION_FACTOR_LOW_GEAR;
-				}else{
-					rotation = rotation * .75;//ROTATION_FACTOR_HIGH_GEAR;
-				}
+				rotation = rotation * turnScaler;
+				//if(Math.abs(rotation) < 0.95){
+				//	rotation = rotation * turnScaler;//ROTATION_FACTOR_LOW_GEAR;
+				//}else{
+				//	rotation = rotation * .55;//ROTATION_FACTOR_HIGH_GEAR;
+				//}
 
 			}else{ //In low gear
 
-				if(Math.abs(rotation) < 0.85){
-					rotation = rotation * .40;//ROTATION_FACTOR_LOW_GEAR;
+				if(Math.abs(rotation) < 0.95){
+					rotation = rotation * .25;//ROTATION_FACTOR_LOW_GEAR;
 				}else{
-					rotation = rotation * .75;
+					rotation = rotation * .55;
 				}
 			}
 		}
@@ -664,7 +668,16 @@ public class DriveTrain_1519_MM extends Subsystem {
 			rotation = rotation - (rotation * (((elevator_CurrentRAW_Position - elevator_Drivetrain_Limit_Start) / 
 			(elevator_Drivetrain_Limit_Full - elevator_Drivetrain_Limit_Start)) * rotation_full_Choke)) ;
 		}
-		//SmartDashboard.putNumber("rotation", rotation);
+		SmartDashboard.putNumber("rotation", turnScaler);
+
+
+		//if(rotation>.3){
+		//	rotation=.3;
+		//}
+		//if(rotation<-.3){
+		//	rotation=-.3;
+		//}
+
 		driveCartesian(yIn, rotation);
 	}
 

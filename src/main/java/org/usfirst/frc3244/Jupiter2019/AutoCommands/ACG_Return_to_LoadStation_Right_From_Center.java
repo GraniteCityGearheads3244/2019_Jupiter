@@ -22,9 +22,9 @@ public class ACG_Return_to_LoadStation_Right_From_Center extends CommandGroup {
     /** Deg Positive Turn to the left */
 
     addParallel(new CG_Elevator_Arm_Reset());
-    addSequential(new Drive_Turn_To_Setpoint(-110),2);
-    addSequential(new Drive_For_Distance_PID(.25, 110, -110));
+    addSequential(new Drive_Turn_To_Setpoint(-125),2);
+    addSequential(new Drive_For_Distance_PID(.65, 110, -125));
     addSequential(new Drive_Turn_To_Setpoint(-180),1);
-    addSequential(new Drive_For_Distance_PID(.25, 24, -180),3);
+    addSequential(new Drive_For_Distance_PID(.65, 24, -180),3);
   }
 }

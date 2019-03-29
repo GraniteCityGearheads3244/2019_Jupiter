@@ -56,7 +56,7 @@ public class Arm_To_Setpoint extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    Robot.arm_MM.my_Arm_Stop();
+    //Robot.arm_MM.my_Arm_Stop();
     end();
   }
 }
