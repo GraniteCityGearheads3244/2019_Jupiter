@@ -21,26 +21,12 @@ public class CG_Elevator_LVL1_Cargo_Ship extends CommandGroup {
    * Add your docs here.
    */
   public CG_Elevator_LVL1_Cargo_Ship() {
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
-
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
+   
 
     addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
     addParallel(new LimeLight_SetPipeline(0));
+    addParallel(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_CARGOBAY),4);
     addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Bay_Position(),true));
-    addSequential(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_CARGOBAY),4);
+    
   }
 }

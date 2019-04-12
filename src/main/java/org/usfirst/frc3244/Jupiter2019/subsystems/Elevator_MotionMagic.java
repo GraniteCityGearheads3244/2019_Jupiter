@@ -56,7 +56,7 @@ public class Elevator_MotionMagic extends Subsystem {
 	 //Deliver To Rocket
 	 private double Deliver_Hatch_Rocket_Position1 = 230; //250; //19"
 	 private double Deliver_Hatch_Rocket_Position2 = 560; //45"
-	 private double Deliver_Hatch_Rocket_Position3 = 640; //675; //75" with Arm set at 520 units;
+	 private double Deliver_Hatch_Rocket_Position3 = 650; //675; //75" with Arm set at 520 units;
 	 private double Deliver_Cargo_Rocket_Position1 = 160; // Roller at 34 with Arm set at 330 units;
 	 private double Deliver_Cargo_Rocket_Position2 = 375; // Center ball @ 57.5   (Was 410)
 	 private double Deliver_Cargo_Rocket_Position3 = 640; //660; // Center ball @ 83" was(710)
