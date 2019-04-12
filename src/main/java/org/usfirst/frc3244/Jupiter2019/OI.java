@@ -218,8 +218,9 @@ public class OI {
         rt_xBox_Driver.whileHeld(new Cargo_Eject(-1));
 
         lt_xBox_Driver = new JoystickAxisButton(xBox_Driver, GAMEPAD_XBOX_LEFT_TRIGGER);
-        lt_xBox_Driver.whileHeld(new CG_Cargo_Intake());
-        
+        //lt_xBox_Driver.whileHeld(new CG_Cargo_Intake());//Cargo_Intake(1)
+        lt_xBox_Driver.whileHeld(new Cargo_Intake(1));
+
         povNorth_xBox_Driver = new JoystickPOVButton(xBox_Driver, JoystickPOVButton.NORTH);
         povNorth_xBox_Driver.whileHeld(new Drive_Turn_To_Setpoint_InTeleop(0.0, 0.0f));
 
@@ -313,7 +314,8 @@ public class OI {
       btn2_launchPad.whenPressed(new ACG_Return_to_LoadStation_Right_From_Center());
 
       btn3_launchPad = new JoystickButton(launchPad,3);
-      //btn3_launchPad.whileHeld(new RGB_Test());
+      btn3_launchPad.whenPressed(new DriveToggle_Camera());
+      btn3_launchPad.whenReleased(new DriveToggle_Camera());
 
       btn4_launchPad = new JoystickButton(launchPad,4);
       btn4_launchPad.whenPressed(new CG_LimeLight_Set_Drive_Hatch());
@@ -334,6 +336,7 @@ public class OI {
       //btn9_launchPad.whileHeld(new CG_Elevator_LVL1_Hatch());
 
       btn10_launchPad = new JoystickButton(launchPad,9);
+      //btn10_launchPad.whileHeld(new Cargo_Intake_Hold());
 
       //btn11_launchPad Used as a logic over ride = new JoystickButton(launchPad,9);
 

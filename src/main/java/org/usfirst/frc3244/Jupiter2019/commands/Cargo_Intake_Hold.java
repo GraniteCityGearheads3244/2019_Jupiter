@@ -11,14 +11,11 @@ import org.usfirst.frc3244.Jupiter2019.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class Cargo_Intake extends Command {
-  private double m_power;
-
-  public Cargo_Intake(double power) {
+public class Cargo_Intake_Hold extends Command {
+  public Cargo_Intake_Hold() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.cargoIntake);
-    m_power = power;
   }
 
   // Called just before this Command runs the first time
@@ -29,7 +26,12 @@ public class Cargo_Intake extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.cargoIntake.my_Cargo_Intake(1);
+    //if(Robot.oi.launchPad.getRawButton(10)){
+    //  Robot.cargoIntake.my_Cargo_Intake(.1);
+    //}else{
+    //  Robot.cargoIntake.my_Cargo_Intake(0);
+    //}
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -41,11 +43,7 @@ public class Cargo_Intake extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    //if(Robot.oi.launchPad.getRawButton(10)){
-      Robot.cargoIntake.my_Cargo_Intake(.1);
-    //}else{
-    //  Robot.cargoIntake.my_Cargo_Intake(0);
-    //}
+    Robot.cargoIntake.my_Cargo_Intake(0);
   }
 
   // Called when another command which requires one or more of the same
