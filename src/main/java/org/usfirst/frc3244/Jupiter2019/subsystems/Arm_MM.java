@@ -229,4 +229,11 @@ public class Arm_MM extends Subsystem {
 		_talon.set(ControlMode.Position, get_My_CurrentRAW_Postion());
 	}
 
+	/**
+	 * Applies power to hold the arm in the home position while spinning or playing defence. 
+	 */
+	public void set_arm_Hold(){
+		_talon.set(ControlMode.PercentOutput,.1);
+	}
+
 }

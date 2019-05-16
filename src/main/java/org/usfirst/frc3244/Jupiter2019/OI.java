@@ -13,6 +13,7 @@ package org.usfirst.frc3244.Jupiter2019;
 
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Left_From_Center;
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Right_From_Center;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Arm_Hold_Defencive_Position;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Arm_To_Pick_Cargo;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Cargo_Intake;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_Arm_Reset;
@@ -327,7 +328,7 @@ public class OI {
       btn6_launchPad.whileHeld(new CG_LimeLight_Set_Target_Right_Hatch());
       
       btn7_launchPad = new JoystickButton(launchPad,7);
-      //btn7_launchPad.whileHeld(new CG_Elevator_LVL3_Hatch());
+      btn7_launchPad.whenPressed(new CG_Arm_Hold_Defencive_Position());
 
       btn8_launchPad = new JoystickButton(launchPad,8);
       //btn8_launchPad.whileHeld(new CG_Elevator_LVL2_Hatch());
