@@ -7,6 +7,7 @@
 
 package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
+import org.usfirst.frc3244.Jupiter2019.commands.Elevator_Shift_To_Release_Hatch;
 import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Retract;
 import org.usfirst.frc3244.Jupiter2019.commands.HatchGripper_Ungrip;
 
@@ -22,6 +23,7 @@ public class CG_HatchDeliverSeqComplete extends CommandGroup {
 
    addSequential(new WaitCommand(.5));
 
-   addSequential(new HatchGripper_Retract());
+   addParallel(new HatchGripper_Retract());
+   addSequential(new Elevator_Shift_To_Release_Hatch(true), 1);
   }
 }
