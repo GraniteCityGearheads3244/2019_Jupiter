@@ -597,10 +597,12 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double turnScaler = (1-Robot.oi.launchPad.getRawAxis(1))*.5;
 
 		
+		
 		// Scall the Rotation Factor
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
 		}else{
+			rotation = Math.copySign(rotation*rotation,rotation);
 			//rotation = rotation; // .15 is a FeedForward
 			if(my_GetIsCurrentGearHigh()){
 
