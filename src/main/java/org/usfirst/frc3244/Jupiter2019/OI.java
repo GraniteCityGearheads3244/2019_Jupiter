@@ -40,7 +40,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc3244.Jupiter2019.subsystems.*;
+import org.usfirst.frc3244.Jupiter2019.util.ANDJoystickAxisButton;
 import org.usfirst.frc3244.Jupiter2019.util.AndJoystickButton;
+import org.usfirst.frc3244.Jupiter2019.util.AndNOTJoystickButton2;
 import org.usfirst.frc3244.Jupiter2019.util.JoystickAxisButton;
 import org.usfirst.frc3244.Jupiter2019.util.JoystickPOVButton;
 import org.usfirst.frc3244.Jupiter2019.util.OrJoystickButton;
@@ -55,6 +57,7 @@ public class OI {
     public Joystick xBox_Driver;
     public Joystick xBox_CoDriver;
     public Joystick launchPad;
+    public Joystick guitarHero;
 
     //Xbox game pad Channels
     public static final int GAMEPAD_XBOX_LEFT_X_AXIS = 0;//
@@ -74,6 +77,14 @@ public class OI {
     public static final int GAMEPAD_XBOX_START_BUTTON = 8;//
     public static final int GAMEPAD_XBOX_LEFT_STICK_BUTTON = 9;
     public static final int GAMEPAD_XBOX_RIGHT_STICK_BUTTON = 10;
+
+    public static final int GUITAR_GREEN = 1;
+    public static final int GUITAR_RED = 2;
+    public static final int GUITAR_YELLOW = 4;
+    public static final int GUITAR_BLUE = 3;
+    public static final int GUITAR_ORANGE = 5;
+    public static final int GUITAR_BACK = 7;
+    public static final int GUITAR_START = 8;
     
 
      /**
@@ -146,7 +157,22 @@ public class OI {
     public AndJoystickButton btn4_;
     
     public OrJoystickButton elevator_Down_OR_BTN;
-        
+
+    public AndNOTJoystickButton2 guitar_GREEN_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_RED_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_YELLOW_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_BLUE_BTN_Hatch;
+    public JoystickButton guitar_ORANGE_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_START_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_BACK_BTN_Hatch;
+
+    public AndJoystickButton guitar_GREEN_BTN_CARGO;
+    public AndJoystickButton guitar_RED_BTN_CARGO;
+    public AndJoystickButton guitar_YELLOW_BTN_CARGO;
+    public JoystickPOVButton guitar_STRUM_UP;
+    public JoystickPOVButton guitar_STRUM_DOWN;
+
+    public ANDJoystickAxisButton guitar_TILT;
     
     /*
      *	 	LTa2						RTa3
@@ -176,7 +202,9 @@ public class OI {
     	setUp_AND_Buttons(); //Do this after all joy sticks are declared.
     	setUp_OR_Buttons(); //Do this after all joy sticks are declared. 
     	
-    	setUp_SmartDashboard_Buttons();
+      setUp_SmartDashboard_Buttons();
+      
+      setUp_Controler_Guitar_Hero();
   
       limeLight = new LimeLight(); 
     }
@@ -249,6 +277,43 @@ public class OI {
       
     }
 
+    private void setUp_Controler_Guitar_Hero(){
+
+      guitarHero = new Joystick(3);
+
+      guitar_ORANGE_BTN_Hatch = new JoystickButton(guitarHero, GUITAR_ORANGE);
+      guitar_ORANGE_BTN_Hatch.whenPressed(new CG_Elevator_Arm_Reset());
+
+      guitar_GREEN_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_GREEN, guitarHero, GUITAR_START);
+      guitar_GREEN_BTN_Hatch.whenPressed(new CG_Elevator_LVL1_Hatch());
+
+      guitar_RED_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_RED, guitarHero, GUITAR_START);
+      guitar_RED_BTN_Hatch.whenPressed(new CG_Elevator_LVL2_Hatch());
+
+      guitar_YELLOW_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_YELLOW, guitarHero, GUITAR_START);
+      guitar_YELLOW_BTN_Hatch.whenPressed(new CG_Elevator_LVL3_Hatch());
+
+
+      guitar_GREEN_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_GREEN, guitarHero, GUITAR_START);
+      guitar_GREEN_BTN_CARGO.whenPressed(new CG_Elevator_LVL1_Cargo());
+
+      guitar_RED_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_RED, guitarHero, GUITAR_START);
+      guitar_RED_BTN_CARGO.whenPressed(new CG_Elevator_LVL2_Cargo());
+
+      guitar_YELLOW_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_YELLOW, guitarHero, GUITAR_START);
+      guitar_YELLOW_BTN_CARGO.whenPressed(new CG_Elevator_LVL3_Cargo());
+
+   
+      guitar_STRUM_UP = new JoystickPOVButton(guitarHero, JoystickPOVButton.NORTH);
+      guitar_STRUM_UP.whenPressed(new CG_Hatch_Pick_From_Floor());
+
+      guitar_STRUM_DOWN = new JoystickPOVButton(guitarHero, JoystickPOVButton.SOUTH);
+      guitar_STRUM_DOWN.whenPressed(new CG_Hatch_Pick_Prepair_From_Floor());
+
+      //guitar_TILT = new ANDJoystickAxisButton(guitarHero, 5 , guitarHero, GUITAR_BACK);
+      //guitar_TILT.whileHeld(new Elevator_Jog_MotoinMagic_GUITARHERO(false));
+
+    }
     private void setUp_Controler_xBox_CoDriver(){
 
       //setUp_OR_Buttons() a_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
@@ -427,6 +492,10 @@ public class OI {
     public LimeLight get_my_LimeLight(){
       return limeLight;
     }
+
+	public double guitarHero_Right_AxisY() {
+		  return -guitarHero.getRawAxis(5);
+	}
 
 }
 
