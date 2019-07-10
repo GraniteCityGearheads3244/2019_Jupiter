@@ -38,15 +38,9 @@ public class Elevator_Jog_MotoinMagic_GUITARHERO extends Command {
   @Override
   protected void execute() {
     double joystick = Robot.oi.guitarHero_Right_AxisY();
-    m_Setpoint = get_Jog_Setpoint(joystick);	
-
-    	//if(joystick>0) {
-    	//m_Setpoint = Robot.elevator_MM.get_MaxHeight();
-    	//}else {
-    	//	m_Setpoint = Robot.elevator_MM.get_minHeight();
-    	//}
+    m_Setpoint = get_Jog_Setpoint(joystick);
     	
-    	Robot.elevator_MM.my_ScissorMotionMagic(m_Setpoint);
+    Robot.elevator_MM.my_ScissorMotionMagic(m_Setpoint);
   }
 
   private double get_Jog_Setpoint(double setpoint){

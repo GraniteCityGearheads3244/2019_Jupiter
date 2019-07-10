@@ -40,7 +40,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc3244.Jupiter2019.subsystems.*;
-import org.usfirst.frc3244.Jupiter2019.util.ANDJoystickAxisButton;
 import org.usfirst.frc3244.Jupiter2019.util.AndJoystickButton;
 import org.usfirst.frc3244.Jupiter2019.util.AndNOTJoystickButton2;
 import org.usfirst.frc3244.Jupiter2019.util.JoystickAxisButton;
@@ -158,6 +157,9 @@ public class OI {
     
     public OrJoystickButton elevator_Down_OR_BTN;
 
+     /**
+     * Declare guitar Buttons
+     */
     public AndNOTJoystickButton2 guitar_GREEN_BTN_Hatch;
     public AndNOTJoystickButton2 guitar_RED_BTN_Hatch;
     public AndNOTJoystickButton2 guitar_YELLOW_BTN_Hatch;
@@ -172,7 +174,7 @@ public class OI {
     public JoystickPOVButton guitar_STRUM_UP;
     public JoystickPOVButton guitar_STRUM_DOWN;
 
-    public ANDJoystickAxisButton guitar_TILT;
+    public JoystickButton guitar_BACK;
     
     /*
      *	 	LTa2						RTa3
@@ -310,8 +312,8 @@ public class OI {
       guitar_STRUM_DOWN = new JoystickPOVButton(guitarHero, JoystickPOVButton.SOUTH);
       guitar_STRUM_DOWN.whenPressed(new CG_Hatch_Pick_Prepair_From_Floor());
 
-      //guitar_TILT = new ANDJoystickAxisButton(guitarHero, 5 , guitarHero, GUITAR_BACK);
-      //guitar_TILT.whileHeld(new Elevator_Jog_MotoinMagic_GUITARHERO(false));
+      guitar_BACK = new JoystickButton(guitarHero, GUITAR_BACK);
+      guitar_BACK.whileHeld(new Elevator_Jog_MotoinMagic_GUITARHERO(false));
 
     }
     private void setUp_Controler_xBox_CoDriver(){
