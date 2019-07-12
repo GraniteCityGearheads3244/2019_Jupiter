@@ -57,6 +57,7 @@ public class OI {
     public Joystick xBox_CoDriver;
     public Joystick launchPad;
     public Joystick guitarHero;
+    public Joystick ddr;
 
     //Xbox game pad Channels
     public static final int GAMEPAD_XBOX_LEFT_X_AXIS = 0;//
@@ -175,6 +176,15 @@ public class OI {
     public JoystickPOVButton guitar_STRUM_DOWN;
 
     public JoystickButton guitar_BACK;
+
+    public JoystickButton ddr_NORTH;
+    public JoystickButton ddr_SOUTH;
+    public JoystickButton ddr_WEST;
+    public JoystickButton ddr_EAST;
+    public JoystickButton ddr_NORTHWEST;
+    public JoystickButton ddr_NORTHEAST;
+    public JoystickButton ddr_SOUTHWEST;
+    public JoystickButton ddr_SOUTHEAST;
     
     /*
      *	 	LTa2						RTa3
@@ -207,6 +217,7 @@ public class OI {
       setUp_SmartDashboard_Buttons();
       
       setUp_Controler_Guitar_Hero();
+      setUp_Controler_DDR();
   
       limeLight = new LimeLight(); 
     }
@@ -316,6 +327,15 @@ public class OI {
       guitar_BACK.whileHeld(new Elevator_Jog_MotoinMagic_GUITARHERO(false));
 
     }
+
+    private void setUp_Controler_DDR(){
+      ddr = new Joystick(4);
+
+      ddr_NORTH = new JoystickButton(ddr,1);
+
+    }
+
+
     private void setUp_Controler_xBox_CoDriver(){
 
       //setUp_OR_Buttons() a_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
