@@ -16,12 +16,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Arm_To_Setpoint extends Command {
 
   private double m_setpoint;
+  private boolean m_hold_Stow;
 
   public Arm_To_Setpoint(double setpoint) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.arm_MM);
     m_setpoint = setpoint;
+    m_hold_Stow = false;
+  }
+
+  public Arm_To_Setpoint(double setpoint, boolean stow_hold) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    requires(Robot.arm_MM);
+    m_setpoint = setpoint;
+    m_hold_Stow = stow_hold;
   }
 
   // Called just before this Command runs the first time
@@ -50,6 +60,9 @@ public class Arm_To_Setpoint extends Command {
   @Override
   protected void end() {
 //    DriverStation.reportWarning("Arm to Sepoint End()", false);
+    if (m_hold_Stow){
+      Robot.arm_MM.set_arm_Hold();
+    }
   }
 
   // Called when another command which requires one or more of the same

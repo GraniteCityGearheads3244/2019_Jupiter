@@ -39,7 +39,7 @@ public class CG_Elevator_Arm_Reset extends CommandGroup {
 
     //addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
     addParallel(new LimeLight_SetPipeline(0),1);
-    addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED),2);
+    addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED),2);  //,true),2);
     addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), false),5);
     addSequential(new HatchGripper_Retract(),2);
   }
