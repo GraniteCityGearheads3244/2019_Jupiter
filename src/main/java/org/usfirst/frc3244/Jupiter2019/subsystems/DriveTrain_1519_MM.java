@@ -591,11 +591,16 @@ public class DriveTrain_1519_MM extends Subsystem {
 		if ((-0.07 < yIn) && (yIn < 0.07)) {
 			yIn = 0.0;
 		}else{
-			yIn = yIn * FORWARD_BACKWARD_FACTOR;
+			//yIn = yIn * FORWARD_BACKWARD_FACTOR;
+
+			yIn = Math.copySign(yIn * yIn, yIn);
 		}
 
 		double turnScaler = (1-Robot.oi.launchPad.getRawAxis(1))*.5;
 
+		if(turnScaler<.2){
+			turnScaler = .2;
+		}
 		
 		
 		// Scall the Rotation Factor
