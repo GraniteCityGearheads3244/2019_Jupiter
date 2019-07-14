@@ -149,7 +149,7 @@ public class Robot extends TimedRobot {
         Robot.arm_MM.my_Arm_Stop();
         Robot.hatch_Floor_Pick_MM.my_Arm_Stop();
 
-        Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+        //Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
         Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
     }
 

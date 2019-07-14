@@ -109,7 +109,7 @@ public class Drive_Turn_To_Setpoint_InTeleop extends PIDCommand {
     	getPIDController().disable();
     	// note:  it is important to call mecanumDriveCartesian here, rather than mecanumDriveAutonomous,
     	// to ensure that "heading preservation" isn't activated for the last instruction
-    	Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+    	//Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
     	Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
     	//SmartDashboard.putNumber("Time", m_timer.get());
     }

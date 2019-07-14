@@ -39,7 +39,7 @@ public class Drive_DDR extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+    //Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
     Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
     Robot.driveTrain_1519_MM.clearDesiredHeading();
   }

@@ -124,7 +124,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 
  	private int m_iterationsSinceRotationCommanded = 0;
  	private double m_desiredHeading = 0.0;
- 	private boolean m_drivingAutoInTeleop = false;
+ 	//private boolean m_drivingAutoInTeleop = false;
  	
  	// driving scaling factors
  	private static final double FORWARD_BACKWARD_FACTOR =  1.0;
@@ -735,12 +735,12 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 	
-	public void driveAutoInTeleopFinished() {
-		m_drivingAutoInTeleop = false;
-	}
+	//public void driveAutoInTeleopFinished() {
+	//	m_drivingAutoInTeleop = false;
+	//}
 	
 	public void driveAutoInTeleop(double yIn, double rotation) {
-		m_drivingAutoInTeleop = true;
+		//m_drivingAutoInTeleop = true;
 		
 		// update count of iterations since rotation last commanded
 		if ((-0.01 < rotation) && (rotation < 0.01)) {
