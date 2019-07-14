@@ -40,6 +40,8 @@ import org.usfirst.frc3244.Jupiter2019.subsystems.*;
 public class Robot extends TimedRobot {
 
     public static final boolean DEBUG = false;
+    public static final boolean ENABLE_GUITARHERO = false;
+    public static final boolean ENABLE_DDR = false;
     public static final boolean DIVERSTATION_REPORTS_ENABLED = false;
     //Command autonomousCommand;
     Command autonomousCommand;
@@ -146,6 +148,9 @@ public class Robot extends TimedRobot {
         Robot.elevator_MM.my_ElevatorStop();
         Robot.arm_MM.my_Arm_Stop();
         Robot.hatch_Floor_Pick_MM.my_Arm_Stop();
+
+        Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+        Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
     }
 
     //Disabled variables

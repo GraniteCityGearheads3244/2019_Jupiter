@@ -185,6 +185,15 @@ public class OI {
     public JoystickButton ddr_NORTHEAST;
     public JoystickButton ddr_SOUTHWEST;
     public JoystickButton ddr_SOUTHEAST;
+
+    public static final int DDR_NORTH_PAD = 0;
+    public static final int DDR_SOUTH_PAD = 2;
+    public static final int DDR_WEST_PAD = 0;
+    public static final int DDR_EAST_PAD = 0;
+    public static final int DDR_NORTHWEST_PAD = 0;
+    public static final int DDR_NORTHEAST_PAD = 0;
+    public static final int DDR_SOUTHWEST_PAD = 1;
+    public static final int DDR_SOUTHEAST_PAD = 3;
     
     /*
      *	 	LTa2						RTa3
@@ -206,7 +215,8 @@ public class OI {
 
       xBox_Driver = new Joystick(0);
     	xBox_CoDriver = new Joystick(1);
-    	launchPad = new Joystick(2);
+      launchPad = new Joystick(2);
+      
     	
     	setUp_Controler_xBox_Driver();
     	setUp_Controler_xBox_CoDriver();
@@ -216,8 +226,15 @@ public class OI {
     	
       setUp_SmartDashboard_Buttons();
       
-      setUp_Controler_Guitar_Hero();
-      setUp_Controler_DDR();
+      if(Robot.ENABLE_GUITARHERO){
+        guitarHero = new Joystick(3);
+        setUp_Controler_Guitar_Hero();
+      }
+      
+      if(Robot.ENABLE_DDR){
+        ddr = new Joystick(4);
+        setUp_Controler_DDR();
+      }
   
       limeLight = new LimeLight(); 
     }
@@ -292,8 +309,6 @@ public class OI {
 
     private void setUp_Controler_Guitar_Hero(){
 
-      guitarHero = new Joystick(3);
-
       guitar_ORANGE_BTN_Hatch = new JoystickButton(guitarHero, GUITAR_ORANGE);
       guitar_ORANGE_BTN_Hatch.whenPressed(new CG_Elevator_Arm_Reset());
 
@@ -329,10 +344,18 @@ public class OI {
     }
 
     private void setUp_Controler_DDR(){
-      ddr = new Joystick(4);
 
-      ddr_NORTH = new JoystickButton(ddr,1);
+      ddr_NORTHWEST = new JoystickButton(ddr, DDR_NORTHWEST_PAD);
+      ddr_NORTHWEST.whenPressed(new Drive_DDR_Left_Control(true));
 
+      ddr_SOUTHWEST = new JoystickButton(ddr, DDR_SOUTHWEST_PAD);
+      ddr_SOUTHWEST.whenPressed(new Drive_DDR_Left_Control(false));
+
+      ddr_NORTHEAST = new JoystickButton(ddr, DDR_NORTHEAST_PAD);
+      ddr_NORTHEAST.whenPressed(new Drive_DDR_Right_Control(true));
+
+      ddr_SOUTHEAST = new JoystickButton(ddr, DDR_SOUTHEAST_PAD);
+      ddr_SOUTHEAST.whenPressed(new Drive_DDR_Right_Control(false));
     }
 
 
