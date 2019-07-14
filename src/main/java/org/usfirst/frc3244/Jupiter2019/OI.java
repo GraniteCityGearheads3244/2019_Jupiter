@@ -345,6 +345,12 @@ public class OI {
 
     private void setUp_Controler_DDR(){
 
+      ddr_NORTH = new JoystickButton(ddr, DDR_NORTH_PAD);
+      ddr_NORTH.whenPressed(new Drive_DDR_Balanced_Control(true));
+
+      ddr_SOUTH = new JoystickButton(ddr, DDR_SOUTH_PAD);
+      ddr_SOUTH.whenPressed(new Drive_DDR_Balanced_Control(false));
+      
       ddr_NORTHWEST = new JoystickButton(ddr, DDR_NORTHWEST_PAD);
       ddr_NORTHWEST.whenPressed(new Drive_DDR_Left_Control(true));
 
