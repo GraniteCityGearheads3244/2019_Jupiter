@@ -233,7 +233,8 @@ public class Arm_MM extends Subsystem {
 	 * Applies power to hold the arm in the home position while spinning or playing defence. 
 	 */
 	public void set_arm_Hold(){
-		_talon.set(ControlMode.PercentOutput,.1);
+		_talon.set(ControlMode.PercentOutput,-.2);
+		System.out.println("Hold");
 	}
 
 }

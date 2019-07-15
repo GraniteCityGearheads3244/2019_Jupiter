@@ -36,6 +36,6 @@ public class CG_Arm_Hold_Defencive_Position extends CommandGroup {
     // arm.
 
     addSequential(new Arm_To_Setpoint(Robot.arm_MM.STOWED),1.5); //THis will move the arm into position before the the power is set to hold it
-    addSequential(new Arm_Hold_Stored_Position(),1); //The motor will now be set to hold the arm with constant power
+    addSequential(new Arm_Hold_Stored_Position()); //The motor will now be set to hold the arm with constant power
   }
 }
