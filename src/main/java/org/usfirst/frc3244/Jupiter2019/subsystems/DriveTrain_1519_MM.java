@@ -305,6 +305,17 @@ public class DriveTrain_1519_MM extends Subsystem {
 		m_kPIDLoopIdx = 1;
 
 		SmartDashboard.putBoolean("High Gear", false);
+	}
+	
+	public void shiftMotinMagic(){
+		DriverStation.reportWarning("Shift Highs Gear", false);
+        dBL_Sol_Shifter.set(Value.kReverse);
+		m_maxWheelSpeed_Current = m_maxWheelSpeed_HighGear;
+		rightTalon.selectProfileSlot(2,0);
+		leftTalon.selectProfileSlot(2,0);
+		m_kPIDLoopIdx = 2;
+
+		SmartDashboard.putBoolean("High Gear", true);
     }
 	
 	public double getMaxWheelSpeed() {
@@ -338,15 +349,20 @@ public class DriveTrain_1519_MM extends Subsystem {
 
 	public void setWheelPIDF() {
 		int talonIndex = 0;
-		double wheelP_HighGear = 0.3;//0.5;
+		double wheelP_HighGear = 0.0;//0.5;
 		double wheelI_HighGear = 0.0;
 		double wheelD_HighGear = 0.0;
 		double wheelF_HighGear = 0.1967;
 
-		double wheelP_LowGear = 1.3;//1.5;
+		double wheelP_LowGear = 0.0;//1.5;
 		double wheelI_LowGear = 0.0;
 		double wheelD_LowGear = 0.0;
 		double wheelF_LowGear = 0.5384;
+
+		double wheelP_MotionMagic = 0.3;//0.5;
+		double wheelI_MotionMagic = 0.0;
+		double wheelD_MotionMagic = 0.0;
+		double wheelF_MotionMagic = 0.1967;
 
 		// set the PID values for each individual wheel
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
@@ -360,6 +376,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 			m_talons[talonIndex].config_kI(1, wheelI_LowGear, 0);
 			m_talons[talonIndex].config_kD(1, wheelD_LowGear, 0);
 			m_talons[talonIndex].config_kF(1, wheelF_LowGear, 0);
+
+			m_talons[talonIndex].config_kP(2, wheelP_MotionMagic, 0);
+			m_talons[talonIndex].config_kI(2, wheelI_MotionMagic, 0);
+			m_talons[talonIndex].config_kD(2, wheelD_MotionMagic, 0);
+			m_talons[talonIndex].config_kF(2, wheelF_MotionMagic, 0);
 		}
 		DriverStation.reportError("setWheelPIDF:\n", false);
 	}
@@ -687,10 +708,10 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double yIn_full_Choke;
 		double rotation_full_Choke;
 		if(my_GetIsCurrentGearHigh()){ 
-			yIn_full_Choke = .75;
+			yIn_full_Choke =  .85;
 			rotation_full_Choke = .5;
 		}else{
-			yIn_full_Choke = .75;
+			yIn_full_Choke = .85;
 			rotation_full_Choke = .5;
 		}
 			// Finaly if the elevator is extended lets slow things down too
@@ -713,7 +734,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 
-	public void driveAutonomous(double yIn, double rotation, double heading) {
+	private void driveAutonomous(double yIn, double rotation, double heading) {
 		m_desiredHeading = heading;
 
 		// preserve heading if no rotation is commanded
@@ -739,7 +760,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	//	m_drivingAutoInTeleop = false;
 	//}
 	
-	public void driveAutoInTeleop(double yIn, double rotation) {
+	private void driveAutoInTeleop(double yIn, double rotation) {
 		//m_drivingAutoInTeleop = true;
 		
 		// update count of iterations since rotation last commanded
@@ -765,7 +786,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 
-	public void driveCartesian(double yIn, double rotation) {
+	private void driveCartesian(double yIn, double rotation) {
 		int talonIndex = 0;
 
 		m_wheelSpeeds[kLeft] = -yIn + rotation;

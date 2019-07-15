@@ -21,6 +21,7 @@ public class Drive_DDR extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    Robot.driveTrain_1519_MM.shiftMotinMagic();
     Robot.driveTrain_1519_MM.zeroDistanceTraveled();
     Robot.driveTrain_1519_MM.my_ddr_CounterReset();
   }
@@ -41,8 +42,9 @@ public class Drive_DDR extends Command {
   @Override
   protected void end() {
     //Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
-    Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
+    Robot.driveTrain_1519_MM.driveTeleop(0.0, 0.0);
     Robot.driveTrain_1519_MM.clearDesiredHeading();
+    Robot.driveTrain_1519_MM.shiftHigh();
   }
 
   // Called when another command which requires one or more of the same
