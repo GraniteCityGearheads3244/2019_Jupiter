@@ -49,7 +49,7 @@ public class Drive_LimeLight_Tracking extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double kp = .07;
+    double kp = .02;
     double yIn = Robot.oi.driveY();
     double rotation = 0.0;
    
@@ -58,7 +58,7 @@ public class Drive_LimeLight_Tracking extends Command {
       if(debug){
         SmartDashboard.putBoolean("Target Found", true);
       }
-      yIn = Robot.oi.driveY();
+      yIn = Robot.oi.driveY() * 0.5;
       rotation = (-limelight.getdegRotationToTarget() * kp);
 
       if(rotation > .5){
@@ -72,7 +72,7 @@ public class Drive_LimeLight_Tracking extends Command {
         targetONS2 = false;
       }
       
-      Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation);
+      Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation, true,  false);
     }else{
       if(debug){
         SmartDashboard.putBoolean("Target Found", false);

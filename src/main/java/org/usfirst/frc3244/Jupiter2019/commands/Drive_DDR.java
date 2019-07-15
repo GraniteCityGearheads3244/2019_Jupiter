@@ -22,6 +22,7 @@ public class Drive_DDR extends Command {
   @Override
   protected void initialize() {
     Robot.driveTrain_1519_MM.zeroDistanceTraveled();
+    Robot.driveTrain_1519_MM.my_ddr_CounterReset();
   }
 
   // Called repeatedly when this Command is scheduled to run

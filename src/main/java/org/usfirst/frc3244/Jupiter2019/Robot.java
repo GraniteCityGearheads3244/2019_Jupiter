@@ -40,8 +40,8 @@ import org.usfirst.frc3244.Jupiter2019.subsystems.*;
 public class Robot extends TimedRobot {
 
     public static final boolean DEBUG = false;
-    public static final boolean ENABLE_GUITARHERO = false;
-    public static final boolean ENABLE_DDR = false;
+    public static final boolean ENABLE_GUITARHERO = true;
+    public static final boolean ENABLE_DDR = true;
     public static final boolean DIVERSTATION_REPORTS_ENABLED = false;
     //Command autonomousCommand;
     Command autonomousCommand;

@@ -177,6 +177,7 @@ public class OI {
 
     public JoystickButton guitar_BACK;
 
+    public JoystickButton ddr_Enable;
     public JoystickButton ddr_NORTH;
     public JoystickButton ddr_SOUTH;
     public JoystickButton ddr_WEST;
@@ -186,14 +187,15 @@ public class OI {
     public JoystickButton ddr_SOUTHWEST;
     public JoystickButton ddr_SOUTHEAST;
 
-    public static final int DDR_NORTH_PAD = 0;
-    public static final int DDR_SOUTH_PAD = 2;
-    public static final int DDR_WEST_PAD = 0;
-    public static final int DDR_EAST_PAD = 0;
-    public static final int DDR_NORTHWEST_PAD = 0;
-    public static final int DDR_NORTHEAST_PAD = 0;
-    public static final int DDR_SOUTHWEST_PAD = 1;
-    public static final int DDR_SOUTHEAST_PAD = 3;
+
+    public static final int DDR_NORTH_PAD = 13;
+    public static final int DDR_SOUTH_PAD = 15;
+    public static final int DDR_WEST_PAD = 16;
+    public static final int DDR_EAST_PAD = 14;
+    public static final int DDR_NORTHWEST_PAD = 3;
+    public static final int DDR_NORTHEAST_PAD = 2;
+    public static final int DDR_SOUTHWEST_PAD = 4;
+    public static final int DDR_SOUTHEAST_PAD = 1;
     
     /*
      *	 	LTa2						RTa3
@@ -345,6 +347,9 @@ public class OI {
 
     private void setUp_Controler_DDR(){
 
+      ddr_Enable = new JoystickButton(launchPad,8);
+      ddr_Enable.whileHeld(new Drive_DDR());
+      
       ddr_NORTH = new JoystickButton(ddr, DDR_NORTH_PAD);
       ddr_NORTH.whenPressed(new Drive_DDR_Balanced_Control(true));
 

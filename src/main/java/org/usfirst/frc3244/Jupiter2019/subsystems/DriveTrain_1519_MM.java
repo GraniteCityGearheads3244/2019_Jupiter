@@ -338,12 +338,12 @@ public class DriveTrain_1519_MM extends Subsystem {
 
 	public void setWheelPIDF() {
 		int talonIndex = 0;
-		double wheelP_HighGear = 0.0;//0.5;
+		double wheelP_HighGear = 0.3;//0.5;
 		double wheelI_HighGear = 0.0;
 		double wheelD_HighGear = 0.0;
 		double wheelF_HighGear = 0.1967;
 
-		double wheelP_LowGear = 0.0;//1.5;
+		double wheelP_LowGear = 1.3;//1.5;
 		double wheelI_LowGear = 0.0;
 		double wheelD_LowGear = 0.0;
 		double wheelF_LowGear = 0.5384;
@@ -552,7 +552,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	}
 
 	public void driveTeleop(double yIn, double rotation) {
-		driveTeleop(yIn, rotation, true);
+		driveTeleop(yIn, rotation, true, true);
 	}
 	
 	/**
@@ -575,7 +575,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	 *            The rate of rotation for the robot that is completely
 	 *            independent of the translation. [-1.0..1.0]
 	 */
-	public void driveTeleop(double yIn, double rotation,boolean squareInputs) {
+	public void driveTeleop(double yIn, double rotation,boolean square_yInputs, boolean square_rInputs) {
 
 		// check for the presence of the special "crawl" commands and do those
 		// if commanded
@@ -614,7 +614,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 			yIn = 0.0;
 		}else{
 			//yIn = yIn * FORWARD_BACKWARD_FACTOR;
-			if (squareInputs) {
+			if (square_yInputs) {
 				yIn = Math.copySign(yIn * yIn, yIn);
 			}
 		}
@@ -630,7 +630,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
 		}else{
-			if (squareInputs) {
+			if (square_rInputs) {
 				rotation = Math.copySign(rotation*rotation,rotation);
 			}
 			//rotation = rotation; // .15 is a FeedForward
@@ -804,8 +804,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 	public void driveDDR_MotionMagic() {
 		int talonIndex = 0;
 
-		m_wheeltargetPos[kLeft] = get_leftWheel_TargetPosition();
+		m_wheeltargetPos[kLeft] = -get_leftWheel_TargetPosition();
 		m_wheeltargetPos[kRight] = get_RightWheel_TargetPosition();
+
+		SmartDashboard.putNumber("m_wheeltargetPos_LEFT", m_wheeltargetPos[kLeft]);
+		SmartDashboard.putNumber("m_wheeltargetPos_RIGHT", m_wheeltargetPos[kRight]);
 		
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
 			m_talons[talonIndex].set(ControlMode.MotionMagic, m_wheeltargetPos[talonIndex]);		
@@ -820,6 +823,10 @@ public class DriveTrain_1519_MM extends Subsystem {
 		return m_zeroPositions[kRight] + m_ddr_RightCounter;
 	}
 
+	public void my_ddr_CounterReset(){
+		m_ddr_LeftCounter = 0.0;
+		m_ddr_RightCounter = 0.0;
+	}
 	public void my_ddr_LeftCount(boolean countUP) {
 		if(countUP){
 			m_ddr_LeftCounter = m_ddr_LeftCounter + m_ddr_step;
