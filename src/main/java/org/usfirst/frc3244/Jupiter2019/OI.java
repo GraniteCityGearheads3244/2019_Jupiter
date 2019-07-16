@@ -172,6 +172,7 @@ public class OI {
     public AndJoystickButton guitar_GREEN_BTN_CARGO;
     public AndJoystickButton guitar_RED_BTN_CARGO;
     public AndJoystickButton guitar_YELLOW_BTN_CARGO;
+    public AndJoystickButton guitar_BLUE_BTN_CARGO;
     public JoystickPOVButton guitar_STRUM_UP;
     public JoystickPOVButton guitar_STRUM_DOWN;
 
@@ -323,6 +324,8 @@ public class OI {
       guitar_YELLOW_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_YELLOW, guitarHero, GUITAR_START);
       guitar_YELLOW_BTN_Hatch.whenPressed(new CG_Elevator_LVL3_Hatch());
 
+      guitar_BLUE_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_BLUE, guitarHero, GUITAR_START);
+      guitar_BLUE_BTN_CARGO.whenPressed(new CG_Elevator_LVL1_Cargo_Ship());
 
       guitar_GREEN_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_GREEN, guitarHero, GUITAR_START);
       guitar_GREEN_BTN_CARGO.whenPressed(new CG_Elevator_LVL1_Cargo());
@@ -332,7 +335,6 @@ public class OI {
 
       guitar_YELLOW_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_YELLOW, guitarHero, GUITAR_START);
       guitar_YELLOW_BTN_CARGO.whenPressed(new CG_Elevator_LVL3_Cargo());
-
    
       guitar_STRUM_UP = new JoystickPOVButton(guitarHero, JoystickPOVButton.NORTH);
       guitar_STRUM_UP.whenPressed(new CG_Hatch_Pick_From_Floor());

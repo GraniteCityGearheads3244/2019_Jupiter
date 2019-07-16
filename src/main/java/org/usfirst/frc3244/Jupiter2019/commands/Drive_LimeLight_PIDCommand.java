@@ -25,9 +25,9 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
 
 	private static final boolean debug = false;
 	
-	private static final double kP = 0.02;
+	private static final double kP = 0.03;
 	private static final double kI = 0.00;
-	private static final double kD = .10;//0.4;
+	private static final double kD = .20;//0.4;
 	
     private boolean rotateToAngle;
 	private double rotateToAngleRate;
@@ -113,7 +113,7 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
         }
 
         
-        m_y = Robot.oi.driveY() * 0.4;
+        m_y = Robot.oi.driveY() * 0.6;
         Robot.driveTrain_1519_MM.driveTeleop(m_y, m_currentRotationRate, true, false);
   
     }

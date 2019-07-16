@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 
     public static final boolean DEBUG = false;
     public static final boolean ENABLE_GUITARHERO = true;
-    public static final boolean ENABLE_DDR = true;
+    public static final boolean ENABLE_DDR = false;//true;
     public static final boolean DIVERSTATION_REPORTS_ENABLED = false;
     //Command autonomousCommand;
     Command autonomousCommand;

@@ -40,7 +40,8 @@ public class CG_Elevator_LVL1_Cargo extends CommandGroup {
 
     addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
     addParallel(new LimeLight_SetPipeline(0));
-    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position1(),true));
     addSequential(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_ROCKET_LVL1),4);
+    addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position1(),true));
+    
   }
 }
