@@ -24,9 +24,9 @@ public class Drive_Turn_To_Setpoint_InTeleop extends PIDCommand {
 
 	private static final boolean debug = false;
 	
-	private static final double kP = 0.01;
+	private static final double kP = 0.03;
 	private static final double kI = 0.0;
-	private static final double kD = 0.02;
+	private static final double kD = 0.2;
 	
     private boolean rotateToAngle;
 	private double rotateToAngleRate;
