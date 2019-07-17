@@ -53,6 +53,7 @@ import org.usfirst.frc3244.Jupiter2019.util.OrJoystickButton;
  */
 public class OI {
     private LimeLight limeLight;
+    private LimeLight limeLight2;
     public Joystick xBox_Driver;
     public Joystick xBox_CoDriver;
     public Joystick launchPad;
@@ -240,6 +241,7 @@ public class OI {
       }
   
       limeLight = new LimeLight(); 
+      limeLight2 = new LimeLight("limelight-two"); 
     }
 
     private void setUp_Controler_xBox_Driver(){
@@ -549,6 +551,10 @@ public class OI {
 
     public LimeLight get_my_LimeLight(){
       return limeLight;
+    }
+
+    public LimeLight get_my_LimeLight2(){
+      return limeLight2;
     }
 
 	public double guitarHero_Right_AxisY() {

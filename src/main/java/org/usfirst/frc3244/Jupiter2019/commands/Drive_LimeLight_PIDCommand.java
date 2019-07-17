@@ -63,26 +63,34 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
     }
 
     protected double returnPIDInput() {
+        
+        LimeLight limelight;
+        //if Elevator is greater than the mid point between Pos 1 and pos two us the lower Lime Light
+        if(Robot.elevator_MM.get_My_CurrentRAW_Postion() < 270){
+            limelight = Robot.oi.get_my_LimeLight();
+            //limelight.setPipeline(m_pipeline);
+            //Robot.oi.get_my_LimeLight2().setPipeline(0);
+        }else{
+            limelight = Robot.oi.get_my_LimeLight2();
+            //limelight.setPipeline(m_pipeline);
+            //Robot.oi.get_my_LimeLight().setPipeline(0);
+        }
 
-    LimeLight limelight = Robot.oi.get_my_LimeLight();
-    double rotation = 0.0;
-    if(limelight.getIsTargetFound()){
-      if(debug){
-        SmartDashboard.putBoolean("Target Found", true);
-      }
-      
-      Robot.rgb_LEDs.set_myRGB("g2");
-      
-      rotation = limelight.getdegRotationToTarget();
-    }else{
-        Robot.rgb_LEDs.set_myRGB("off");
-
-        rotation = 0.0;
-    }
+        double rotation = 0.0;
+        
+        if(limelight.getIsTargetFound()){
+            if(debug){
+                SmartDashboard.putBoolean("Target Found", true);
+            }
+            Robot.rgb_LEDs.set_myRGB("g2");
+            rotation = limelight.getdegRotationToTarget();
+        }else{
+            Robot.rgb_LEDs.set_myRGB("off");
+            rotation = 0.0;
+        }
         
     	return rotation;
-        //return RobotMap.ahrs.getAngle();
-      
+       
     }
 
     protected void usePIDOutput(double output) {
@@ -95,6 +103,7 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
     protected void initialize() {
 
         Robot.oi.get_my_LimeLight().setPipeline(m_pipeline);
+        Robot.oi.get_my_LimeLight2().setPipeline(m_pipeline);
     	
     	if(debug){
     		System.out.println("tCurrent setpoint: " + m_setpoint);
@@ -138,6 +147,7 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
         Robot.driveTrain_1519_MM.driveTeleop(0.0,0.0);
         Robot.rgb_LEDs.set_myRGB("d");
         Robot.oi.get_my_LimeLight().setPipeline(0);
+        Robot.oi.get_my_LimeLight2().setPipeline(0);
     }
 
     // Called when another command which requires one or more of the same
