@@ -234,12 +234,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
 
-        Alliance currentAlliance = DriverStation.getInstance().getAlliance();
-        if(currentAlliance == Alliance.Red){
-            Robot.rgb_LEDs.set_myRGB("red2");
-        }else if(currentAlliance == Alliance.Blue){
-            Robot.rgb_LEDs.set_myRGB("blue2");
-        }
+        //Alliance currentAlliance = DriverStation.getInstance().getAlliance();
+        //if(currentAlliance == Alliance.Red){
+        //    Robot.rgb_LEDs.set_myRGB("red2");
+        //}else if(currentAlliance == Alliance.Blue){
+        //    Robot.rgb_LEDs.set_myRGB("blue2");
+        //}
 
         //Turn off all the Launchpad LEDs
     	Robot.oi.launchPad.setOutputs(0); 

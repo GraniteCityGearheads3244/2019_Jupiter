@@ -22,7 +22,7 @@ public class RGB_Test extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.rgb_LEDs.set_myRGB("blue1");
+    //Robot.rgb_LEDs.set_myRGB("blue1");
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -40,7 +40,7 @@ public class RGB_Test extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.rgb_LEDs.set_myRGB("blue2");
+    //Robot.rgb_LEDs.set_myRGB("blue2");
     
   }
 

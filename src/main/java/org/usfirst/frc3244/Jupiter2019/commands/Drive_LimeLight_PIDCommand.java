@@ -70,9 +70,13 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
       if(debug){
         SmartDashboard.putBoolean("Target Found", true);
       }
-     
+      
+      Robot.rgb_LEDs.set_myRGB("g2");
+      
       rotation = limelight.getdegRotationToTarget();
     }else{
+        Robot.rgb_LEDs.set_myRGB("off");
+
         rotation = 0.0;
     }
         
@@ -132,7 +136,7 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
     	//Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
         //SmartDashboard.putNumber("Time", m_timer.get());
         Robot.driveTrain_1519_MM.driveTeleop(0.0,0.0);
-        Robot.rgb_LEDs.set_myRGB("off");
+        Robot.rgb_LEDs.set_myRGB("d");
         Robot.oi.get_my_LimeLight().setPipeline(0);
     }
 

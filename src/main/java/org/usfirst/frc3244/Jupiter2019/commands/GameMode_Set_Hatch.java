@@ -33,7 +33,7 @@ public class GameMode_Set_Hatch extends InstantCommand {
     // If Bandwidth issues then try this
     Robot.oi.get_my_LimeLight().setStream(StreamType.kPiPMain);
 
-    Robot.rgb_LEDs.set_myRGB("blue1");
+    //Robot.rgb_LEDs.set_myRGB("blue1");
     
   }
 
