@@ -158,6 +158,7 @@ public class OI {
     public AndJoystickButton btn4_;
     
     public OrJoystickButton elevator_Down_OR_BTN;
+    public OrJoystickButton hatchDeliver_OR_BTN;
 
      /**
      * Declare guitar Buttons
@@ -214,8 +215,11 @@ public class OI {
      *							  +
      */
 
+    private boolean enable_hatchDeliver_OR_BTN;
 
     public OI() {
+
+      enable_hatchDeliver_OR_BTN = true;
 
       xBox_Driver = new Joystick(0);
     	xBox_CoDriver = new Joystick(1);
@@ -262,9 +266,11 @@ public class OI {
         lb_xBox_Driver.whenPressed(new CG_HatchGrabSeqStart());
         lb_xBox_Driver.whenReleased(new CG_HatchGrabSeqComplete());
 
-        rb_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_BUTTON);
-        rb_xBox_Driver.whenPressed(new CG_HatchDeliver());
-        rb_xBox_Driver.whenReleased(new CG_HatchDeliverSeqComplete());
+        if(!enable_hatchDeliver_OR_BTN){
+          rb_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_BUTTON);
+          rb_xBox_Driver.whenPressed(new CG_HatchDeliver());
+          rb_xBox_Driver.whenReleased(new CG_HatchDeliverSeqComplete());
+        }
 
         start_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_START_BUTTON);
         start_xBox_Driver.whenPressed(new GameMode_Set_Cargo());
@@ -475,6 +481,12 @@ public class OI {
     private void setUp_OR_Buttons(){
       elevator_Down_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
       elevator_Down_OR_BTN.whenPressed(new CG_Elevator_Arm_Reset());
+
+      if(enable_hatchDeliver_OR_BTN){
+        hatchDeliver_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_RIGHT_BUTTON);
+        hatchDeliver_OR_BTN.whenPressed(new CG_HatchDeliver());
+        hatchDeliver_OR_BTN.whenReleased(new CG_HatchDeliverSeqComplete());
+    }
       
     }
 
