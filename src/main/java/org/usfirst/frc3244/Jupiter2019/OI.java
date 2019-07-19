@@ -158,7 +158,7 @@ public class OI {
     public AndJoystickButton btn4_;
     
     public OrJoystickButton elevator_Down_OR_BTN;
-    public OrJoystickButton hatchDeliver_OR_BTN;
+    public OrJoystickButton rb_hatchDeliver_OR_BTN;
 
      /**
      * Declare guitar Buttons
@@ -215,11 +215,11 @@ public class OI {
      *							  +
      */
 
-    private boolean enable_hatchDeliver_OR_BTN;
+    private boolean enable_rb_hatchDeliver_OR_BTN;
 
     public OI() {
 
-      enable_hatchDeliver_OR_BTN = true;
+      enable_rb_hatchDeliver_OR_BTN = true;
 
       xBox_Driver = new Joystick(0);
     	xBox_CoDriver = new Joystick(1);
@@ -266,7 +266,7 @@ public class OI {
         lb_xBox_Driver.whenPressed(new CG_HatchGrabSeqStart());
         lb_xBox_Driver.whenReleased(new CG_HatchGrabSeqComplete());
 
-        if(!enable_hatchDeliver_OR_BTN){
+        if(!enable_rb_hatchDeliver_OR_BTN){
           rb_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_BUTTON);
           rb_xBox_Driver.whenPressed(new CG_HatchDeliver());
           rb_xBox_Driver.whenReleased(new CG_HatchDeliverSeqComplete());
@@ -397,9 +397,11 @@ public class OI {
       lb_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_LEFT_BUTTON);
       //lb_xBox_CoDriver.whenPressed(new);
       
-      rb_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_RIGHT_BUTTON);
-      rb_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), true));
-      
+      if(!enable_rb_hatchDeliver_OR_BTN){
+        rb_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_RIGHT_BUTTON);
+        //rb_xBox_CoDriver.whenPressed(new Elevator_To_Setpoint(Robot.elevator_MM.get_bottom_Position(), true));
+      }
+
       start_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_START_BUTTON);
       start_xBox_CoDriver.whenPressed(new CG_Hatch_Pick_Prepair_From_Floor());
       
@@ -482,10 +484,10 @@ public class OI {
       elevator_Down_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
       elevator_Down_OR_BTN.whenPressed(new CG_Elevator_Arm_Reset());
 
-      if(enable_hatchDeliver_OR_BTN){
-        hatchDeliver_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_RIGHT_BUTTON);
-        hatchDeliver_OR_BTN.whenPressed(new CG_HatchDeliver());
-        hatchDeliver_OR_BTN.whenReleased(new CG_HatchDeliverSeqComplete());
+      if(enable_rb_hatchDeliver_OR_BTN){
+        rb_hatchDeliver_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_RIGHT_BUTTON);
+        rb_hatchDeliver_OR_BTN.whenPressed(new CG_HatchDeliver());
+        rb_hatchDeliver_OR_BTN.whenReleased(new CG_HatchDeliverSeqComplete());
     }
       
     }
