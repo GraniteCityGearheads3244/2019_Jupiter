@@ -104,7 +104,7 @@ public class Drive_Turn_To_Setpoint extends PIDCommand {
     	//m_y = Robot.oi.driveY();
     	getPIDController().enable();    
     	m_currentRotationRate = rotateToAngleRate;
-        Robot.driveTrain_1519_MM.driveTeleop(0.0, m_currentRotationRate);
+        Robot.driveTrain_1519_MM.driveTeleop(0.0, m_currentRotationRate,false,false);
   
     }
 

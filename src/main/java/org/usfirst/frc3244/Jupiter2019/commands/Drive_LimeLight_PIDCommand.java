@@ -68,12 +68,12 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
         //if Elevator is greater than the mid point between Pos 1 and pos two us the lower Lime Light
         if(Robot.elevator_MM.get_My_CurrentRAW_Postion() < 270){
             limelight = Robot.oi.get_my_LimeLight();
-            //limelight.setPipeline(m_pipeline);
-            //Robot.oi.get_my_LimeLight2().setPipeline(0);
+            limelight.setPipeline(m_pipeline);
+            Robot.oi.get_my_LimeLight2().setPipeline(0);
         }else{
             limelight = Robot.oi.get_my_LimeLight2();
-            //limelight.setPipeline(m_pipeline);
-            //Robot.oi.get_my_LimeLight().setPipeline(0);
+            limelight.setPipeline(m_pipeline);
+            Robot.oi.get_my_LimeLight().setPipeline(0);
         }
 
         double rotation = 0.0;
@@ -145,9 +145,10 @@ public class Drive_LimeLight_PIDCommand extends PIDCommand {
     	//Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
         //SmartDashboard.putNumber("Time", m_timer.get());
         Robot.driveTrain_1519_MM.driveTeleop(0.0,0.0);
-        Robot.rgb_LEDs.set_myRGB("d");
         Robot.oi.get_my_LimeLight().setPipeline(0);
         Robot.oi.get_my_LimeLight2().setPipeline(0);
+        Robot.rgb_LEDs.set_myRGB("d");
+       
     }
 
     // Called when another command which requires one or more of the same

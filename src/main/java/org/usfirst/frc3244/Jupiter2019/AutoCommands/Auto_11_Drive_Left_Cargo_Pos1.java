@@ -22,7 +22,7 @@ public class Auto_11_Drive_Left_Cargo_Pos1 extends CommandGroup {
     /** Deg Positive Turn to the left */
     
     addSequential(new Drive_For_Distance_PID(0.75, 170, 5.0));
-    addSequential(new Drive_Turn_To_Setpoint(-90),1);
+    addSequential(new Drive_Turn_To_Setpoint(-85),2);
     //addSequential(new Drive_ShiftLow());
   }
 }

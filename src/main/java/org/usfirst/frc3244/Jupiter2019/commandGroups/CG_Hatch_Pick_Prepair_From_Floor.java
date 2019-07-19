@@ -41,7 +41,7 @@ public class CG_Hatch_Pick_Prepair_From_Floor extends CommandGroup {
     // arm.
 
     addParallel(new LimeLight_SetPIP(StreamType.kPiPMain));
-    addParallel(new LimeLight_SetPipeline(0));
+    //addParallel(new LimeLight_SetPipeline(0));
     addParallel(new HatchGripper_Ungrip());
     addParallel(new Arm_To_Setpoint(Robot.arm_MM.STOWED),2);
     addParallel(new Elevator_To_Setpoint(Robot.elevator_MM.get_Intake_Hatch_Floor_Position(),false));

@@ -38,7 +38,7 @@ public class CG_Elevator_LVL3_Hatch extends CommandGroup {
     // arm.
 
     addParallel(new LimeLight_SetPIP(StreamType.kPiPMain));
-    addParallel(new LimeLight_SetPipeline(0));
+    //addParallel(new LimeLight_SetPipeline(0));
     addParallel(new CG_Elevator_LVL3_Hatch_Arm_Swing());
     addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position3(),true));
     //addSequential(new Arm_To_Setpoint(Robot.arm_MM.HATCH_PLACE_ROCKET_LVL3));
