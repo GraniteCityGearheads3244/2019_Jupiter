@@ -23,12 +23,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Hatch_Floor_Pick_MM extends Subsystem {
 
-	public double PERSET_STOWED = 200;
+	public double PERSET_STOWED = 150;
 	public double PERSET_PRE_HANDOFF = 450;
-  public double PERSET_PICK = 950;
+  public double PERSET_PICK = 925;
   
   private double maxSetPoint = 950;
-  private double minSetPoint = 200;
+  private double minSetPoint = 150;
 
   /* Hardware */
   TalonSRX _talon = new TalonSRX(4);
