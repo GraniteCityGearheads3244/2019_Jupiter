@@ -115,7 +115,8 @@ public class DriveTrain_1519_MM extends Subsystem {
  	// create objects needed for independent control of each wheel
  	private WPI_TalonSRX[] m_talons = new WPI_TalonSRX[kMaxNumberOfMotors];
 	private double m_wheelSpeeds[] = new double[kMaxNumberOfMotors];
- 	private double m_zeroPositions[] = new double[kMaxNumberOfMotors];
+	 private double m_zeroPositions[] = new double[kMaxNumberOfMotors];
+	 private double m_wheeltargetPos[] = new double[kMaxNumberOfMotors];
 
  	private boolean m_useVoltageRamp = true;
  	private double m_voltageRampRate = 36.0;//48.0; // in volts/second
@@ -123,7 +124,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 
  	private int m_iterationsSinceRotationCommanded = 0;
  	private double m_desiredHeading = 0.0;
- 	private boolean m_drivingAutoInTeleop = false;
+ 	//private boolean m_drivingAutoInTeleop = false;
  	
  	// driving scaling factors
  	private static final double FORWARD_BACKWARD_FACTOR =  1.0;
@@ -155,6 +156,9 @@ public class DriveTrain_1519_MM extends Subsystem {
  	private boolean reportERROR_ONS = false;
  	
  	private boolean m_Craling = false;
+	private double m_ddr_LeftCounter;
+	private double m_ddr_RightCounter;
+	private double m_ddr_step = 4096 / 8; //1/8 wheel revolution
 
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
@@ -221,6 +225,21 @@ public class DriveTrain_1519_MM extends Subsystem {
 				m_talons[talonIndex].configClosedloopRamp(m_openLoopRamp_sec, Constants.kTimeoutMs);
 			}
 		}
+
+
+		//Motion Magic setups
+		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
+			//m_talons[talonIndex].setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+			m_talons[talonIndex].setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 10, Constants.kTimeoutMs);
+			m_talons[talonIndex].setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, Constants.kTimeoutMs);
+		}
+
+		/* Set acceleration and vcruise velocity - see documentation */
+		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
+			m_talons[talonIndex].configMotionCruiseVelocity(2560, Constants.kTimeoutMs);
+			m_talons[talonIndex].configMotionAcceleration(2560, Constants.kTimeoutMs);
+		}
+
 		// Also need to set up the "inverted motors" array for the mecanum drive
 		// code
 		m_invertedMotors[kLeft] = 1;
@@ -286,6 +305,17 @@ public class DriveTrain_1519_MM extends Subsystem {
 		m_kPIDLoopIdx = 1;
 
 		SmartDashboard.putBoolean("High Gear", false);
+	}
+	
+	public void shiftMotinMagic(){
+		DriverStation.reportWarning("Shift Highs Gear", false);
+        dBL_Sol_Shifter.set(Value.kReverse);
+		m_maxWheelSpeed_Current = m_maxWheelSpeed_HighGear;
+		rightTalon.selectProfileSlot(2,0);
+		leftTalon.selectProfileSlot(2,0);
+		m_kPIDLoopIdx = 2;
+
+		SmartDashboard.putBoolean("High Gear", true);
     }
 	
 	public double getMaxWheelSpeed() {
@@ -329,6 +359,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double wheelD_LowGear = 0.0;
 		double wheelF_LowGear = 0.5384;
 
+		double wheelP_MotionMagic = 0.3;//0.5;
+		double wheelI_MotionMagic = 0.0;
+		double wheelD_MotionMagic = 0.0;
+		double wheelF_MotionMagic = 0.1967;
+
 		// set the PID values for each individual wheel
 		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
 			//m_talons[talonIndex].setPID(wheelP, wheelI, wheelD, wheelF, 0, m_voltageRampRate, 0);
@@ -341,6 +376,11 @@ public class DriveTrain_1519_MM extends Subsystem {
 			m_talons[talonIndex].config_kI(1, wheelI_LowGear, 0);
 			m_talons[talonIndex].config_kD(1, wheelD_LowGear, 0);
 			m_talons[talonIndex].config_kF(1, wheelF_LowGear, 0);
+
+			m_talons[talonIndex].config_kP(2, wheelP_MotionMagic, 0);
+			m_talons[talonIndex].config_kI(2, wheelI_MotionMagic, 0);
+			m_talons[talonIndex].config_kD(2, wheelD_MotionMagic, 0);
+			m_talons[talonIndex].config_kF(2, wheelF_MotionMagic, 0);
 		}
 		DriverStation.reportError("setWheelPIDF:\n", false);
 	}
@@ -532,6 +572,9 @@ public class DriveTrain_1519_MM extends Subsystem {
 		}
 	}
 
+	public void driveTeleop(double yIn, double rotation) {
+		driveTeleop(yIn, rotation, true, true);
+	}
 	
 	/**
 	 * Drive method for Mecanum wheeled robots.
@@ -553,7 +596,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 	 *            The rate of rotation for the robot that is completely
 	 *            independent of the translation. [-1.0..1.0]
 	 */
-	public void driveTeleop(double yIn, double rotation) {
+	public void driveTeleop(double yIn, double rotation,boolean square_yInputs, boolean square_rInputs) {
 
 		// check for the presence of the special "crawl" commands and do those
 		// if commanded
@@ -591,16 +634,26 @@ public class DriveTrain_1519_MM extends Subsystem {
 		if ((-0.07 < yIn) && (yIn < 0.07)) {
 			yIn = 0.0;
 		}else{
-			yIn = yIn * FORWARD_BACKWARD_FACTOR;
+			//yIn = yIn * FORWARD_BACKWARD_FACTOR;
+			if (square_yInputs) {
+				yIn = Math.copySign(yIn * yIn, yIn);
+			}
 		}
 
 		double turnScaler = (1-Robot.oi.launchPad.getRawAxis(1))*.5;
 
+		if(turnScaler<.2){
+			turnScaler = .2;
+		}
+		
 		
 		// Scall the Rotation Factor
 		if ((-0.07 < rotation) && (rotation < 0.07)) {
 			rotation = 0.0;
 		}else{
+			if (square_rInputs) {
+				rotation = Math.copySign(rotation*rotation,rotation);
+			}
 			//rotation = rotation; // .15 is a FeedForward
 			if(my_GetIsCurrentGearHigh()){
 
@@ -655,10 +708,10 @@ public class DriveTrain_1519_MM extends Subsystem {
 		double yIn_full_Choke;
 		double rotation_full_Choke;
 		if(my_GetIsCurrentGearHigh()){ 
-			yIn_full_Choke = .75;
+			yIn_full_Choke =  .85;
 			rotation_full_Choke = .5;
 		}else{
-			yIn_full_Choke = .75;
+			yIn_full_Choke = .85;
 			rotation_full_Choke = .5;
 		}
 			// Finaly if the elevator is extended lets slow things down too
@@ -681,7 +734,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 
-	public void driveAutonomous(double yIn, double rotation, double heading) {
+	private void driveAutonomous(double yIn, double rotation, double heading) {
 		m_desiredHeading = heading;
 
 		// preserve heading if no rotation is commanded
@@ -703,12 +756,12 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 	
-	public void driveAutoInTeleopFinished() {
-		m_drivingAutoInTeleop = false;
-	}
+	//public void driveAutoInTeleopFinished() {
+	//	m_drivingAutoInTeleop = false;
+	//}
 	
-	public void driveAutoInTeleop(double yIn, double rotation) {
-		m_drivingAutoInTeleop = true;
+	private void driveAutoInTeleop(double yIn, double rotation) {
+		//m_drivingAutoInTeleop = true;
 		
 		// update count of iterations since rotation last commanded
 		if ((-0.01 < rotation) && (rotation < 0.01)) {
@@ -733,7 +786,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 		driveCartesian(yIn, rotation);
 	}
 
-	public void driveCartesian(double yIn, double rotation) {
+	private void driveCartesian(double yIn, double rotation) {
 		int talonIndex = 0;
 
 		m_wheelSpeeds[kLeft] = -yIn + rotation;
@@ -768,4 +821,49 @@ public class DriveTrain_1519_MM extends Subsystem {
 //		SmartDashboard.putNumber("Encoder Distance", getDistanceTraveled());
 	
 	}
+
+	public void driveDDR_MotionMagic() {
+		int talonIndex = 0;
+
+		m_wheeltargetPos[kLeft] = -get_leftWheel_TargetPosition();
+		m_wheeltargetPos[kRight] = get_RightWheel_TargetPosition();
+
+		SmartDashboard.putNumber("m_wheeltargetPos_LEFT", m_wheeltargetPos[kLeft]);
+		SmartDashboard.putNumber("m_wheeltargetPos_RIGHT", m_wheeltargetPos[kRight]);
+		
+		for (talonIndex = 0; talonIndex < kMaxNumberOfMotors; talonIndex++) {
+			m_talons[talonIndex].set(ControlMode.MotionMagic, m_wheeltargetPos[talonIndex]);		
+		}
+	
+	}
+
+	private double get_leftWheel_TargetPosition(){
+		return m_zeroPositions[kLeft] + m_ddr_LeftCounter;
+	}
+	private double get_RightWheel_TargetPosition(){
+		return m_zeroPositions[kRight] + m_ddr_RightCounter;
+	}
+
+	public void my_ddr_CounterReset(){
+		m_ddr_LeftCounter = 0.0;
+		m_ddr_RightCounter = 0.0;
+	}
+	public void my_ddr_LeftCount(boolean countUP) {
+		if(countUP){
+			m_ddr_LeftCounter = m_ddr_LeftCounter + m_ddr_step;
+		}else{
+			m_ddr_LeftCounter = m_ddr_LeftCounter - m_ddr_step;
+		}
+	}
+
+	public void my_ddr_RightCount(boolean countUP) {
+		if(countUP){
+			m_ddr_RightCounter = m_ddr_RightCounter + m_ddr_step;
+		}else{
+			m_ddr_RightCounter = m_ddr_RightCounter - m_ddr_step;
+		}
+	}
+	
 }
+
+

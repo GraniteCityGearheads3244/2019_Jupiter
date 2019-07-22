@@ -24,7 +24,7 @@ public class CG_Elevator_LVL1_Cargo_Ship extends CommandGroup {
    
 
     addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
-    addParallel(new LimeLight_SetPipeline(0));
+    //addParallel(new LimeLight_SetPipeline(0));
     addParallel(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_CARGOBAY),4);
     addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Bay_Position(),true));
     

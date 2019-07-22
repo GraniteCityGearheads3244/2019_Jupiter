@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drive_With_Joysticks extends Command {
+  private boolean init_Overspeed_Flag;
+
   public Drive_With_Joysticks() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
@@ -23,12 +25,25 @@ public class Drive_With_Joysticks extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    double yIn = Robot.oi.driveY();
+    if(Math.abs(yIn) > .05 ){
+      init_Overspeed_Flag = true;
+    }else{
+      init_Overspeed_Flag = false;
+    }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double yIn = Robot.oi.driveY();
+    double yIn = Robot.oi.driveY(); 
+    
+    if(init_Overspeed_Flag && yIn > .5){
+      yIn = yIn *.5;
+    }
+    else{
+      init_Overspeed_Flag = false;
+    }
 
     if(Robot.elevator_MM.getCurrent_GameMode() == GameMode.Cargo.value){ 
     //if(Robot.oi.launchPad.getRawButton(3)){

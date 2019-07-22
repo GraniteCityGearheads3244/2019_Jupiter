@@ -49,7 +49,7 @@ public class Drive_LimeLight_Tracking extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double kp = .07;
+    double kp = .02;
     double yIn = Robot.oi.driveY();
     double rotation = 0.0;
    
@@ -58,7 +58,7 @@ public class Drive_LimeLight_Tracking extends Command {
       if(debug){
         SmartDashboard.putBoolean("Target Found", true);
       }
-      yIn = Robot.oi.driveY();
+      yIn = Robot.oi.driveY() * 0.5;
       rotation = (-limelight.getdegRotationToTarget() * kp);
 
       if(rotation > .5){
@@ -67,12 +67,12 @@ public class Drive_LimeLight_Tracking extends Command {
         rotation = -.5;
       }
       if(!targetONS1){
-        Robot.rgb_LEDs.set_myRGB("green2");
+        //Robot.rgb_LEDs.set_myRGB("red1");
         targetONS1 = true;
         targetONS2 = false;
       }
       
-      Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation);
+      Robot.driveTrain_1519_MM.driveTeleop(yIn, rotation, true,  false);
     }else{
       if(debug){
         SmartDashboard.putBoolean("Target Found", false);
@@ -81,7 +81,7 @@ public class Drive_LimeLight_Tracking extends Command {
       rotation = Robot.oi.driveRotation();;
       
       if(!targetONS2){
-        Robot.rgb_LEDs.set_myRGB("green1");
+        //Robot.rgb_LEDs.set_myRGB("off");
         targetONS1 = false;
         targetONS2 = true;
       }
@@ -101,7 +101,7 @@ public class Drive_LimeLight_Tracking extends Command {
   protected void end() {
     //Robot.oi.get_my_LimeLight().setLEDMode(LedMode.kforceOff);
     Robot.driveTrain_1519_MM.driveTeleop(0.0,0.0);
-    Robot.rgb_LEDs.set_myRGB("off");
+    //Robot.rgb_LEDs.set_myRGB("");
     Robot.oi.get_my_LimeLight().setPipeline(0);
 
   }

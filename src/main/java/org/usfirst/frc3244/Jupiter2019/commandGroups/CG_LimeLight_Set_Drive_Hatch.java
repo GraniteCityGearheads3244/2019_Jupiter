@@ -37,6 +37,6 @@ public class CG_LimeLight_Set_Drive_Hatch extends CommandGroup {
 
     setRunWhenDisabled(true);
     addParallel(new LimeLight_SetPIP(StreamType.kPiPMain));
-    addParallel(new LimeLight_SetPipeline(0));
+    //addParallel(new LimeLight_SetPipeline(0));
   }
 }

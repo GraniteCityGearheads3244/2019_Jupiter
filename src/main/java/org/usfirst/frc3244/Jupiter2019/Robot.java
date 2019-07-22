@@ -40,6 +40,8 @@ import org.usfirst.frc3244.Jupiter2019.subsystems.*;
 public class Robot extends TimedRobot {
 
     public static final boolean DEBUG = false;
+    public static final boolean ENABLE_GUITARHERO = true;
+    public static final boolean ENABLE_DDR = false;//true;
     public static final boolean DIVERSTATION_REPORTS_ENABLED = false;
     //Command autonomousCommand;
     Command autonomousCommand;
@@ -146,6 +148,9 @@ public class Robot extends TimedRobot {
         Robot.elevator_MM.my_ElevatorStop();
         Robot.arm_MM.my_Arm_Stop();
         Robot.hatch_Floor_Pick_MM.my_Arm_Stop();
+
+        //Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+        Robot.driveTrain_1519_MM.driveTeleop(0.0, 0.0);
     }
 
     //Disabled variables
@@ -229,12 +234,12 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
 
-        Alliance currentAlliance = DriverStation.getInstance().getAlliance();
-        if(currentAlliance == Alliance.Red){
-            Robot.rgb_LEDs.set_myRGB("red2");
-        }else if(currentAlliance == Alliance.Blue){
-            Robot.rgb_LEDs.set_myRGB("blue2");
-        }
+        //Alliance currentAlliance = DriverStation.getInstance().getAlliance();
+        //if(currentAlliance == Alliance.Red){
+        //    Robot.rgb_LEDs.set_myRGB("red2");
+        //}else if(currentAlliance == Alliance.Blue){
+        //    Robot.rgb_LEDs.set_myRGB("blue2");
+        //}
 
         //Turn off all the Launchpad LEDs
     	Robot.oi.launchPad.setOutputs(0); 

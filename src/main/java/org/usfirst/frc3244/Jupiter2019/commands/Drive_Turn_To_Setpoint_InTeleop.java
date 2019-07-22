@@ -24,9 +24,9 @@ public class Drive_Turn_To_Setpoint_InTeleop extends PIDCommand {
 
 	private static final boolean debug = false;
 	
-	private static final double kP = 0.01;
+	private static final double kP = 0.03;
 	private static final double kI = 0.0;
-	private static final double kD = 0.02;
+	private static final double kD = 0.2;
 	
     private boolean rotateToAngle;
 	private double rotateToAngleRate;
@@ -95,7 +95,7 @@ public class Drive_Turn_To_Setpoint_InTeleop extends PIDCommand {
             System.out.println("m_currentRotationRate: " + m_currentRotationRate);
         }
 
-        Robot.driveTrain_1519_MM.driveAutoInTeleop(m_y, m_currentRotationRate);
+        Robot.driveTrain_1519_MM.driveTeleop(m_y, m_currentRotationRate, true, false);
   
     }
 
@@ -109,8 +109,8 @@ public class Drive_Turn_To_Setpoint_InTeleop extends PIDCommand {
     	getPIDController().disable();
     	// note:  it is important to call mecanumDriveCartesian here, rather than mecanumDriveAutonomous,
     	// to ensure that "heading preservation" isn't activated for the last instruction
-    	Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
-    	Robot.driveTrain_1519_MM.driveCartesian(0.0, 0.0);
+    	//Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+    	Robot.driveTrain_1519_MM.driveTeleop(0.0, 0.0);
     	//SmartDashboard.putNumber("Time", m_timer.get());
     }
 

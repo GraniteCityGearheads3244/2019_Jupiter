@@ -13,63 +13,58 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Arm_To_Setpoint extends Command {
+public class Elevator_Shift_To_Release_Hatch extends Command {
 
-  private double m_setpoint;
-  private boolean m_hold_Stow;
+  private boolean m_continueTOServo;
+  private double  m_setpoint = 0.0;
 
-  public Arm_To_Setpoint(double setpoint) {
+  public Elevator_Shift_To_Release_Hatch(boolean continueTOServo) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.arm_MM);
-    m_setpoint = setpoint;
-    m_hold_Stow = false;
-  }
-
-  public Arm_To_Setpoint(double setpoint, boolean stow_hold) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Robot.arm_MM);
-    m_setpoint = setpoint;
-    m_hold_Stow = stow_hold;
+    requires(Robot.elevator_MM);
+   
+    m_continueTOServo = continueTOServo;
+    
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    //Robot.arm_MM.set_my_CruiseVelocity(Robot.arm_MM.get_my_CRUISE_VELOCITY());
+
+    m_setpoint = Robot.elevator_MM.get_My_CurrentRAW_Postion() - 10;
+
     if(Robot.DIVERSTATION_REPORTS_ENABLED){
-      DriverStation.reportError("Arm Target = " + m_setpoint, false);
-      SmartDashboard.putNumber("Arm Target", m_setpoint);
+      DriverStation.reportError("Elevator Target = " + m_setpoint, false);
+      SmartDashboard.putNumber("Elevator Target = ", m_setpoint);
     }
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.arm_MM.my_Arm_MotionMagic(m_setpoint);
+    Robot.elevator_MM.my_ScissorMotionMagic(m_setpoint);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.arm_MM.get_My_PositionLock(m_setpoint);
+    return Robot.elevator_MM.get_My_PositionLock(m_setpoint);
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-//    DriverStation.reportWarning("Arm to Sepoint End()", false);
-    if (m_hold_Stow){
-      Robot.arm_MM.set_arm_Hold();
+    if(!m_continueTOServo){
+      Robot.elevator_MM.my_ElevatorStop();
     }
+    DriverStation.reportWarning("Elevator to Sepoint End()", false);
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    //Robot.arm_MM.my_Arm_Stop();
+    Robot.elevator_MM.my_ElevatorStop();
     end();
   }
 }

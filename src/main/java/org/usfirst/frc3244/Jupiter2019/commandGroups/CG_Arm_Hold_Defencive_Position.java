@@ -8,18 +8,16 @@
 package org.usfirst.frc3244.Jupiter2019.commandGroups;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
+import org.usfirst.frc3244.Jupiter2019.commands.Arm_Hold_Stored_Position;
 import org.usfirst.frc3244.Jupiter2019.commands.Arm_To_Setpoint;
-import org.usfirst.frc3244.Jupiter2019.commands.Elevator_To_Setpoint;
-import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPipeline;
-import org.usfirst.frc3244.Jupiter2019.commands.LimeLight_SetPIP;
-import oi.limelightvision.limelight.frc.ControlMode.StreamType;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class CG_Elevator_LVL3_Cargo extends CommandGroup {
+public class CG_Arm_Hold_Defencive_Position extends CommandGroup {
   /**
    * Add your docs here.
    */
-  public CG_Elevator_LVL3_Cargo() {
+  public CG_Arm_Hold_Defencive_Position() {
     // Add Commands here:
     // e.g. addSequential(new Command1());
     // addSequential(new Command2());
@@ -37,9 +35,7 @@ public class CG_Elevator_LVL3_Cargo extends CommandGroup {
     // a CommandGroup containing them would require both the chassis and the
     // arm.
 
-    addParallel(new LimeLight_SetPIP(StreamType.kPiPSecondary));
-    //addParallel(new LimeLight_SetPipeline(0));
-    addSequential(new Arm_To_Setpoint(Robot.arm_MM.CARGO_PLACE_ROCKET_LVL3),4);
-    addSequential(new Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Cargo_Rocket_Position3(),true));
+    addSequential(new Arm_To_Setpoint(Robot.arm_MM.STOWED),1.5); //THis will move the arm into position before the the power is set to hold it
+    addSequential(new Arm_Hold_Stored_Position()); //The motor will now be set to hold the arm with constant power
   }
 }

@@ -13,6 +13,7 @@ package org.usfirst.frc3244.Jupiter2019;
 
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Left_From_Center;
 import org.usfirst.frc3244.Jupiter2019.AutoCommands.ACG_Return_to_LoadStation_Right_From_Center;
+import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Arm_Hold_Defencive_Position;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Arm_To_Pick_Cargo;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Cargo_Intake;
 import org.usfirst.frc3244.Jupiter2019.commandGroups.CG_Elevator_Arm_Reset;
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc3244.Jupiter2019.subsystems.*;
 import org.usfirst.frc3244.Jupiter2019.util.AndJoystickButton;
+import org.usfirst.frc3244.Jupiter2019.util.AndNOTJoystickButton2;
 import org.usfirst.frc3244.Jupiter2019.util.JoystickAxisButton;
 import org.usfirst.frc3244.Jupiter2019.util.JoystickPOVButton;
 import org.usfirst.frc3244.Jupiter2019.util.OrJoystickButton;
@@ -51,9 +53,12 @@ import org.usfirst.frc3244.Jupiter2019.util.OrJoystickButton;
  */
 public class OI {
     private LimeLight limeLight;
+    private LimeLight limeLight2;
     public Joystick xBox_Driver;
     public Joystick xBox_CoDriver;
     public Joystick launchPad;
+    public Joystick guitarHero;
+    public Joystick ddr;
 
     //Xbox game pad Channels
     public static final int GAMEPAD_XBOX_LEFT_X_AXIS = 0;//
@@ -73,6 +78,14 @@ public class OI {
     public static final int GAMEPAD_XBOX_START_BUTTON = 8;//
     public static final int GAMEPAD_XBOX_LEFT_STICK_BUTTON = 9;
     public static final int GAMEPAD_XBOX_RIGHT_STICK_BUTTON = 10;
+
+    public static final int GUITAR_GREEN = 1;
+    public static final int GUITAR_RED = 2;
+    public static final int GUITAR_YELLOW = 4;
+    public static final int GUITAR_BLUE = 3;
+    public static final int GUITAR_ORANGE = 5;
+    public static final int GUITAR_BACK = 7;
+    public static final int GUITAR_START = 8;
     
 
      /**
@@ -145,7 +158,46 @@ public class OI {
     public AndJoystickButton btn4_;
     
     public OrJoystickButton elevator_Down_OR_BTN;
-        
+
+     /**
+     * Declare guitar Buttons
+     */
+    public AndNOTJoystickButton2 guitar_GREEN_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_RED_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_YELLOW_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_BLUE_BTN_Hatch;
+    public JoystickButton guitar_ORANGE_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_START_BTN_Hatch;
+    public AndNOTJoystickButton2 guitar_BACK_BTN_Hatch;
+
+    public AndJoystickButton guitar_GREEN_BTN_CARGO;
+    public AndJoystickButton guitar_RED_BTN_CARGO;
+    public AndJoystickButton guitar_YELLOW_BTN_CARGO;
+    public AndJoystickButton guitar_BLUE_BTN_CARGO;
+    public JoystickPOVButton guitar_STRUM_UP;
+    public JoystickPOVButton guitar_STRUM_DOWN;
+
+    public JoystickButton guitar_BACK;
+
+    public JoystickButton ddr_Enable;
+    public JoystickButton ddr_NORTH;
+    public JoystickButton ddr_SOUTH;
+    public JoystickButton ddr_WEST;
+    public JoystickButton ddr_EAST;
+    public JoystickButton ddr_NORTHWEST;
+    public JoystickButton ddr_NORTHEAST;
+    public JoystickButton ddr_SOUTHWEST;
+    public JoystickButton ddr_SOUTHEAST;
+
+
+    public static final int DDR_NORTH_PAD = 13;
+    public static final int DDR_SOUTH_PAD = 15;
+    public static final int DDR_WEST_PAD = 16;
+    public static final int DDR_EAST_PAD = 14;
+    public static final int DDR_NORTHWEST_PAD = 3;
+    public static final int DDR_NORTHEAST_PAD = 2;
+    public static final int DDR_SOUTHWEST_PAD = 4;
+    public static final int DDR_SOUTHEAST_PAD = 1;
     
     /*
      *	 	LTa2						RTa3
@@ -167,7 +219,8 @@ public class OI {
 
       xBox_Driver = new Joystick(0);
     	xBox_CoDriver = new Joystick(1);
-    	launchPad = new Joystick(2);
+      launchPad = new Joystick(2);
+      
     	
     	setUp_Controler_xBox_Driver();
     	setUp_Controler_xBox_CoDriver();
@@ -175,9 +228,20 @@ public class OI {
     	setUp_AND_Buttons(); //Do this after all joy sticks are declared.
     	setUp_OR_Buttons(); //Do this after all joy sticks are declared. 
     	
-    	setUp_SmartDashboard_Buttons();
+      setUp_SmartDashboard_Buttons();
+      
+      if(Robot.ENABLE_GUITARHERO){
+        guitarHero = new Joystick(3);
+        setUp_Controler_Guitar_Hero();
+      }
+      
+      if(Robot.ENABLE_DDR){
+        ddr = new Joystick(4);
+        setUp_Controler_DDR();
+      }
   
       limeLight = new LimeLight(); 
+      limeLight2 = new LimeLight("limelight-two"); 
     }
 
     private void setUp_Controler_xBox_Driver(){
@@ -188,8 +252,8 @@ public class OI {
         b_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_B_BUTTON);
         b_xBox_Driver.whileHeld(new Drive_LimeLight_Tracking());
 
-        //setUp_OR_Buttons() x_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON);
-        //setUp_OR_Buttons() x_xBox_Driver.whenPressed(new CG_Elevator_Arm_Reset());
+        x_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON);
+        x_xBox_Driver.whenPressed(new CG_Elevator_LVL1_Hatch());
 
         y_xBox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_Y_BUTTON);
         y_xBox_Driver.whenPressed(new CG_Arm_To_Pick_Cargo());
@@ -209,7 +273,7 @@ public class OI {
         reset_xBox_Driver.whenPressed(new GameMode_Set_Hatch());
 
         r_Stick_Button_xbox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_RIGHT_STICK_BUTTON);
-        r_Stick_Button_xbox_Driver.whileHeld(new Drive_LimeLight_Tracking(1));
+        r_Stick_Button_xbox_Driver.whileHeld(new Drive_LimeLight_PIDCommand(1)); //Drive_LimeLight_Tracking(1));
 
         l_Stick_Button_xbox_Driver = new JoystickButton(xBox_Driver, GAMEPAD_XBOX_LEFT_STICK_BUTTON);
         l_Stick_Button_xbox_Driver.whenPressed(new DriveToggleShifter());
@@ -248,10 +312,72 @@ public class OI {
       
     }
 
+    private void setUp_Controler_Guitar_Hero(){
+
+      guitar_ORANGE_BTN_Hatch = new JoystickButton(guitarHero, GUITAR_ORANGE);
+      guitar_ORANGE_BTN_Hatch.whenPressed(new CG_Elevator_Arm_Reset());
+
+      guitar_GREEN_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_GREEN, guitarHero, GUITAR_START);
+      guitar_GREEN_BTN_Hatch.whenPressed(new CG_Elevator_LVL1_Hatch());
+
+      guitar_RED_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_RED, guitarHero, GUITAR_START);
+      guitar_RED_BTN_Hatch.whenPressed(new CG_Elevator_LVL2_Hatch());
+
+      guitar_YELLOW_BTN_Hatch = new AndNOTJoystickButton2(guitarHero, GUITAR_YELLOW, guitarHero, GUITAR_START);
+      guitar_YELLOW_BTN_Hatch.whenPressed(new CG_Elevator_LVL3_Hatch());
+
+      guitar_BLUE_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_BLUE, guitarHero, GUITAR_START);
+      guitar_BLUE_BTN_CARGO.whenPressed(new CG_Elevator_LVL1_Cargo_Ship());
+
+      guitar_GREEN_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_GREEN, guitarHero, GUITAR_START);
+      guitar_GREEN_BTN_CARGO.whenPressed(new CG_Elevator_LVL1_Cargo());
+
+      guitar_RED_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_RED, guitarHero, GUITAR_START);
+      guitar_RED_BTN_CARGO.whenPressed(new CG_Elevator_LVL2_Cargo());
+
+      guitar_YELLOW_BTN_CARGO = new AndJoystickButton(guitarHero, GUITAR_YELLOW, guitarHero, GUITAR_START);
+      guitar_YELLOW_BTN_CARGO.whenPressed(new CG_Elevator_LVL3_Cargo());
+   
+      guitar_STRUM_UP = new JoystickPOVButton(guitarHero, JoystickPOVButton.NORTH);
+      guitar_STRUM_UP.whenPressed(new CG_Hatch_Pick_From_Floor());
+
+      guitar_STRUM_DOWN = new JoystickPOVButton(guitarHero, JoystickPOVButton.SOUTH);
+      guitar_STRUM_DOWN.whenPressed(new CG_Hatch_Pick_Prepair_From_Floor());
+
+      guitar_BACK = new JoystickButton(guitarHero, GUITAR_BACK);
+      guitar_BACK.whileHeld(new Elevator_Jog_MotoinMagic_GUITARHERO(false));
+
+    }
+
+    private void setUp_Controler_DDR(){
+
+      ddr_Enable = new JoystickButton(launchPad,8);
+      ddr_Enable.whileHeld(new Drive_DDR());
+      
+      ddr_NORTH = new JoystickButton(ddr, DDR_NORTH_PAD);
+      ddr_NORTH.whenPressed(new Drive_DDR_Balanced_Control(true));
+
+      ddr_SOUTH = new JoystickButton(ddr, DDR_SOUTH_PAD);
+      ddr_SOUTH.whenPressed(new Drive_DDR_Balanced_Control(false));
+      
+      ddr_NORTHWEST = new JoystickButton(ddr, DDR_NORTHWEST_PAD);
+      ddr_NORTHWEST.whenPressed(new Drive_DDR_Left_Control(true));
+
+      ddr_SOUTHWEST = new JoystickButton(ddr, DDR_SOUTHWEST_PAD);
+      ddr_SOUTHWEST.whenPressed(new Drive_DDR_Left_Control(false));
+
+      ddr_NORTHEAST = new JoystickButton(ddr, DDR_NORTHEAST_PAD);
+      ddr_NORTHEAST.whenPressed(new Drive_DDR_Right_Control(true));
+
+      ddr_SOUTHEAST = new JoystickButton(ddr, DDR_SOUTHEAST_PAD);
+      ddr_SOUTHEAST.whenPressed(new Drive_DDR_Right_Control(false));
+    }
+
+
     private void setUp_Controler_xBox_CoDriver(){
 
-      //setUp_OR_Buttons() a_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
-      //setUp_OR_Buttons() a_xBox_CoDriver.whileHeld(new CG_Elevator_Arm_Reset());
+      a_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
+      a_xBox_CoDriver.whenPressed(new CG_Elevator_Arm_Reset());
       
       b_xBox_CoDriver = new JoystickButton(xBox_CoDriver, GAMEPAD_XBOX_B_BUTTON);
       b_xBox_CoDriver.whenPressed(new CG_Elevator_LVL1_Hatch());//Elevator_To_Setpoint(Robot.elevator_MM.get_Deliver_Hatch_Rocket_Position1(),false));
@@ -327,7 +453,7 @@ public class OI {
       btn6_launchPad.whileHeld(new CG_LimeLight_Set_Target_Right_Hatch());
       
       btn7_launchPad = new JoystickButton(launchPad,7);
-      //btn7_launchPad.whileHeld(new CG_Elevator_LVL3_Hatch());
+      btn7_launchPad.whenPressed(new CG_Arm_Hold_Defencive_Position());
 
       btn8_launchPad = new JoystickButton(launchPad,8);
       //btn8_launchPad.whileHeld(new CG_Elevator_LVL2_Hatch());
@@ -347,8 +473,8 @@ public class OI {
     }
 
     private void setUp_OR_Buttons(){
-      elevator_Down_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
-      elevator_Down_OR_BTN.whenPressed(new CG_Elevator_Arm_Reset());
+      //elevator_Down_OR_BTN = new OrJoystickButton(xBox_Driver, GAMEPAD_XBOX_X_BUTTON, xBox_CoDriver, GAMEPAD_XBOX_A_BUTTON);
+      //elevator_Down_OR_BTN.whenPressed(new CG_Elevator_Arm_Reset());
       
     }
 
@@ -426,6 +552,14 @@ public class OI {
     public LimeLight get_my_LimeLight(){
       return limeLight;
     }
+
+    public LimeLight get_my_LimeLight2(){
+      return limeLight2;
+    }
+
+	public double guitarHero_Right_AxisY() {
+		  return -guitarHero.getRawAxis(5);
+	}
 
 }
 

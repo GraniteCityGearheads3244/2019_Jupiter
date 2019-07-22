@@ -9,67 +9,48 @@ package org.usfirst.frc3244.Jupiter2019.commands;
 
 import org.usfirst.frc3244.Jupiter2019.Robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Arm_To_Setpoint extends Command {
-
-  private double m_setpoint;
-  private boolean m_hold_Stow;
-
-  public Arm_To_Setpoint(double setpoint) {
+public class Drive_DDR extends Command {
+  public Drive_DDR() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    requires(Robot.arm_MM);
-    m_setpoint = setpoint;
-    m_hold_Stow = false;
-  }
-
-  public Arm_To_Setpoint(double setpoint, boolean stow_hold) {
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
-    requires(Robot.arm_MM);
-    m_setpoint = setpoint;
-    m_hold_Stow = stow_hold;
+    requires(Robot.driveTrain_1519_MM);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    //Robot.arm_MM.set_my_CruiseVelocity(Robot.arm_MM.get_my_CRUISE_VELOCITY());
-    if(Robot.DIVERSTATION_REPORTS_ENABLED){
-      DriverStation.reportError("Arm Target = " + m_setpoint, false);
-      SmartDashboard.putNumber("Arm Target", m_setpoint);
-    }
+    Robot.driveTrain_1519_MM.shiftMotinMagic();
+    Robot.driveTrain_1519_MM.zeroDistanceTraveled();
+    Robot.driveTrain_1519_MM.my_ddr_CounterReset();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    Robot.arm_MM.my_Arm_MotionMagic(m_setpoint);
+    Robot.driveTrain_1519_MM.driveDDR_MotionMagic();
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.arm_MM.get_My_PositionLock(m_setpoint);
+    return false;
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-//    DriverStation.reportWarning("Arm to Sepoint End()", false);
-    if (m_hold_Stow){
-      Robot.arm_MM.set_arm_Hold();
-    }
+    //Robot.driveTrain_1519_MM.driveAutoInTeleopFinished();
+    Robot.driveTrain_1519_MM.driveTeleop(0.0, 0.0);
+    Robot.driveTrain_1519_MM.clearDesiredHeading();
+    Robot.driveTrain_1519_MM.shiftHigh();
   }
 
   // Called when another command which requires one or more of the same
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    //Robot.arm_MM.my_Arm_Stop();
     end();
   }
 }
