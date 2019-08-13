@@ -43,19 +43,19 @@ public class Elevator_MotionMagic extends Subsystem {
 	 * 
 	 * ******************************/
 
-	 private double m_GlobalOffset = 30;
+	 private double m_GlobalOffset = 0.0; // fair equalted 30;
 	 //home
 	 private double bottom_Position = 160;
 	 //Intake
 	 private double Intake_Hatch_Floor_Position = 160;
-	 private double Intake_Hatch_Depot_Position = 250 + m_GlobalOffset -5;
+	 private double Intake_Hatch_Depot_Position = 250 + m_GlobalOffset;
 	 private double Intake_cargo_Floor_Position = 160;
 	 private double Intake_cargo_Depot_Position = 160;
 	 //Deliver To Cargo Bay
 	 private double Deliver_Hatch_Bay_Position = 250 + m_GlobalOffset;
 	 private double Deliver_Cargo_Bay_Position = 195;
 	 //Deliver To Rocket
-	 private double Deliver_Hatch_Rocket_Position1 = 230 + m_GlobalOffset -5 ; //250; //19"
+	 private double Deliver_Hatch_Rocket_Position1 = 230 + m_GlobalOffset; //250; //19"
 	 private double Deliver_Hatch_Rocket_Position2 = 560 + m_GlobalOffset; //45"
 	 private double Deliver_Hatch_Rocket_Position3 = 650 + m_GlobalOffset; //675; //75" with Arm set at 520 units;
 	 private double Deliver_Cargo_Rocket_Position1 = 160; // Roller at 34 with Arm set at 330 units;
