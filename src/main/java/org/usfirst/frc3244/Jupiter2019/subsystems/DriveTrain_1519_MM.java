@@ -165,7 +165,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 
     public DriveTrain_1519_MM() {
 
-		SmartDashboard.putNumber("MaxDriveSpeed", .3);
+		SmartDashboard.putNumber("MaxDriveSpeed", 1);
         dBL_Sol_Shifter = new DoubleSolenoid(0, 4, 5);
         addChild("DBL_Sol_Shifter",dBL_Sol_Shifter);
 		
