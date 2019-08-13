@@ -165,6 +165,7 @@ public class DriveTrain_1519_MM extends Subsystem {
 
     public DriveTrain_1519_MM() {
 
+		SmartDashboard.putNumber("MaxDriveSpeed", .3);
         dBL_Sol_Shifter = new DoubleSolenoid(0, 4, 5);
         addChild("DBL_Sol_Shifter",dBL_Sol_Shifter);
 		
@@ -639,6 +640,10 @@ public class DriveTrain_1519_MM extends Subsystem {
 				yIn = Math.copySign(yIn * yIn, yIn);
 			}
 		}
+		double MaxDriveSpeed = SmartDashboard.getNumber("MaxDriveSpeed", .4);
+		if(Math.abs(yIn) > MaxDriveSpeed){
+			yIn = Math.copySign(MaxDriveSpeed,yIn);
+		}
 
 		double turnScaler = (1-Robot.oi.launchPad.getRawAxis(1))*.5;
 
@@ -667,9 +672,9 @@ public class DriveTrain_1519_MM extends Subsystem {
 			}else{ //In low gear
 
 				if(Math.abs(rotation) < 0.95){
-					rotation = rotation * .25;//ROTATION_FACTOR_LOW_GEAR;
+					rotation = rotation * turnScaler;//ROTATION_FACTOR_LOW_GEAR;
 				}else{
-					rotation = rotation * .55;
+					rotation = rotation * turnScaler;
 				}
 			}
 		}

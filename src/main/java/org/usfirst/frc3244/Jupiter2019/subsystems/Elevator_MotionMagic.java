@@ -43,20 +43,21 @@ public class Elevator_MotionMagic extends Subsystem {
 	 * 
 	 * ******************************/
 
+	 private double m_GlobalOffset = 30;
 	 //home
 	 private double bottom_Position = 160;
 	 //Intake
 	 private double Intake_Hatch_Floor_Position = 160;
-	 private double Intake_Hatch_Depot_Position = 250;
+	 private double Intake_Hatch_Depot_Position = 250 + m_GlobalOffset -5;
 	 private double Intake_cargo_Floor_Position = 160;
 	 private double Intake_cargo_Depot_Position = 160;
 	 //Deliver To Cargo Bay
-	 private double Deliver_Hatch_Bay_Position = 250;
+	 private double Deliver_Hatch_Bay_Position = 250 + m_GlobalOffset;
 	 private double Deliver_Cargo_Bay_Position = 195;
 	 //Deliver To Rocket
-	 private double Deliver_Hatch_Rocket_Position1 = 230; //250; //19"
-	 private double Deliver_Hatch_Rocket_Position2 = 560; //45"
-	 private double Deliver_Hatch_Rocket_Position3 = 650; //675; //75" with Arm set at 520 units;
+	 private double Deliver_Hatch_Rocket_Position1 = 230 + m_GlobalOffset -5 ; //250; //19"
+	 private double Deliver_Hatch_Rocket_Position2 = 560 + m_GlobalOffset; //45"
+	 private double Deliver_Hatch_Rocket_Position3 = 650 + m_GlobalOffset; //675; //75" with Arm set at 520 units;
 	 private double Deliver_Cargo_Rocket_Position1 = 160; // Roller at 34 with Arm set at 330 units;
 	 private double Deliver_Cargo_Rocket_Position2 = 340; // Center ball @ 57.5   (Was 410)
 	 private double Deliver_Cargo_Rocket_Position3 = 640; //660; // Center ball @ 83" was(710)
@@ -244,9 +245,9 @@ public class Elevator_MotionMagic extends Subsystem {
   }
   
   public void setPIDF_UP() {
-    double elevatorkP = 4.7;// 3/17 = 1.7///RobotPreferences.getelevatorkP();
+    double elevatorkP = 5.1;//befor fair = 4.8;// 3/17 = 1.7///RobotPreferences.getelevatorkP();
     double elevatorkI = 0.003;//RobotPreferences.getelevatorkI();
-    double elevatorkD = 100.0;//RobotPreferences.getelevatorkD();
+    double elevatorkD = 50.0;//RobotPreferences.getelevatorkD();
     double elevatorkF = 31.96;//RobotPreferences.getelevatorkF();
   
    /* Set Motion Magic gains in slot0 - see documentation */
