@@ -481,6 +481,8 @@ public class OI {
     private void setUp_SmartDashboard_Buttons(){
       //SmartDashboard.putData("Arm UP", new Arm_To_Setpoint(5));
       //SmartDashboard.putData("Arm DWON", new Arm_To_Setpoint(0));
+      SmartDashboard.putData("Demo Speed", new DriveTrainSetMaxSpeed(.4));
+      SmartDashboard.putData("Guest Demo Speed", new DriveTrainSetMaxSpeed(.3));
     }
 
 
