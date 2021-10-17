@@ -162,7 +162,7 @@ public class Arm_MM extends Subsystem {
 	private double getFeedForward(double horizontalHoldOutput) {
 
 		// get the radians of the arm
-		// getAngle() returns degrees
+		// getAngle() returns degrees the 90- offsets retruns value because up was 90deg but arbff needs to be 0
 		double theta = Math.toRadians(90 - my_getCurrentArmAngle());
     
 		// get a range of 0 to 1 to multiply by feedforward.
